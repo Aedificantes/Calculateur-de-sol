@@ -3,7 +3,7 @@ package com.example.aedificantes_calculateur_se_sol.ParamSolPackage;
 public enum TypeSol {
 
     REMBLAI(1,"remblai"),
-    SABLEAUX(2,"sableux"),
+    SABLEUX(2,"sableux"),
     ARGILEUX(3,"argileux"),
     LIMONEUX(4,"limoneux"),
     LOAM_SABLEUX(5,"loam sableux");
