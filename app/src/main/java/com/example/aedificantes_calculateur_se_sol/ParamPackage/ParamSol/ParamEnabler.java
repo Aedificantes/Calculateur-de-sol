@@ -1,8 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamSolPackage;
-
-import android.widget.Switch;
-
-import com.example.aedificantes_calculateur_se_sol.LineProfilSolAdaptater;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 public class ParamEnabler {
     private LineProfilSolAdaptater.LineProfilSolViewHolder holder;

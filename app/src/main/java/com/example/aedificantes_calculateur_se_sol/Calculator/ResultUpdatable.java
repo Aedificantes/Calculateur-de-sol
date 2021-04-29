@@ -4,4 +4,7 @@ public interface ResultUpdatable {
 
     public void allValuesAreSet();
     public void allValuesAreNotSet();
+
+
+
 }

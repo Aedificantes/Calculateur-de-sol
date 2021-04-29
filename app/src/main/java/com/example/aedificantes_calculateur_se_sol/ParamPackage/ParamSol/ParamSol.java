@@ -1,10 +1,8 @@
-package com.example.aedificantes_calculateur_se_sol.ParamSolPackage;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 import com.example.aedificantes_calculateur_se_sol.Error.Error;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ParamSol {
@@ -91,7 +89,8 @@ public class ParamSol {
     public void setTypeSol(TypeSol typeSol) {
         this.typeSol = typeSol;
     }
-    public List<Error> generateError(){
+
+    public List<Error> generateError() {
         ArrayList<Error> list =  new ArrayList<>();
         for(int each : paramToSet){
             if(params.get(each) == 0){
@@ -100,7 +99,6 @@ public class ParamSol {
         }
         return list;
     }
-
 
     @Override
     public String toString() {
@@ -113,4 +111,5 @@ public class ParamSol {
                 ", paramEnabler=" + paramEnabler +
                 '}';
     }
+
 }

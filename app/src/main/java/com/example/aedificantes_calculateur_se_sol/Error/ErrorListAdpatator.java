@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ErrorListAdpatator extends BaseExpandableListAdapter {
-    private List<Integer> list_ligneWithError;
-    private HashMap<Integer, List<Error>> list_errorsByLine;
+    private List<String> list_ligneWithError;
+    private HashMap<String, List<Error>> list_errorsByLine;
     private Context context;
 
     public ErrorListAdpatator(Context context) {
@@ -27,7 +27,7 @@ public class ErrorListAdpatator extends BaseExpandableListAdapter {
         list_errorsByLine = new HashMap<>();
     }
 
-    public void display(HashMap<Integer, List<Error>> toDisplayData){
+    public void display(HashMap<String, List<Error>> toDisplayData){
         list_errorsByLine = toDisplayData;
         list_ligneWithError = new ArrayList<>(toDisplayData.keySet());
     }
@@ -77,7 +77,7 @@ public class ErrorListAdpatator extends BaseExpandableListAdapter {
 
         TextView TV_error_string = (TextView) convertView.findViewById(R.id.TV_line_group_error);
 
-        TV_error_string.setText("Ligne n°"+(groupPosition+1));
+        TV_error_string.setText(this.list_ligneWithError.get(groupPosition));
 
         return convertView;
     }

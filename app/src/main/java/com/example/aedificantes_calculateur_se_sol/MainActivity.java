@@ -9,18 +9,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 
+import com.example.aedificantes_calculateur_se_sol.Calculator.ResultDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorDisplayer;
-import com.example.aedificantes_calculateur_se_sol.Error.ErrorListAdpatator;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.Error.Verificator;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.LineProfilSolAdaptater;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ResultUpdatable {
 
@@ -32,8 +31,11 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
     private RecyclerView.LayoutManager mLayoutManager;
     final ArrayList<ParamSol> listParams =  new ArrayList<>();
 
-    ResultManager resultManager = new ResultManager();
-    ErrorDisplayer errorDisplayer;
+    private ResultManager resultManager = new ResultManager();
+    private PieuParamManager pieuParamManager;
+    private ErrorDisplayer errorDisplayer;
+    private ResultDisplayer resultDisplayer;
+    private Verificator verificator;
 
 
     @Override
@@ -47,9 +49,12 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
         MAIN_CONTEXT = this;
 
         errorDisplayer = new ErrorDisplayer(this, layout_Const_Result);
+        resultDisplayer = new ResultDisplayer(this, layout_Const_Result);
+        verificator = new Verificator(this);
+        pieuParamManager = new PieuParamManager(verificator);
 
         listParams.add(new ParamSol());
-        mAdapter = new LineProfilSolAdaptater(listParams,this);
+        mAdapter = new LineProfilSolAdaptater(listParams,verificator);
 
         mLayoutManager = new LinearLayoutManager(this);
 
@@ -77,10 +82,13 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
     public void allValuesAreSet() {
         System.out.println("SET CORRECTLY SO CALCULATE");
         errorDisplayer.hide();
+        resultDisplayer.show();
+
     }
     @Override
     public void allValuesAreNotSet() {
         System.out.println("NOT SET CORRECTLY SO PRINT ERROR");
-        errorDisplayer.generateAndDisplay(listParams);
+        resultDisplayer.hide();
+        errorDisplayer.generateAndDisplay(listParams,pieuParamManager);
     }
 }

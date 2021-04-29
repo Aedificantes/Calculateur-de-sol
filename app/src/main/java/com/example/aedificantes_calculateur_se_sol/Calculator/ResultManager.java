@@ -1,7 +1,6 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import com.example.aedificantes_calculateur_se_sol.Calculator.AlphaCalculator;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 
 public class ResultManager {
 

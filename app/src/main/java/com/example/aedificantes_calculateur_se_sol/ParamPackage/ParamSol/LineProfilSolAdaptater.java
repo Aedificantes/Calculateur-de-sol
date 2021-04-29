@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,17 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.Compacite;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.Granularite;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamSolPackage.TypeSol;
+import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
+import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
+import com.example.aedificantes_calculateur_se_sol.MainActivity;
+import com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
 
-public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAdaptater.LineProfilSolViewHolder> {
+public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAdaptater.LineProfilSolViewHolder> implements VerificateObserver {
     private ArrayList<ParamSol> mListparamSols;
     public OnItemClickListener mListener;
-    private ResultUpdatable updater;
+    private VerificateObservable verificator;
 
     public interface OnItemClickListener {
         void onAddClick(int position);
@@ -91,13 +91,15 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         LineProfilSolViewHolder ipvh = new LineProfilSolViewHolder(v, mListener);
         return ipvh;
     }
-    public LineProfilSolAdaptater(ArrayList<ParamSol> listParams, ResultUpdatable updater){
+    public LineProfilSolAdaptater(ArrayList<ParamSol> listParams, VerificateObservable verificator){
         mListparamSols = listParams;
-        this.updater =  updater;
+        this.verificator =  verificator;
+        verificator.addLikeObserver(this);
     }
-    public LineProfilSolAdaptater(ResultUpdatable updater){
+    public LineProfilSolAdaptater(VerificateObservable verificator){
         mListparamSols = new ArrayList<>();
-        this.updater =  updater;
+        this.verificator =  verificator;
+        verificator.addLikeObserver(this);
     }
     @Override
     public void onBindViewHolder(@NonNull final LineProfilSolViewHolder holder, final int position) {
@@ -127,7 +129,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                         System.out.println(currentItem.toString());
                         setParamSolLastElement();
                         updateAll_ET_Element();
-                        verifyEverythingIsFill();
+                        verificator.notifyDataChange();
                     }else{
                         Toast.makeText(MainActivity.MAIN_CONTEXT, "Au moins 1 élément est requis.", Toast.LENGTH_LONG).show();
                     }
@@ -141,7 +143,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currentItem.setTypeSol(TypeSol.values()[position]);
                 currentItem.getParamEnabler().update();
-                verifyEverythingIsFill();
+                verificator.notifyDataChange();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -151,7 +153,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currentItem.setCompacite(Compacite.values()[position]);
                 currentItem.getParamEnabler().update();
-                verifyEverythingIsFill();
+                verificator.notifyDataChange();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -161,7 +163,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currentItem.setGranularite(Granularite.values()[position]);
                 currentItem.getParamEnabler().update();
-                verifyEverythingIsFill();
+                verificator.notifyDataChange();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -194,7 +196,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                     } else {
                         paramSol.setValueByIndex(finalI, 0);
                     }
-                    verifyEverythingIsFill();
+                    verificator.notifyDataChange();
                 }
             });
         }
@@ -213,15 +215,6 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         }
     }
 
-    private void verifyEverythingIsFill(){
-        for(ParamSol each_PS : mListparamSols){
-            if(!each_PS.isAllFill()) {
-                updater.allValuesAreNotSet();
-                return;
-            }
-        }
-        updater.allValuesAreSet();
-    }
 
     @Override
     public int getItemCount() {
@@ -239,4 +232,14 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         return position;
         //return super.getItemId(position);
     }
+
+    @Override
+    public boolean isFill() {
+        for(ParamSol each_PS : mListparamSols){
+            if(!each_PS.isAllFill())
+                return false;
+        }
+        return true;
+    }
+
 }

@@ -1,17 +1,16 @@
-package com.example.aedificantes_calculateur_se_sol.ParamSolPackage;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
-public enum Granularite {
+public enum Compacite {
 
-    GRAVELEUX(1,"graveleux"),
-    GROSSIER(2,"grossier"),
-    MOYEN(3,"moyen"),
-    FIN(4,"fin"),
-    PULVERULENT(5,"pulverulent");
+    FRIABLE(1,"fiable"),
+    MOYEN_DENSE(2,"moyennement dense"),
+    DENSE_SOND_ST(3,"dense sondate stat"),
+    DENSE_SANS_SOND_ST(4,"dense SANS sondage stat");
 
     private int indice ;
     private String name ;
 
-    private Granularite(int indice,String name) {
+    private Compacite(int indice,String name) {
         this.indice = indice ;
         this.name = name;
     }
@@ -30,4 +29,3 @@ public enum Granularite {
         return  this.name;
     }
 }
-
