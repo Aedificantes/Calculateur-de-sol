@@ -2,11 +2,11 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 public enum Granularite {
 
-    GRAVELEUX(1,"graveleux"),
-    GROSSIER(2,"grossier"),
-    MOYEN(3,"moyen"),
-    FIN(4,"fin"),
-    PULVERULENT(5,"pulverulent");
+    GRAVELEUX(0,"graveleux"),
+    GROSSIER(1,"grossier"),
+    MOYEN(2,"moyen"),
+    FIN(3,"fin"),
+    PULVERULENT(4,"pulverulent");
 
     private int indice ;
     private String name ;

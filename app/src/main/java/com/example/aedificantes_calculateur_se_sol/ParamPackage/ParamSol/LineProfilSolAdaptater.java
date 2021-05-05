@@ -20,6 +20,7 @@ import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 import com.example.aedificantes_calculateur_se_sol.MainActivity;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 import com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
     private ArrayList<ParamSol> mListparamSols;
     public OnItemClickListener mListener;
     private VerificateObservable verificator;
+    private PieuParamManager pieuParamManager;
+    private boolean allAreSet = false;
 
     public interface OnItemClickListener {
         void onAddClick(int position);
@@ -91,14 +94,16 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         LineProfilSolViewHolder ipvh = new LineProfilSolViewHolder(v, mListener);
         return ipvh;
     }
-    public LineProfilSolAdaptater(ArrayList<ParamSol> listParams, VerificateObservable verificator){
+    public LineProfilSolAdaptater(ArrayList<ParamSol> listParams, VerificateObservable verificator, PieuParamManager managerPieu){
         mListparamSols = listParams;
         this.verificator =  verificator;
+        this.pieuParamManager = managerPieu;
         verificator.addLikeObserver(this);
     }
-    public LineProfilSolAdaptater(VerificateObservable verificator){
+    public LineProfilSolAdaptater(VerificateObservable verificator, PieuParamManager managerPieu){
         mListparamSols = new ArrayList<>();
         this.verificator =  verificator;
+        this.pieuParamManager = managerPieu;
         verificator.addLikeObserver(this);
     }
     @Override
@@ -117,6 +122,9 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         holder.ET_List.get(4).setText(String.valueOf(currentItem.params.get(4)));
         holder.ET_List.get(5).setText(String.valueOf(currentItem.params.get(5)));
         holder.ET_List.get(6).setText(String.valueOf(currentItem.params.get(6)));
+        holder.SP_TypeSol.setSelection(currentItem.getTypeSol().getIndice());
+        holder.SP_Granularite.setSelection(currentItem.getGranularite().getIndice());
+        holder.SP_Compacite.setSelection(currentItem.getCompacite().getIndice());
 
         holder.BT_delete_line.setEnabled(true);
         holder.BT_delete_line.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +177,13 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        updateAll_ET_Element();
+        if(!allAreSet){ // permet d'identifier si toutes les lignes ont été créée, autrement, l'appel de updateAll_ET_Element() pose un problème sur les lignes don't le holder n'a pas été placé dans ParamEnabler
+            updatePOS_ET_Element(position);
+            if(position == mListparamSols.size()-1)
+                allAreSet = true;
+        }else{
+            updateAll_ET_Element();
+        }
 
     }
 
@@ -214,6 +228,9 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             each.getParamEnabler().update();
         }
     }
+    private void updatePOS_ET_Element(int pos){
+            mListparamSols.get(pos).getParamEnabler().update();
+    }
 
 
     @Override
@@ -235,6 +252,13 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
     @Override
     public boolean isFill() {
+        if(pieuParamManager.isFill()){
+            for(ParamSol each: mListparamSols){
+                each.setLoadLayer(false);
+            }
+            MainActivity.resultManager.getLayerCalculator().ParamSol_couchePortante().setLoadLayer(true);
+            updateAll_ET_Element();
+        }
         for(ParamSol each_PS : mListparamSols){
             if(!each_PS.isAllFill())
                 return false;

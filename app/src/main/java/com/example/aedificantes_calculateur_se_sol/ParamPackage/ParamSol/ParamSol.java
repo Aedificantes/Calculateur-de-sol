@@ -9,11 +9,11 @@ public class ParamSol {
     private Compacite compacite = Compacite.FRIABLE;
     private Granularite granularite = Granularite.GRAVELEUX;
     private TypeSol typeSol = TypeSol.REMBLAI;
-    //public int p1=0,p2=0,p3=0,p4=0,p5=0,p6=0,p7=0;
     public ArrayList<Float> params = new ArrayList<>();
     public ArrayList<Integer> paramToSet = new ArrayList<>();
     public ArrayList<String> logNameParam = new ArrayList<>();
     private ParamEnabler paramEnabler;
+    private boolean isLoadLayer = false;
 
 
     public ParamSol() {
@@ -29,6 +29,27 @@ public class ParamSol {
         logNameParam.add("Indice d'humidite");
         logNameParam.add("Epaisseur de l'horizon");
 
+    }
+    public ParamSol(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
+        this.typeSol = sol;
+        this.granularite = granularite;
+        this.compacite = comp;
+        for(float each: value){
+            params.add(each);
+        }
+        for(int i=value.length; i<7; i++) {
+            params.add(0f);
+        }
+        System.out.println("Create ParamSol with :"+params.size() + " values : details: "+params.toString());
+        logNameParam.add("Facteur de plasticité des sols argileux");
+        logNameParam.add("Indices des vides");
+        logNameParam.add("Cohésion du sol");
+        logNameParam.add("Angle de frottement interne des sols");
+        logNameParam.add("Masse volumique de l'horizon");
+        logNameParam.add("Indice d'humidite");
+        logNameParam.add("Epaisseur de l'horizon");
+
+        paramEnabler = new ParamEnabler(this);
     }
 
     public boolean isAllFill(){
@@ -46,6 +67,29 @@ public class ParamSol {
             paramToSet.add(each);
         }
     }
+
+    public float Il(){
+        return this.params.get(0);
+    }
+    public float e(){
+        return this.params.get(1);
+    }
+    public float cT(){
+        return this.params.get(2);
+    }
+    public float fi(){
+        return this.params.get(3);
+    }
+    public float yT(){
+        return this.params.get(4);
+    }
+    public float Sr(){
+        return this.params.get(5);
+    }
+    public float h(){ // en metre
+        return this.params.get(6);
+    }
+
     public void addParamToSet(int index){
         paramToSet.add(index);
     }
@@ -88,6 +132,12 @@ public class ParamSol {
 
     public void setTypeSol(TypeSol typeSol) {
         this.typeSol = typeSol;
+    }
+
+    public boolean isLoadLayer() { return isLoadLayer; }
+
+    public void setLoadLayer(boolean loadLayer) {
+        isLoadLayer = loadLayer;
     }
 
     public List<Error> generateError() {

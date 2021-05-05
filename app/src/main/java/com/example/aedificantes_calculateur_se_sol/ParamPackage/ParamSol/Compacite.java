@@ -2,10 +2,10 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 public enum Compacite {
 
-    FRIABLE(1,"fiable"),
-    MOYEN_DENSE(2,"moyennement dense"),
-    DENSE_SOND_ST(3,"dense sondate stat"),
-    DENSE_SANS_SOND_ST(4,"dense SANS sondage stat");
+    FRIABLE(0,"fiable"),
+    MOYEN_DENSE(1,"moyennement dense"),
+    DENSE_SOND_ST(2,"dense sondate stat"),
+    DENSE_SANS_SOND_ST(3,"dense SANS sondage stat");
 
     private int indice ;
     private String name ;

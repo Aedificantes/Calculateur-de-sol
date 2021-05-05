@@ -93,7 +93,7 @@
                     android:text="Dfut" />
 
                 <EditText
-                    android:id="@+id/editTextNumberDecimal"
+                    android:id="@+id/ET_Dfut"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -125,7 +125,7 @@
                     android:text="Dhel" />
 
                 <EditText
-                    android:id="@+id/editTextNumberDecimal2"
+                    android:id="@+id/ET_Dhel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -157,7 +157,7 @@
                     android:text="Ip" />
 
                 <EditText
-                    android:id="@+id/editTextNumberDecimal3"
+                    android:id="@+id/ET_Ip"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -189,7 +189,7 @@
                     android:text="Hk" />
 
                 <EditText
-                    android:id="@+id/editTextNumberDecimal4"
+                    android:id="@+id/ET_Hk"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -221,7 +221,7 @@
                     android:text="H" />
 
                 <EditText
-                    android:id="@+id/editTextNumberDecimal5"
+                    android:id="@+id/ET_H"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

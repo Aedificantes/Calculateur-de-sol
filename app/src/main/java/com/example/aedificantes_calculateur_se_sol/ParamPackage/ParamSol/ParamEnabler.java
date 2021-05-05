@@ -1,5 +1,7 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
+import com.example.aedificantes_calculateur_se_sol.MainActivity;
+
 public class ParamEnabler {
     private LineProfilSolAdaptater.LineProfilSolViewHolder holder;
     private ParamSol paramSol;
@@ -7,12 +9,10 @@ public class ParamEnabler {
 
     public ParamEnabler(ParamSol current) {
         paramSol = current;
-
     }
 
     public void manage(LineProfilSolAdaptater.LineProfilSolViewHolder holder) {
         this.holder = holder;
-        this.paramSol = paramSol;
         enableElement();
     }
 
@@ -25,6 +25,7 @@ public class ParamEnabler {
         if (paramSol.getTypeSol() == TypeSol.SABLEUX) {
             holder.SP_Granularite.setEnabled(true);
             holder.SP_Compacite.setEnabled(true);
+            set_ET_Enable(3,4,5);
         } else {
             holder.SP_Granularite.setEnabled(false);
             holder.SP_Compacite.setEnabled(false);
@@ -50,8 +51,9 @@ public class ParamEnabler {
         }
         holder.get_ET_index(6).setEnabled(!isLast);
         if(!isLast){ this.paramSol.addParamToSet(6); }
-
-        }
+        holder.get_ET_index(2).setEnabled(paramSol.isLoadLayer());
+        if(paramSol.isLoadLayer()){ this.paramSol.addParamToSet(2); }
+    }
 
     public void setLast(Boolean last) {
         isLast = last;

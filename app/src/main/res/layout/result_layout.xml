@@ -5,7 +5,7 @@
     android:id="@+id/LL_table_Result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -98,7 +98,7 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="0.3" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -110,32 +110,81 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView26"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="#\ncouche"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="Profondeur\nenfoncement"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="Direction\ncharges"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="A\nm²"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="Résultat\nT"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textView26"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="#\ncouche"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/TV_Tab1_0"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:text="TV_Tab1_0"
                         android:textSize="18sp" />
@@ -145,25 +194,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Profondeur\nenfoncement"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/TV_Tab1_1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:text="TV_Tab1_1"
                         android:textSize="18sp" />
@@ -172,20 +209,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textView12"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Direction\ncharges"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/TV_Tab1_2"
@@ -193,7 +218,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_2"
+                        android:text="Compression"
                         android:textSize="18sp" />
 
                     <TextView
@@ -202,27 +227,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_3"
+                        android:text="Traction"
                         android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textView14"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="A\nm²"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/TV_Tab1_4"
@@ -230,7 +243,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_4"
+                        android:text="TV_Tab1_4_AFd0,comp"
                         android:textSize="18sp" />
 
                     <TextView
@@ -239,27 +252,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_5"
+                        android:text="TV_Tab1_5_AFd0,tr"
                         android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textView16"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Résultat\nT"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/TV_Tab1_6"
@@ -267,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_6"
+                        android:text="TV_Tab1_6_Fd0,comp"
                         android:textSize="18sp" />
 
                     <TextView
@@ -276,7 +277,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="TV_Tab1_7"
+                        android:text="TV_Tab1_7_Fd0,tr"
                         android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -284,7 +285,7 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="0.3" />
 
         </LinearLayout>
 
@@ -301,7 +302,7 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="0.3" />
 
             <TextView
                 android:id="@+id/textView30"
@@ -313,177 +314,129 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/TextViewTab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="#\ncouche"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="Profondeur\nm"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="h\nm"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="f\nT/m²"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="u\nm"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#EDCECE"
+                    android:gravity="center"
+                    android:text="Résultat\nT"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/TextViewTab2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="#\ncouche"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_0"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="TV_Tab2_0"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
+                    android:id="@+id/LL_tab2_couche"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Profondeur\nenfoncement"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="TV_Tab2_1"
-                        android:textSize="18sp" />
-                </LinearLayout>
+                    android:orientation="vertical"/>
 
                 <LinearLayout
+                    android:id="@+id/LL_tab2_profondeur"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Direction\ncharges"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_2"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_3"
-                        android:textSize="18sp" />
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
 
                 <LinearLayout
+                    android:id="@+id/LL_tab2_hauteur"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="A\nm²"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_4"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/TV_Tab2_5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_5"
-                        android:textSize="18sp" />
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
 
                 <LinearLayout
+                    android:id="@+id/LL_tab2_f"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:orientation="vertical"
-                    android:weightSum="3">
+                    android:layout_weight="1"
+                    android:orientation="vertical"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#EDCECE"
-                        android:gravity="center"
-                        android:text="Résultat\nT"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/TV_Tab2_4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TV_Tab2_4"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/TV_Tab2_6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_6"
-                        android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/TV_Tab2_5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TV_Tab2_5"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/TV_Tab2_7"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="TV_Tab2_7"
-                        android:textSize="18sp" />
-                </LinearLayout>
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="0.3" />
         </LinearLayout>
     </LinearLayout>
 
