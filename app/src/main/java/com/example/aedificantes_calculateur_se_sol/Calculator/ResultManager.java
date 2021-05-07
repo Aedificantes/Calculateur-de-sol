@@ -78,8 +78,9 @@ public class ResultManager {
 
     }
 
-    public float resistanceSol_couche(int index){ //TODO pourles sols argileux la formule est différentes ! à produire
-            double tamp = resistanceSolCalculator.resistanceSol_AVG(layerCalculator.profondeur_couche_index(index)); // xx.xx Kpa
+    public float resistanceSol_couche(int index){ //TODO pour les sols argileux la formule est différentes ! à produire
+            ParamSol paramSolIndex = paramSolList.get(index);
+            double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
             System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
             tamp = (tamp/9.80665); // x.xxxxxxx T/m²
             System.out.print(tamp+"T/m²"+ " =~ ");

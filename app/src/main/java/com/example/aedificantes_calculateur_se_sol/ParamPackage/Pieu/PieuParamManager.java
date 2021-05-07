@@ -21,9 +21,21 @@ public class PieuParamManager  implements VerificateObserver{
         //TODO get editText from layout and add to listof PieuParam
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Dfut), "Dfut", verificator));
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Dhel), "DHel",verificator));
-        list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Hk), "Hk",verificator));
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Ip), "Ip",verificator));
+        list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Hk), "Hk",verificator));
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_H), "H",verificator));
+    }
+    public void setValues(float[] tab) {
+        int index =0;
+        for(PieuParam each: list_PieuParam){
+            if(index <= tab.length) {
+                each.setValue(tab[index]);
+            }else{
+                each.setValue(0);
+            }
+            index++;
+        }
+        verificator.notifyDataChange();
     }
 
     public List<Error> generateError(){
@@ -43,10 +55,10 @@ public class PieuParamManager  implements VerificateObserver{
         return this.list_PieuParam.get(1).value();
     }
     public float Hk_val(){
-        return this.list_PieuParam.get(2).value();
+        return this.list_PieuParam.get(3).value();
     }
     public float Ip_val(){
-        return this.list_PieuParam.get(3).value();
+        return this.list_PieuParam.get(2).value();
     }
     public float H_val(){
         return this.list_PieuParam.get(4).value();

@@ -13,10 +13,12 @@ public class PieuParam implements VerificateObserver {
     private float value_PieuParam =0f;
     private String nameOfElement;
     private VerificateObservable verificator; //Pour cette classe on ne s'enregistre pas, c'est le PieuParamManager qui en aura la responsabilité
+    private EditText ET;
 
     public PieuParam(EditText ET, String nameOfElement, final VerificateObservable verificator) {
         this.verificator = verificator;
         this.nameOfElement = nameOfElement;
+        this.ET = ET;
         ET.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -39,6 +41,11 @@ public class PieuParam implements VerificateObserver {
                 verificator.notifyDataChange();
             }
         });
+    }
+
+    public void setValue(float value){
+        this.value_PieuParam = value;
+        ET.setText(String.valueOf(value));
     }
 
     public float value(){

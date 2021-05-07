@@ -1,18 +1,23 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.aedificantes_calculateur_se_sol.CanvaActivty;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 import  com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResultDisplayer {
-    private Context context;
     private ViewGroup parent;
 
     private List<TextView> list_TV_tab1 = new ArrayList<>();
@@ -24,11 +29,13 @@ public class ResultDisplayer {
     private LinearLayout LL_tab2_hauteur;
     private LinearLayout LL_tab2_f;
 
+    private Button BT_schema;
+    private Button BT_detail;
 
     private boolean isShow = false;
 
-    public ResultDisplayer(Context context, ViewGroup parent) {
-        LL_Result = (LinearLayout) View.inflate(context, R.layout.result_layout, null);
+    public ResultDisplayer(final AppCompatActivity activity, ViewGroup parent) {
+        LL_Result = (LinearLayout) View.inflate(activity, R.layout.result_layout, null);
         this.parent = parent;
         LL_tab2_couche = LL_Result.findViewById(R.id.LL_tab2_couche);
         LL_tab2_profondeur = LL_Result.findViewById(R.id.LL_tab2_profondeur);
@@ -46,6 +53,16 @@ public class ResultDisplayer {
 
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_4));
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_5));
+
+        BT_schema = LL_Result.findViewById(R.id.BT_schema);
+        BT_schema.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, CanvaActivty.class);
+                activity.startActivity(intent);
+            }
+        });
+        BT_detail = LL_Result.findViewById(R.id.BT_details);
     }
 
     public void updateData(ResultManager resultManager){
@@ -72,18 +89,18 @@ public class ResultDisplayer {
 
     }
 
-        private TextView create_TV_withWeight(Context context, String text){
-            TextView tampTV = new TextView(context);
-            tampTV.setText(text);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    1.0f
-            );
-            tampTV.setLayoutParams(param);
-            tampTV.setGravity(Gravity.CENTER);
-            return tampTV;
-        }
+    private TextView create_TV_withWeight(Context context, String text){
+        TextView tampTV = new TextView(context);
+        tampTV.setText(text);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1.0f
+        );
+        tampTV.setLayoutParams(param);
+        tampTV.setGravity(Gravity.CENTER);
+        return tampTV;
+    }
 
     public void hide(){
         if(isShow){

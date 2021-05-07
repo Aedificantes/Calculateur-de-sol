@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
         pieuParamManager = new PieuParamManager(verificator, global_LL_activity);
         resultManager = new ResultManager(listParams,pieuParamManager);
 
+        pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
+
         mAdapter = new LineProfilSolAdaptater(listParams,verificator, pieuParamManager);
 
         mLayoutManager = new LinearLayoutManager(this);
