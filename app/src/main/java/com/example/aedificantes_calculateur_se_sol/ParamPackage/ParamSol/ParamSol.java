@@ -2,52 +2,51 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 import com.example.aedificantes_calculateur_se_sol.Error.Error;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParamSol {
-    private Compacite compacite = Compacite.FRIABLE;
-    private Granularite granularite = Granularite.GRAVELEUX;
-    private TypeSol typeSol = TypeSol.REMBLAI;
-    public ArrayList<Float> params = new ArrayList<>();
+    private ParamSolData data;
+
     public ArrayList<Integer> paramToSet = new ArrayList<>();
-    public ArrayList<String> logNameParam = new ArrayList<>();
     private ParamEnabler paramEnabler;
-    private boolean isLoadLayer = false;
 
 
     public ParamSol() {
         paramEnabler = new ParamEnabler(this);
+        data = new ParamSolData();
         for(int i=0; i<7; i++) {
-            params.add(0f);
+            data.params.add(0f);
         }
-        logNameParam.add("Facteur de plasticité des sols argileux");
-        logNameParam.add("Indices des vides");
-        logNameParam.add("Cohésion du sol");
-        logNameParam.add("Angle de frottement interne des sols");
-        logNameParam.add("Masse volumique de l'horizon");
-        logNameParam.add("Indice d'humidite");
-        logNameParam.add("Epaisseur de l'horizon");
+        data.logNameParam.add("Facteur de plasticité des sols argileux");
+        data.logNameParam.add("Indices des vides");
+        data.logNameParam.add("Cohésion du sol");
+        data.logNameParam.add("Angle de frottement interne des sols");
+        data.logNameParam.add("Masse volumique de l'horizon");
+        data.logNameParam.add("Indice d'humidite");
+        data.logNameParam.add("Epaisseur de l'horizon");
 
     }
     public ParamSol(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
-        this.typeSol = sol;
-        this.granularite = granularite;
-        this.compacite = comp;
+        data = new ParamSolData();
+        this.data.setTypeSol(sol);
+        this.data.setGranularite(granularite);
+        this.setCompacite(comp);
         for(float each: value){
-            params.add(each);
+            data.params.add(each);
         }
         for(int i=value.length; i<7; i++) {
-            params.add(0f);
+            data.params.add(0f);
         }
-        System.out.println("Create ParamSol with :"+params.size() + " values : details: "+params.toString());
-        logNameParam.add("Facteur de plasticité des sols argileux");
-        logNameParam.add("Indices des vides");
-        logNameParam.add("Cohésion du sol");
-        logNameParam.add("Angle de frottement interne des sols");
-        logNameParam.add("Masse volumique de l'horizon");
-        logNameParam.add("Indice d'humidite");
-        logNameParam.add("Epaisseur de l'horizon");
+        System.out.println("Create ParamSol with :"+data.params.size() + " values : details: "+data.params.toString());
+        data.logNameParam.add("Facteur de plasticité des sols argileux");
+        data.logNameParam.add("Indices des vides");
+        data.logNameParam.add("Cohésion du sol");
+        data.logNameParam.add("Angle de frottement interne des sols");
+        data.logNameParam.add("Masse volumique de l'horizon");
+        data.logNameParam.add("Indice d'humidite");
+        data.logNameParam.add("Epaisseur de l'horizon");
 
         paramEnabler = new ParamEnabler(this);
     }
@@ -55,7 +54,7 @@ public class ParamSol {
     public boolean isAllFill(){
         boolean returned = true;
         for(int each : paramToSet){
-            if(params.get(each) == 0){
+            if(data.params.get(each) == 0){
                 return false;
             }
         }
@@ -69,25 +68,25 @@ public class ParamSol {
     }
 
     public float Il(){
-        return this.params.get(0);
+        return this.data.Il();
     }
     public float e(){
-        return this.params.get(1);
+        return this.data.e();
     }
     public float cT(){
-        return this.params.get(2);
+        return this.data.cT();
     }
     public float fi(){
-        return this.params.get(3);
+        return this.data.fi();
     }
     public float yT(){
-        return this.params.get(4);
+        return this.data.yT();
     }
     public float Sr(){
-        return this.params.get(5);
+        return this.data.Sr();
     }
     public float h(){ // en metre
-        return this.params.get(6);
+        return this.data.h();
     }
 
     public void addParamToSet(int index){
@@ -95,7 +94,7 @@ public class ParamSol {
     }
 
     public void setValueByIndex(int index, float value){
-        params.set(index,value);
+        data.params.set(index,value);
     }
 
     public ParamEnabler getParamEnabler() {
@@ -103,7 +102,7 @@ public class ParamSol {
     }
 
     public ArrayList<Float> getParams() {
-        return params;
+        return data.params;
     }
 
     public void setParamEnabler(ParamEnabler paramEnabler) {
@@ -111,40 +110,42 @@ public class ParamSol {
     }
 
     public Compacite getCompacite() {
-        return compacite;
+        return data.getCompacite();
     }
 
-    public void setCompacite(Compacite compacite) {
-        this.compacite = compacite;
-    }
+    public void setCompacite(Compacite compacite) { data.setCompacite(compacite); }
 
     public Granularite getGranularite() {
-        return granularite;
+        return data.getGranularite();
     }
 
     public void setGranularite(Granularite granularite) {
-        this.granularite = granularite;
+        data.setGranularite(granularite);
     }
 
     public TypeSol getTypeSol() {
-        return typeSol;
+        return data.getTypeSol();
     }
 
     public void setTypeSol(TypeSol typeSol) {
-        this.typeSol = typeSol;
+        data.setTypeSol(typeSol);
     }
 
-    public boolean isLoadLayer() { return isLoadLayer; }
+    public boolean isLoadLayer() { return data.isLoadLayer(); }
 
     public void setLoadLayer(boolean loadLayer) {
-        isLoadLayer = loadLayer;
+        data.setLoadLayer(loadLayer);
+    }
+
+    public ParamSolData getData() {
+        return data;
     }
 
     public List<Error> generateError() {
         ArrayList<Error> list =  new ArrayList<>();
         for(int each : paramToSet){
-            if(params.get(each) == 0){
-                list.add(new Error(" - "+logNameParam.get(each)+" n'a pas de valeur"));
+            if(data.params.get(each) == 0){
+                list.add(new Error(" - "+data.logNameParam.get(each)+" n'a pas de valeur"));
             }
         }
         return list;
@@ -153,10 +154,10 @@ public class ParamSol {
     @Override
     public String toString() {
         return "ParamSol{" +
-                "compacite=" + compacite +
-                ", granularite=" + granularite +
-                ", typeSol=" + typeSol +
-                ", params=" + params +
+                "compacite=" + data.getCompacite() +
+                ", granularite=" + data.getGranularite() +
+                ", typeSol=" + data.getTypeSol() +
+                ", params=" + data.params +
                 ", paramToSet=" + paramToSet +
                 ", paramEnabler=" + paramEnabler +
                 '}';

@@ -115,13 +115,13 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
 
         holder.TV_number.setText(String.valueOf(position));
-        holder.ET_List.get(0).setText(String.valueOf(currentItem.params.get(0)));
-        holder.ET_List.get(1).setText(String.valueOf(currentItem.params.get(1)));
-        holder.ET_List.get(2).setText(String.valueOf(currentItem.params.get(2)));
-        holder.ET_List.get(3).setText(String.valueOf(currentItem.params.get(3)));
-        holder.ET_List.get(4).setText(String.valueOf(currentItem.params.get(4)));
-        holder.ET_List.get(5).setText(String.valueOf(currentItem.params.get(5)));
-        holder.ET_List.get(6).setText(String.valueOf(currentItem.params.get(6)));
+        holder.ET_List.get(0).setText(String.valueOf(currentItem.getParams().get(0)));
+        holder.ET_List.get(1).setText(String.valueOf(currentItem.getParams().get(1)));
+        holder.ET_List.get(2).setText(String.valueOf(currentItem.getParams().get(2)));
+        holder.ET_List.get(3).setText(String.valueOf(currentItem.getParams().get(3)));
+        holder.ET_List.get(4).setText(String.valueOf(currentItem.getParams().get(4)));
+        holder.ET_List.get(5).setText(String.valueOf(currentItem.getParams().get(5)));
+        holder.ET_List.get(6).setText(String.valueOf(currentItem.getParams().get(6)));
         holder.SP_TypeSol.setSelection(currentItem.getTypeSol().getIndice());
         holder.SP_Granularite.setSelection(currentItem.getGranularite().getIndice());
         holder.SP_Compacite.setSelection(currentItem.getCompacite().getIndice());

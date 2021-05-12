@@ -3,6 +3,7 @@ package com.example.aedificantes_calculateur_se_sol.Calculator;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class ResistanceSolCalculator {
         Ref.put(40, new int[]{107,75,53,38,23,14,9,8,7});
     }
 
-    public float resistanceSol_AVG(float index, ParamSol layerParam){
+    public float resistanceSol_AVG(float index, ParamSolData layerParam){
         if(index < 1) index = 1;
         int[] local_index = placeOfIndex(index);
         float k,w;

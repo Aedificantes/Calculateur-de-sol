@@ -2,13 +2,15 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 import android.graphics.Color;
 
-import com.example.aedificantes_calculateur_se_sol.Schema.HatchTexture;
-import com.example.aedificantes_calculateur_se_sol.Schema.HorizontalLineTexture;
-import com.example.aedificantes_calculateur_se_sol.Schema.LineTexture;
-import com.example.aedificantes_calculateur_se_sol.Schema.PointTexture;
-import com.example.aedificantes_calculateur_se_sol.Schema.Texture;
+import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.HatchTexture;
+import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.HorizontalLineTexture;
+import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.LineTexture;
+import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.PointTexture;
+import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.Texture;
 
-public enum TypeSol {
+import java.io.Serializable;
+
+public enum TypeSol implements Serializable {
 
     REMBLAI(0,"remblai", new HatchTexture(5, Color.BLUE)),
     SABLEUX(1,"sableux", new PointTexture(0,Color.parseColor("#3EAB99"))),

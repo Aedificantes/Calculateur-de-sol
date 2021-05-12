@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.aedificantes_calculateur_se_sol.Calculator.ResultButtonLoader;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
@@ -20,12 +22,14 @@ import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compaci
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.LineProfilSolAdaptater;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ResultUpdatable {
+public class MainActivity extends AppCompatActivity implements ResultUpdatable, ResultButtonLoader {
 
     public static Context MAIN_CONTEXT;
 
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
         resultDisplayer = new ResultDisplayer(this, layout_Const_Result);
         verificator = new Verificator(this);
         pieuParamManager = new PieuParamManager(verificator, global_LL_activity);
-        resultManager = new ResultManager(listParams,pieuParamManager);
+        resultManager = new ResultManager(listOfDataParamSol(),pieuParamManager.generate_pieuParamData());
 
         pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
 
@@ -92,19 +96,46 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable {
 
     }
 
+    private ArrayList<ParamSolData> listOfDataParamSol(){
+        ArrayList<ParamSolData> listDataParamSol = new ArrayList<>();
+        for(ParamSol each : listParams){
+            listDataParamSol.add(each.getData());
+        }
+        return listDataParamSol;
+    }
+
 
     @Override
     public void allValuesAreSet() {
         System.out.println("SET CORRECTLY SO CALCULATE");
         errorDisplayer.hide();
+        resultManager.updateData(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
         resultDisplayer.updateData(resultManager);
         resultDisplayer.show();
-
     }
     @Override
     public void allValuesAreNotSet() {
         System.out.println("NOT SET CORRECTLY SO PRINT ERROR");
         resultDisplayer.hide();
         errorDisplayer.generateAndDisplay(listParams,pieuParamManager);
+    }
+
+    @Override
+    public void updateCalculator() {
+        resultManager.updateData(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
+    }
+
+    @Override
+    public void launchDrawing() {
+
+        Intent intent = new Intent(this, CanvaActivty.class);
+        intent.putExtra("listParamSolData",listOfDataParamSol() );
+        intent.putExtra("pieuManagerData",pieuParamManager.generate_pieuParamData() );
+         this.startActivity(intent);
+    }
+
+    @Override
+    public void launchDetail() {
+
     }
 }

@@ -17,6 +17,7 @@ public class Verificator implements  VerificateObservable{
 
     @Override
     public void notifyDataChange() {
+        updater.updateCalculator();
         for(VerificateObserver each_obs : list_observer){
             if(!each_obs.isFill()) {
                 updater.allValuesAreNotSet();

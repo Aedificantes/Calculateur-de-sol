@@ -2,6 +2,8 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
 import com.example.aedificantes_calculateur_se_sol.MainActivity;
 
+import java.io.Serializable;
+
 public class ParamEnabler {
     private LineProfilSolAdaptater.LineProfilSolViewHolder holder;
     private ParamSol paramSol;

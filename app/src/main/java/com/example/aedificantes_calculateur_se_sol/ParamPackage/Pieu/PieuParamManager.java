@@ -48,6 +48,16 @@ public class PieuParamManager  implements VerificateObserver{
         return list;
     }
 
+    public PieuManagerData generate_pieuParamData(){
+        return new PieuManagerData(
+                Dfut_val(),
+                Dhel_val(),
+                Ip_val(),
+                Hk_val(),
+                H_val()
+        );
+    }
+
     public float Dfut_val(){
         return this.list_PieuParam.get(0).value();
     }

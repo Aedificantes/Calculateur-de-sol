@@ -34,8 +34,8 @@ public class ResultDisplayer {
 
     private boolean isShow = false;
 
-    public ResultDisplayer(final AppCompatActivity activity, ViewGroup parent) {
-        LL_Result = (LinearLayout) View.inflate(activity, R.layout.result_layout, null);
+    public ResultDisplayer(final ResultButtonLoader buttonLoader, ViewGroup parent) {
+        LL_Result = (LinearLayout) View.inflate(parent.getContext(), R.layout.result_layout, null);
         this.parent = parent;
         LL_tab2_couche = LL_Result.findViewById(R.id.LL_tab2_couche);
         LL_tab2_profondeur = LL_Result.findViewById(R.id.LL_tab2_profondeur);
@@ -58,11 +58,16 @@ public class ResultDisplayer {
         BT_schema.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, CanvaActivty.class);
-                activity.startActivity(intent);
+                buttonLoader.launchDrawing();
             }
         });
         BT_detail = LL_Result.findViewById(R.id.BT_details);
+        BT_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonLoader.launchDetail();
+            }
+        });
     }
 
     public void updateData(ResultManager resultManager){
@@ -82,10 +87,12 @@ public class ResultDisplayer {
             LL_tab2_couche.addView(create_TV_withWeight(LL_tab2_couche.getContext(), String.valueOf(i)));
             LL_tab2_profondeur.addView(create_TV_withWeight(LL_tab2_profondeur.getContext(), String.valueOf(resultManager.getLayerCalculator().profondeur_couche_index(i))));
             LL_tab2_hauteur.addView(create_TV_withWeight(LL_tab2_hauteur.getContext(), resultManager.enfoncement_couche_index_ToDisplay(i)));
-            LL_tab2_f.addView(create_TV_withWeight(LL_tab2_hauteur.getContext(), resultManager.resistanceSol_couche_toDisplay(i)));
+            LL_tab2_f.addView(create_TV_withWeight(LL_tab2_f.getContext(), resultManager.resistanceSol_couche_toDisplay(i)));
         }
         list_TV_tab2.get(0).setText(String.valueOf(resultManager.perimetre_section_transfersale_fut_toDisplay()));
         list_TV_tab2.get(1).setText(String.valueOf(resultManager.fdf_toDisplay()));
+
+
 
     }
 

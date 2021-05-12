@@ -1,6 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
-public enum Granularite {
+import java.io.Serializable;
+
+public enum Granularite implements Serializable {
 
     GRAVELEUX(0,"graveleux"),
     GROSSIER(1,"grossier"),

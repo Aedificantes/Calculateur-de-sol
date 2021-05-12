@@ -1,6 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
-public enum Compacite {
+import java.io.Serializable;
+
+public enum Compacite implements Serializable {
 
     FRIABLE(0,"fiable"),
     MOYEN_DENSE(1,"moyennement dense"),
