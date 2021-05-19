@@ -11,7 +11,4 @@ public class Error {
         return error_string;
     }
 
-    public void setError_string(String error_string) {
-        this.error_string = error_string;
-    }
 }

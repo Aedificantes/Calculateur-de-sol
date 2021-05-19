@@ -1,13 +1,10 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class ResultManager {
@@ -27,7 +24,7 @@ public class ResultManager {
         layerCalculator = new LayerCalculator(paramSolDataList,pieuParamManagerData);
     }
 
-    private float round(float value, int nbAfterComa){
+    public float round(float value, int nbAfterComa){
         int tenPower = (int) Math.pow(10,nbAfterComa);
         float tamp = Math.round(value*tenPower);
         return tamp/tenPower;
@@ -40,6 +37,10 @@ public class ResultManager {
     public float getAlpha2() {
         return alphaCalculator.getAlpha2(layerCalculator.ParamSol_couchePortante().fi());
     }
+    public TabBlockManager alpha_detail_tab() {
+        return alphaCalculator.constructTab(layerCalculator.ParamSol_couchePortante().fi());
+    }
+
 
     public float fd0_comp(){ // return ( alpha1 · cT + alpha2 · yT · (H+Hk) ) · Acomp //A =
         ParamSolData couchePortante = layerCalculator.ParamSol_couchePortante();
@@ -80,7 +81,7 @@ public class ResultManager {
 
     }
 
-    public float resistanceSol_couche(int index){ //TODO pour les sols argileux la formule est différentes ! à produire
+    public float resistanceSol_couche_Tm(int index){
             ParamSolData paramSolIndex = paramSolDataList.get(index);
             double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
             System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
@@ -92,11 +93,18 @@ public class ResultManager {
             return (float) tamp;
     }
 
+    public float resistanceSol_couche_Kpa(int index){
+        ParamSolData paramSolIndex = paramSolDataList.get(index);
+        double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
+        System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
+        return (float) tamp;
+    }
+
     public String resistanceSol_couche_toDisplay(int index){
         if(paramSolDataList.get(index).getTypeSol() == TypeSol.REMBLAI){
             return "-";
         }else{
-            return String.valueOf(resistanceSol_couche(index));
+            return String.valueOf(resistanceSol_couche_Tm(index));
         }
     }
 
@@ -114,22 +122,34 @@ public class ResultManager {
     public float fdf(){
         float fdf = round(perimetre_section_transfersale_fut(),2) * resistance_AVG_long_du_fut() * (pieuParamManagerData.Ip_val()/1000 - pieuParamManagerData.Dhel_val()/1000);
         System.out.println(" ResultManager -> fdf() -> detail: "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_AVG_long_du_fut()+ " * ("+pieuParamManagerData.Ip_val()/1000 + " - "+pieuParamManagerData.Dhel_val()/1000+")");
-        return fdf;
+        fdf = round(fdf*100, 0);
+        return fdf/100;
     }
 
     public String fdf_toDisplay(){
-        float fdf = fdf();
-        fdf = round(fdf*100, 0);
-        return String.valueOf(fdf/100);
+        return String.valueOf(fdf());
     }
+
+    public String fdcomp_toDisplay(){
+        return String.valueOf(0);
+    }
+
+    public String fdtrac_toDisplay(){
+        return String.valueOf(0);
+    }
+
+    public String fdvar_toDisplay(){
+        return String.valueOf(0);
+    }
+
 
     public float resistance_AVG_long_du_fut(){
         float tamp =0f;
         float sum_enfoncement =0f;
         float[][] logArray = new float[layerCalculator.index_couchePortante()][2];
         if(layerCalculator.index_couchePortante() == 1){
-            tamp = resistanceSol_couche(0);
-            System.out.println(" ResultManager -> resistance_AVG_long_du_fut() -> detail :("+ resistanceSol_couche(0)+")");
+            tamp = resistanceSol_couche_Tm(0);
+            System.out.println(" ResultManager -> resistance_AVG_long_du_fut() -> detail :("+  resistanceSol_couche_Tm(0)+")");
             return tamp;
         }else {
             for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
@@ -138,7 +158,7 @@ public class ResultManager {
                 } else {
                     logArray[i][0] = layerCalculator.enfoncement_couche_index(i) / 1000;
                 }
-                logArray[i][1] = resistanceSol_couche(i);
+                logArray[i][1] =  resistanceSol_couche_Tm(i);
                 tamp += logArray[i][0] * logArray[i][1];
                 sum_enfoncement += layerCalculator.enfoncement_couche_index(i) / 1000;
             }
@@ -197,5 +217,17 @@ public class ResultManager {
 
     public LayerCalculator getLayerCalculator() {
         return layerCalculator;
+    }
+
+    public List<ParamSolData> getParamSolDataList() {
+        return paramSolDataList;
+    }
+
+    public PieuManagerData getPieuParamManagerData() {
+        return pieuParamManagerData;
+    }
+
+    public ResistanceSolCalculator getResistanceSolCalculator() {
+        return resistanceSolCalculator;
     }
 }

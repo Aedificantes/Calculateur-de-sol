@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="sensorPortrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".DetailsActivity"></activity>
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".DetailTabActivity"></activity>
+        <activity android:name=".DetailsActivity" />
         <activity android:name=".CanvaActivty" />
         <activity android:name=".MainActivity">
             <intent-filter>

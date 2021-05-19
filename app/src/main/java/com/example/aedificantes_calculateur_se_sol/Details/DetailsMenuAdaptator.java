@@ -1,6 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.Error;
-import com.example.aedificantes_calculateur_se_sol.Details.Detail;
-import  com.example.aedificantes_calculateur_se_sol.R;
+package com.example.aedificantes_calculateur_se_sol.Details;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,46 +7,53 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
+import com.example.aedificantes_calculateur_se_sol.Error.Error;
+import com.example.aedificantes_calculateur_se_sol.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
-public class ErrorListAdpatator extends BaseExpandableListAdapter {
-    private List<String> list_ligneWithError;
-    private HashMap<String, List<Error>> list_errorsByLine;
+public class DetailsMenuAdaptator extends BaseExpandableListAdapter {
+
+    private List<DetailTitle> list_titleDetails;
+    private TreeMap<DetailTitle, List<Detail>> list_ContentDetails;
     private Context context;
+    private DetailTabLauncher launcher;
 
-    public ErrorListAdpatator(Context context) {
-        System.out.println("create of ErrorParamsDisplayer");
+    public DetailsMenuAdaptator(Context context, DetailTabLauncher launcher) {
+        System.out.println("create of DetailsMenuAdaptator");
         this.context = context;
-        this.list_ligneWithError = new ArrayList<>();
-        list_errorsByLine = new HashMap<>();
+        this.launcher = launcher;
+        this.list_titleDetails = new ArrayList<>();
+        list_ContentDetails = new TreeMap<>();
     }
 
-    public void display(HashMap<String, List<Error>> toDisplayData){
-        list_errorsByLine = toDisplayData;
-        list_ligneWithError = new ArrayList<>(toDisplayData.keySet());
+    public void display(TreeMap<DetailTitle, List<Detail>> toDisplayData){
+        list_ContentDetails = toDisplayData;
+        list_titleDetails = new ArrayList<>(toDisplayData.keySet());
     }
 
     @Override
     public int getGroupCount() {
-        return list_ligneWithError.size();
+        return list_titleDetails.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return list_errorsByLine.get(getGroup(groupPosition)).size();
-
+        return list_ContentDetails.get(getGroup(groupPosition)).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return list_ligneWithError.get(groupPosition);
+        return list_titleDetails.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return list_errorsByLine.get(getGroup(groupPosition)).get(childPosition);
+        return list_ContentDetails.get(getGroup(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -73,9 +78,9 @@ public class ErrorListAdpatator extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.groupelem_list_error, null);
         }
 
-        TextView TV_error_string = (TextView) convertView.findViewById(R.id.TV_line_group_error);
-
-        TV_error_string.setText(this.list_ligneWithError.get(groupPosition));
+        TextView TV_detail_string = (TextView) convertView.findViewById(R.id.TV_line_group_error);
+        DetailTitle title = this.list_titleDetails.get(groupPosition);
+        TV_detail_string.setText(title.getNumber()+" - "+title.getText());
 
         return convertView;
     }
@@ -89,8 +94,15 @@ public class ErrorListAdpatator extends BaseExpandableListAdapter {
 
         TextView tvItem = (TextView) convertView.findViewById(R.id.TV_error);
 
-        Error error = (Error) getChild(groupPosition, childPosition);
-        tvItem.setText(error.getError_string());
+        Detail detail = (Detail) getChild(groupPosition, childPosition);
+        tvItem.setText(detail.get_displayableDetail());
+        tvItem.setTextSize(25);
+
+        tvItem.setOnClickListener(v -> {
+            if(detail.hasTab()){
+                launcher.openTabLayout(detail.getTabManager());
+            }
+        });
 
 
         return convertView;

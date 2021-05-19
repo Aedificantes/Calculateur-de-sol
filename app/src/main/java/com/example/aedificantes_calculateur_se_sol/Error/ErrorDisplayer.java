@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 
+import com.example.aedificantes_calculateur_se_sol.Details.Detail;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 

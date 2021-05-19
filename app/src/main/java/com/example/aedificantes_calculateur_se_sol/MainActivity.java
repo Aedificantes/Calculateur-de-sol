@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.aedificantes_calculateur_se_sol.Calculator.DetailResultManager;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultButtonLoader;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable, 
 
     @Override
     public void launchDrawing() {
-
         Intent intent = new Intent(this, CanvaActivty.class);
         intent.putExtra("listParamSolData",listOfDataParamSol() );
         intent.putExtra("pieuManagerData",pieuParamManager.generate_pieuParamData() );
@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable, 
 
     @Override
     public void launchDetail() {
-
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("listParamSolData",listOfDataParamSol() );
+        intent.putExtra("pieuManagerData",pieuParamManager.generate_pieuParamData() );
+        this.startActivity(intent);
     }
 }
