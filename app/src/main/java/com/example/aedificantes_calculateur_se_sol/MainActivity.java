@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements ResultUpdatable, 
 
     @Override
     public void launchDetail() {
-        Intent intent = new Intent(this, DetailsActivity.class);
+        //Intent intent = new Intent(this, DetailsActivity.class);
+        Intent intent = new Intent(this, GlobalResultActivity.class);
         intent.putExtra("listParamSolData",listOfDataParamSol() );
         intent.putExtra("pieuManagerData",pieuParamManager.generate_pieuParamData() );
         this.startActivity(intent);

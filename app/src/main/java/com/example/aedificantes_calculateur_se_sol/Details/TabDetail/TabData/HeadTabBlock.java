@@ -8,12 +8,21 @@ import android.view.View;
 import android.widget.TextView;
 
 public class HeadTabBlock extends TextView_TabBlock{
+    boolean isColumnTitle = false;
     public HeadTabBlock(int startWidhtCell, int startHeightCell, int nbWidhtCell, int nbHeightCell, String htmlText) {
         super(startWidhtCell, startHeightCell, nbWidhtCell, nbHeightCell, htmlText);
+    }
+    public HeadTabBlock(int startWidhtCell, int startHeightCell, int nbWidhtCell, int nbHeightCell, String htmlText, boolean isColumnTitle) {
+        super(startWidhtCell, startHeightCell, nbWidhtCell, nbHeightCell, htmlText);
+        this.isColumnTitle = isColumnTitle;
     }
 
     public HeadTabBlock(int startWidhtCell, int startHeightCell, int nbWidhtCell, int nbHeightCell) {
         super(startWidhtCell, startHeightCell, nbWidhtCell, nbHeightCell);
+    }
+
+    public boolean isColumnTitle(){
+        return this.isColumnTitle;
     }
 
     @Override
@@ -23,6 +32,9 @@ public class HeadTabBlock extends TextView_TabBlock{
         tamp.setTypeface(null, Typeface.BOLD);
         tamp.setGravity(Gravity.CENTER);
         tamp.setBackgroundColor(Color.parseColor("#978BF2"));
+        if(isColumnTitle){
+            tamp.setBackgroundColor(Color.RED);
+        }
         return tamp;
     }
 }

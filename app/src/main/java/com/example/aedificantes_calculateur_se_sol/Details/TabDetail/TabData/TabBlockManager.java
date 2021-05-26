@@ -1,24 +1,29 @@
 package com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TreeMap;
 
 public class TabBlockManager<T extends Serializable & Comparable,V extends Serializable>  implements Serializable {
     private HeadTab headTab;
     private ArrayList<TabBlock> blockList = new ArrayList<>();
-    private TreeMap<T,V[]> contentData;
+    private TreeMap<T,ArrayList<V>> contentData;
     private MarkedElementsManager markedElementsManager;
 
 
-    public TabBlockManager(HeadTab headTab, TreeMap<T,V[]> data, MarkedElementsManager markedElementsManager) {
+    public TabBlockManager(HeadTab headTab, TreeMap<T,ArrayList<V>> data, MarkedElementsManager markedElementsManager) {
         this.headTab = headTab;
         this.contentData = data;
         this.markedElementsManager = markedElementsManager;
         updateContentTabBlocks();
     }
 
-    public TabBlockManager(HeadTab headTab, TreeMap<T,V[]> data) {
+    public TabBlockManager(HeadTab headTab, TreeMap<T,ArrayList<V>> data) {
         this.headTab = headTab;
         this.contentData = data;
         this.markedElementsManager = new MarkedElementsManager();
@@ -29,7 +34,7 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
         this.blockList.clear();
         int indexRow = headTab.getNbHeightcells();
         for(T eachKey : contentData.keySet()){
-            V[] line = contentData.get((T)eachKey);
+            ArrayList<V> line = contentData.get((T)eachKey);
             blockList.add(new ContentTabBlock(0,indexRow,1, 1,eachKey.toString(), markedElementsManager.isCellMarqued(indexRow-headTab.getNbHeightcells(),0)));
             int indexColumn = 1;
             for(V eachElem : line){
@@ -45,19 +50,32 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
         this.blockList.add(block);
     }
 
-    public void addRowData(T title, V[] bufferSized, V defaultVal, V... values){
-        //contentData.put(title, new V[]{defaultVal, defaultVal});
+    public void addRowData(T title,V defaultVal, V... values){
+        ArrayList<V> list = new ArrayList<>();
+        T oneKey =  contentData.firstKey();
         for(int i=0; i < values.length; i++){
-            if(i < bufferSized.length){
-                bufferSized[i] = values[i];
+            if(i < contentData.get(oneKey).size()){
+                list.add(values[i]);
             }
         }
-        if(bufferSized.length < values.length){
-            for(int i = values.length-1; i < bufferSized.length; i++){
-                bufferSized[i] = defaultVal;
+        if(list.size() < contentData.get(oneKey).size()){
+            for(int i = list.size()-1; i < contentData.get(oneKey).size()-1; i++){
+                list.add(defaultVal);
             }
         }
-        contentData.put(title,bufferSized);
+        contentData.put(title,list);
+        markedElementsManager.add_marked_row(indexOfGivenKey(title));
+        updateContentTabBlocks();
+    }
+
+    public void addRowData_givenColumn(T title,V defaultVal, V value, int indexColumn){
+        ArrayList<V> list = new ArrayList<>();
+        T oneKey =  contentData.firstKey();
+
+        list.addAll(Collections.nCopies((contentData.get(oneKey).size()), defaultVal));
+        list.set(indexColumn, value);
+
+        contentData.put(title,list);
         markedElementsManager.add_marked_row(indexOfGivenKey(title));
         updateContentTabBlocks();
     }
@@ -71,9 +89,41 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
         return contentData.keySet().size()-1;
     }
 
-    public void addColumn(String title, V[] bufferSized, V defaultVal, V... values){
+    public void addColumn(String title,V defaultVal,int indexNewColumn, V... values){
+        //T oneKey =  contentData.firstKey();
+        headTab.addColumn(indexNewColumn,title);
 
+        int index = 0;
+        for(T eachKey : contentData.keySet()){
+            if(index < values.length){
+                contentData.get(eachKey).add(indexNewColumn,values[index]);
+            }else{
+                contentData.get(eachKey).add(indexNewColumn,defaultVal);
+            }
+            index++;
+        }
+        markedElementsManager.add_marked_column(indexNewColumn);
+        updateContentTabBlocks();
     }
+
+    public void addColumn_dataGivenRow(String title, V defaultVal, int indexNewColumn, int indexRow, V value) {
+        int index = 0;
+
+        for (T eachKey : contentData.keySet()) {
+            if (index == indexRow) {
+                  contentData.get(eachKey).add(indexNewColumn, value);
+            } else {
+                contentData.get(eachKey).add(indexNewColumn, defaultVal);
+            }
+            index++;
+        }
+
+        headTab.addColumn(indexNewColumn+1, title);
+        markedElementsManager.add_marked_column(indexNewColumn+1);
+        updateContentTabBlocks();
+    }
+
+
 
 //    public void addContentData(TreeMap<T, V[]> data){
       //TODO add or replace block with values after HeadTab
@@ -106,11 +156,11 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
         this.blockList = blockList;
     }
 
-    public TreeMap<T,V[]> getContentData() {
+    public TreeMap<T,ArrayList<V>> getContentData() {
         return contentData;
     }
 
-    public void setContentData(TreeMap<T,V[]> contentData) {
+    public void setContentData(TreeMap<T,ArrayList<V>> contentData) {
         this.contentData = contentData;
         updateContentTabBlocks();
     }

@@ -1,5 +1,9 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.HeadTab;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
@@ -8,38 +12,40 @@ import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSo
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeMap;
 
 public class ResistanceSolCalculator {
-    private TreeMap<Float, Integer[]> Ref = new TreeMap<Float, Integer[]>();
+    private TreeMap<Float,ArrayList<Float>> Ref = new TreeMap<>();
 
     public ResistanceSolCalculator() {
-        Ref.put(1f, new Integer[]{35,23,15,12,8,4,4,3,2});
-        Ref.put(2f, new Integer[]{42,30,21,17,12,7,5,4,4});
-        Ref.put(3f, new Integer[]{48,35,25,20,14,8,7,6,5});
-        Ref.put(4f, new Integer[]{53,38,27,22,16,9,8,7,5});
-        Ref.put(5f, new Integer[]{56,40,29,24,17,10,8,7,6});
-        Ref.put(6f, new Integer[]{58,42,31,25,18,10,8,7,6});
-        Ref.put(8f, new Integer[]{62,44,33,26,19,10,8,7,6});
-        Ref.put(10f, new Integer[]{65,46,34,27,19,10,8,7,6});
-        Ref.put(15f, new Integer[]{72,51,38,28,20,11,8,7,6});
-        Ref.put(20f, new Integer[]{79,56,41,30,20,12,8,7,6});
-        Ref.put(25f, new Integer[]{86,61,44,32,20,12,9,8,7});
-        Ref.put(30f, new Integer[]{93,66,47,34,21,12,9,8,7});
-        Ref.put(35f, new Integer[]{100,70,50,36,22,12,9,8,7});
-        Ref.put(40f, new Integer[]{107,75,53,38,23,14,9,8,7});
+        Ref.put(1f, new ArrayList<Float>(Arrays.asList(35f,23f,15f,12f,8f,4f,4f,3f,2f)));//new Integer[]{35,23,15,12,8,4,4,3,2});
+        Ref.put(2f, new ArrayList<Float>(Arrays.asList(42f,30f,21f,17f,12f,7f,5f,4f,4f)));// new Integer[]{42,30,21,17,12,7,5,4,4});
+        Ref.put(3f, new ArrayList<Float>(Arrays.asList(48f,35f,25f,20f,14f,8f,7f,6f,5f)));// new Integer[]{48,35,25,20,14,8,7,6,5});
+        Ref.put(4f, new ArrayList<Float>(Arrays.asList(53f,38f,27f,22f,16f,9f,8f,7f,5f)));// new Integer[]{53,38,27,22,16,9,8,7,5});
+        Ref.put(5f, new ArrayList<Float>(Arrays.asList(56f,40f,29f,24f,17f,10f,8f,7f,6f)));// new Integer[]{56,40,29,24,17,10,8,7,6});
+        Ref.put(6f, new ArrayList<Float>(Arrays.asList(58f,42f,31f,25f,18f,10f,8f,7f,6f)));// new Integer[]{58,42,31,25,18,10,8,7,6});
+        Ref.put(8f, new ArrayList<Float>(Arrays.asList(62f,44f,33f,26f,19f,10f,8f,7f,6f)));// new Integer[]{62,44,33,26,19,10,8,7,6});
+        Ref.put(10f, new ArrayList<Float>(Arrays.asList(65f,46f,34f,27f,19f,10f,8f,7f,6f)));// new Integer[]{65,46,34,27,19,10,8,7,6});
+        Ref.put(15f, new ArrayList<Float>(Arrays.asList(72f,51f,38f,28f,20f,11f,8f,7f,6f)));// new Integer[]{72,51,38,28,20,11,8,7,6});
+        Ref.put(20f, new ArrayList<Float>(Arrays.asList(79f,56f,41f,30f,20f,12f,8f,7f,6f)));// new Integer[]{79,56,41,30,20,12,8,7,6});
+        Ref.put(25f, new ArrayList<Float>(Arrays.asList(86f,61f,44f,32f,20f,12f,9f,8f,7f)));// new Integer[]{86,61,44,32,20,12,9,8,7});
+        Ref.put(30f, new ArrayList<Float>(Arrays.asList(93f,66f,47f,34f,21f,12f,9f,8f,7f)));// new Integer[]{93,66,47,34,21,12,9,8,7});
+        Ref.put(35f, new ArrayList<Float>(Arrays.asList(100f,70f,50f,36f,22f,12f,9f,8f,7f)));// new Integer[]{100,70,50,36,22,12,9,8,7});
+        Ref.put(40f, new ArrayList<Float>(Arrays.asList(107f,75f,53f,38f,23f,14f,9f,8f,7f)));// new Integer[]{107,75,53,38,23,14,9,8,7});
     }
 
     public float resistanceSol_AVG(float index, ParamSolData layerParam){
-        if(index < 1) index = 1;
+        if(index < 1) index = 1f;
         Float[] local_index = placeOfIndex(index);
         float k,w;
         if(layerParam.getTypeSol() == TypeSol.SABLEUX){
             int  sandType = sandTypeChooser(layerParam.getGranularite());
-            if(local_index[0] == local_index[1]){ return Ref.get(local_index[0])[sandType]; } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
-            k = (Ref.get(local_index[0])[sandType] - Ref.get(local_index[1])[sandType])/(local_index[0]-local_index[1]);
-            w = Ref.get(local_index[0])[sandType] - (Ref.get(local_index[0])[sandType] - Ref.get(local_index[1])[sandType])/(local_index[0]-local_index[1])*local_index[0];
+            if(local_index[0] == local_index[1]){ return Ref.get(local_index[0]).get(sandType); } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
+            k = (Ref.get(local_index[0]).get(sandType) - Ref.get(local_index[1]).get(sandType))/(local_index[0]-local_index[1]);
+            w = Ref.get(local_index[0]).get(sandType) - (Ref.get(local_index[0]).get(sandType) - Ref.get(local_index[1]).get(sandType))/(local_index[0]-local_index[1])*local_index[0];
             float result = (k*index+w)*factorSandCompacite(layerParam.getCompacite());
             System.out.println(" ResistanceSolCalculator -> resistanceSol_AVG("+index+","+layerParam+") detail: index:"+index+"sable type:"+sandType+" return: "+ result);
             return result ;
@@ -48,22 +54,22 @@ public class ResistanceSolCalculator {
             float[] valueOfColumn_argile = new float[]{0.8f,0.9f}; // TODO VERIFY UTILITY AND HARDCODED VALUES !!!
             if(local_index[0] == local_index[1]){
                 if(index_column_argile[0] == index_column_argile[1]) {
-                    return Ref.get(local_index[0])[index_column_argile[0]];
+                    return Ref.get(local_index[0]).get(index_column_argile[0]);
                 }else{
-                    k = (Ref.get(local_index[0])[index_column_argile[0]] - Ref.get(local_index[0])[index_column_argile[1]])/(valueOfColumn_argile[0]-valueOfColumn_argile[1]);
-                    w = Ref.get(local_index[0])[index_column_argile[0]] - (Ref.get(local_index[0])[index_column_argile[0]] - Ref.get(local_index[0])[index_column_argile[1]])/(valueOfColumn_argile[0]-valueOfColumn_argile[1])*valueOfColumn_argile[0];
+                    k = (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[1]))/(valueOfColumn_argile[0]-valueOfColumn_argile[1]);
+                    w = Ref.get(local_index[0]).get(index_column_argile[0]) - (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[1]))/(valueOfColumn_argile[0]-valueOfColumn_argile[1])*valueOfColumn_argile[0];
                     System.out.println(" ResistanceSolCalculator -> resistanceSol_AVG("+index+","+layerParam+") detail: index:"+index+" argile: ["+index_column_argile[0]+","+layerParam.Il()+","+index_column_argile[1]+"] return: "+ (k*layerParam.Il()+w));
                     return (k*layerParam.Il()+w) ;
                 }
             } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
 
             float alpha1,alpha2;
-            k = (Ref.get(local_index[0])[index_column_argile[0]] - Ref.get(local_index[0])[index_column_argile[0]])/(index_column_argile[0]-index_column_argile[1]);
-            w = Ref.get(local_index[0])[index_column_argile[0]] - (Ref.get(local_index[0])[index_column_argile[0]] - Ref.get(local_index[0])[index_column_argile[0]])/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
+            k = (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
+            w = Ref.get(local_index[0]).get(index_column_argile[0]) - (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
             alpha1 =  k*layerParam.Il()+w ;
 
-            k = (Ref.get(local_index[1])[index_column_argile[0]] - Ref.get(local_index[1])[index_column_argile[0]])/(index_column_argile[0]-index_column_argile[1]);
-            w = Ref.get(local_index[1])[index_column_argile[0]] - (Ref.get(local_index[1])[index_column_argile[0]] - Ref.get(local_index[1])[index_column_argile[0]])/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
+            k = (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
+            w = Ref.get(local_index[1]).get(index_column_argile[0]) - (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
             alpha2 =  k*layerParam.Il()+w ;
 
             k = (alpha1 - alpha2)/(local_index[0]-local_index[1]);
@@ -105,7 +111,7 @@ public class ResistanceSolCalculator {
     }
 
     private Float[] placeOfIndex(float index){
-        ArrayList<Float> list = new ArrayList<Float>(Ref.keySet());
+        ArrayList<Float> list = new ArrayList<>(Ref.keySet());
         Collections.sort(list);
         if(index <= list.get(0)){ return new Float[]{list.get(0), list.get(0)}; }
         if(index >= list.get(list.size()-1)){ return new Float[]{list.get(list.size()-1), list.get(list.size()-1)}; }
@@ -117,6 +123,8 @@ public class ResistanceSolCalculator {
         }
         return new Float[]{40f, 40f};
     }
+
+
 
     public TabBlockManager constructTab(Float index, ParamSolData data) {
         HeadTab headTab = new HeadTab(10,5);
@@ -147,14 +155,17 @@ public class ResistanceSolCalculator {
         headTab.addBlock(8,4,1,1,"0.9");
         headTab.addBlock(9,4,1,1,"1");
 
-        TreeMap<Float, Integer[]>  tabRefWithIndex = (TreeMap<Float, Integer[]>) Ref.clone();
+        TreeMap<Float, ArrayList<Float>>  tabRefWithIndex = (TreeMap<Float, ArrayList<Float>>) Ref.clone();
 
-        TabBlockManager<Float, Integer> tabManager = new TabBlockManager<>(headTab,tabRefWithIndex);
+        TabBlockManager<Float, Float> tabManager = new TabBlockManager<>(headTab,tabRefWithIndex);
+        //tabManager.addColumn("test",0,2,3,4);
+
+        treeChooser_generateTab(index,data,tabManager);
 
         return tabManager;
     }
 
-    private int indexOfGivenKey(Float key, TreeMap<Float, Integer[]> tabRefWithIndex){
+    private int indexOfGivenKey(Float key, TreeMap<Float, ArrayList<Float>> tabRefWithIndex){
         int index =-1;
         for(Float each : tabRefWithIndex.keySet()){
             index ++;
@@ -163,7 +174,7 @@ public class ResistanceSolCalculator {
         return tabRefWithIndex.keySet().size()-1;
     }
 
-    private void treeChooser_generateTab(float index, ParamSolData layerParam) {
+    private void treeChooser_generateTab(float index, ParamSolData layerParam, TabBlockManager tabManager) {
         if (index < 1) index = 1;
         Float[] local_index = placeOfIndex(index);
         float k, w;
@@ -173,6 +184,8 @@ public class ResistanceSolCalculator {
                 /*TODO
                     -highlight cell at line: local_index[0] & column: sandType
                  */
+                tabManager.getMarquedElements().add_marked_cell(indexOfGivenKey(local_index[0],this.Ref),sandType);
+                tabManager.updateContentTabBlocks();
                 return;
             }
                 /*TODO
@@ -181,6 +194,7 @@ public class ResistanceSolCalculator {
                     -add value with 0 or nothing and just new calculate value at line: indexOfGivenKey(Float key,...) & column : sandType
                     -highlight line local_index[0]+1;
                  */
+            tabManager.addRowData_givenColumn(index,0f,resistanceSol_AVG(index,layerParam),sandType);
             return;
         } else {
             int[] index_column_argile = columnSolArgile(layerParam.Il()); //column index
@@ -189,6 +203,8 @@ public class ResistanceSolCalculator {
                 if (index_column_argile[0] == index_column_argile[1]) {
                     //return Ref.get(local_index[0])[index_column_argile[0]];
                     //TODO Highlight cell line:local_index[0] & column: index_column_argile[0]
+                    tabManager.getMarquedElements().add_marked_cell(indexOfGivenKey(local_index[0],this.Ref),index_column_argile[0]);
+                    tabManager.updateContentTabBlocks();
                     return;
                 } else {
                     /*TODO
@@ -197,6 +213,9 @@ public class ResistanceSolCalculator {
                         -add values with 0 or nothing and just new calculate value in cell at line: local_index[0] & column : index_column_argile[0]+1
                         -highlight column index_column_argile[0]+1;
                     */
+
+                    //tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0,index_column_argile[0]+1, 3,10);//indexOfGivenKey(local_index[0],this.Ref)
+                    tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0f,index_column_argile[0]+1, indexOfGivenKey(local_index[0],this.Ref),resistanceSol_AVG(index,layerParam));//
                     return;
                 }
             } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
@@ -209,6 +228,9 @@ public class ResistanceSolCalculator {
                 -add values with 0 or nothing and just new calculate value in cell at line: local_index[0]+1 & column : index_column_argile[0]+1
                 -highlight column index_column_argile[0]+1 and line local_index[0]+1 ;
              */
+            tabManager.addRowData_givenColumn(index,0,resistanceSol_AVG(index,layerParam),index_column_argile[0]);
+            tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0f,index_column_argile[0],indexOfGivenKey(local_index[0],this.Ref),resistanceSol_AVG(index,layerParam));
+
 
             return;
 
