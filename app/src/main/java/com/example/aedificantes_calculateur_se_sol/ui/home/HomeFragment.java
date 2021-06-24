@@ -71,6 +71,8 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     private static final String LOG_TAG = "Frag_01";
     private static final int MY_REQUEST_CODE_PERMISSION = 1000;
     private static final int MY_RESULT_CODE_FILECHOOSER = 2000;
+    private static final int MY_WRITE_REQUEST_CODE_PERMISSION = 3000;
+    private static final int MY_WRITE_RESULT_CODE_FILECHOOSER = 4000;
 
     private FragmentHomeBinding binding;
     private View globalContainer;
@@ -317,11 +319,11 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 });
             }
             if(item.getTitle() == getString(R.string.action_exportFile)){
-                FileExporter fileExp = new FileExporter(paramContainer);
-                fileExp.generate();
+                askPermissionWrite();
             }
         }
     }
+
 
     private void askPermissionAndBrowseFile()  {
         // With Android Level >= 23, you have to ask the user
@@ -329,7 +331,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) { // Level 23
 
             // Check if we have Call permission
-            int permisson = ActivityCompat.checkSelfPermission(this.getContext(),
+            int permisson = ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
                     Manifest.permission.READ_EXTERNAL_STORAGE);
 
             if (permisson != PackageManager.PERMISSION_GRANTED) {
@@ -342,6 +344,30 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
             }
         }
         this.doBrowseFile();
+    }
+
+    private void askPermissionWrite()  {
+        // With Android Level >= 23, you have to ask the user
+        // for permission to access External Storage.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) { // Level 23
+
+            // Check if we have Call permission
+            int permisson = ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if (permisson != PackageManager.PERMISSION_GRANTED) {
+                // If don't have permission so prompt the user.
+                this.requestPermissions(
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_WRITE_REQUEST_CODE_PERMISSION
+                );
+                return;
+            }
+        }
+
+        FileExporter exporter = new FileExporter(paramContainer);
+        Log.d(LOG_TAG, "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
+        exporter.save();
     }
 
     private void doBrowseFile()  {
@@ -370,14 +396,36 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Log.i( LOG_TAG,"Permission granted!");
-                    Toast.makeText(this.getContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
 
                     this.doBrowseFile();
                 }
                 // Cancelled or denied.
                 else {
                     Log.i(LOG_TAG,"Permission denied!");
-                    Toast.makeText(this.getContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+
+            case MY_WRITE_REQUEST_CODE_PERMISSION: {
+
+                // Note: If request is cancelled, the result arrays are empty.
+                // Permissions granted (CALL_PHONE).
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i( LOG_TAG,"Permission granted!");
+                    Toast.makeText(getActivity().getApplicationContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
+
+                    FileExporter exporter = new FileExporter(paramContainer);
+                    Log.d("MAINACTIVITY", "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
+                    exporter.save();
+                }
+                // Cancelled or denied.
+                else {
+                    Log.i(LOG_TAG,"Permission denied!");
+                    Toast.makeText(getActivity().getApplicationContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -392,15 +440,9 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 if (resultCode == Activity.RESULT_OK ) {
                     if(data != null)  {
                         Uri fileUri = data.getData();
-                        Log.i(LOG_TAG, "Uri: " + fileUri);
+                        Log.i(LOG_TAG, "Url: " + fileUri.getPath());
 
-                        String filePath = null;
-                        try {
-                           // filePath = FileUtils.getPath(this.getContext(),fileUri);
-                        } catch (Exception e) {
-                            Log.e(LOG_TAG,"Error: " + e);
-                            Toast.makeText(this.getContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
-                        }
+
                         //this.editTextPath.setText(filePath);
                     }
                 }
@@ -408,5 +450,4 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }

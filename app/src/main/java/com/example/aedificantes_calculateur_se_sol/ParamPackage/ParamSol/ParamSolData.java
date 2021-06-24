@@ -1,5 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -83,5 +86,22 @@ public class ParamSolData implements Serializable {
 
     public void setLogNameParam(ArrayList<String> logNameParam) {
         this.logNameParam = logNameParam;
+    }
+
+    public JSONObject convert_to_json() throws JSONException {
+        JSONObject solDataJSON = new JSONObject();
+        solDataJSON.put("TYPE_SOL", this.getTypeSol().getIndice());
+        solDataJSON.put("GRANULARITE", this.getGranularite().getIndice());
+        solDataJSON.put("COMPACITE", this.getCompacite().getIndice());
+
+        solDataJSON.put("E", this.e());
+        solDataJSON.put("CT", this.cT());
+        solDataJSON.put("FI", this.fi());
+        solDataJSON.put("H", this.h());
+        solDataJSON.put("IL", this.Il());
+        solDataJSON.put("SR", this.Sr());
+        solDataJSON.put("YT", this.yT());
+
+        return solDataJSON;
     }
 }
