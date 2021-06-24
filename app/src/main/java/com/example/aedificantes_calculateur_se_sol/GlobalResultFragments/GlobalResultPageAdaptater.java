@@ -6,11 +6,20 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
-    public GlobalResultPageAdaptater(@NonNull @NotNull FragmentManager fm) {
+    private ArrayList<ParamSolData> solData;
+    private PieuManagerData pieuManagerData;
+    public GlobalResultPageAdaptater(@NonNull @NotNull FragmentManager fm, ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
         super(fm);
+        this.solData = SolData;
+        this.pieuManagerData =pieuManagerData;
     }
 
     @Override
@@ -22,11 +31,11 @@ public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0: //Page number 1
-                return ResultFragment.newInstance();
+                return ResultFragment.newInstance(solData,pieuManagerData);
             case 1: //Page number 2
-                return DrawingFragment.newInstance();
+                return DrawingFragment.newInstance(solData,pieuManagerData);
             case 2: //Page number 3
-                return DetailFragment.newInstance();
+                return DetailFragment.newInstance(solData,pieuManagerData);
             default:
                 return null;
         }
@@ -36,9 +45,9 @@ public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0: //Page number 1
-                return "Tableau";
+                return "Tableaux";
             case 1: //Page number 2
-                return "Schéma";
+                return "Schémas";
             case 2: //Page number 3
                 return "Details";
             default:

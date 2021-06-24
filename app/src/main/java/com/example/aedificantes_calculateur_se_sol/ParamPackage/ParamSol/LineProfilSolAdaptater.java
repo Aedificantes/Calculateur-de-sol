@@ -1,7 +1,9 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +21,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
-import com.example.aedificantes_calculateur_se_sol.MainActivity;
+import com.example.aedificantes_calculateur_se_sol.MainNavigationActivity;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 import com.example.aedificantes_calculateur_se_sol.R;
+import com.example.aedificantes_calculateur_se_sol.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 
 public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAdaptater.LineProfilSolViewHolder> implements VerificateObserver {
+
+    private Context context;
     private ArrayList<ParamSol> mListparamSols;
     public OnItemClickListener mListener;
     private VerificateObservable verificator;
@@ -94,17 +99,19 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         LineProfilSolViewHolder ipvh = new LineProfilSolViewHolder(v, mListener);
         return ipvh;
     }
-    public LineProfilSolAdaptater(ArrayList<ParamSol> listParams, VerificateObservable verificator, PieuParamManager managerPieu){
+    public LineProfilSolAdaptater(Context context, ArrayList<ParamSol> listParams, VerificateObservable verificator, PieuParamManager managerPieu){
         mListparamSols = listParams;
         this.verificator =  verificator;
         this.pieuParamManager = managerPieu;
         verificator.addLikeObserver(this);
+        this.context = context;
     }
-    public LineProfilSolAdaptater(VerificateObservable verificator, PieuParamManager managerPieu){
+    public LineProfilSolAdaptater(Context context, VerificateObservable verificator, PieuParamManager managerPieu){
         mListparamSols = new ArrayList<>();
         this.verificator =  verificator;
         this.pieuParamManager = managerPieu;
         verificator.addLikeObserver(this);
+        this.context = context;
     }
     @Override
     public void onBindViewHolder(@NonNull final LineProfilSolViewHolder holder, final int position) {
@@ -139,7 +146,8 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                         updateAll_ET_Element();
                         verificator.notifyDataChange();
                     }else{
-                        Toast.makeText(MainActivity.MAIN_CONTEXT, "Au moins 1 élément est requis.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Au moins 1 élément est requis.", Toast.LENGTH_SHORT).show();
+                        Log.d("list ParamSol","Au moins 1 élément est requis.");
                     }
                 }
             });
@@ -177,7 +185,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        if(!allAreSet){ // permet d'identifier si toutes les lignes ont été créée, autrement, l'appel de updateAll_ET_Element() pose un problème sur les lignes don't le holder n'a pas été placé dans ParamEnabler
+        if(!allAreSet){ // permet d'identifier si toutes les lignes ont été crées, autrement, l'appel de updateAll_ET_Element() pose un problème sur les lignes dont le holder n'a pas été placé dans ParamEnabler
             updatePOS_ET_Element(position);
             if(position == mListparamSols.size()-1)
                 allAreSet = true;
@@ -256,7 +264,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             for(ParamSol each: mListparamSols){
                 each.setLoadLayer(false);
             }
-            MainActivity.resultManager.getLayerCalculator().ParamSol_couchePortante().setLoadLayer(true);
+            HomeFragment.resultManager.getLayerCalculator().ParamSol_couchePortante().setLoadLayer(true);
             updateAll_ET_Element();
         }
         for(ParamSol each_PS : mListparamSols){

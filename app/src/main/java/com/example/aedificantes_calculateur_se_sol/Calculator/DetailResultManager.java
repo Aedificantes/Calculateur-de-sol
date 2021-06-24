@@ -1,18 +1,12 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import com.example.aedificantes_calculateur_se_sol.Details.Detail;
 import com.example.aedificantes_calculateur_se_sol.Details.DetailTitle;
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -161,12 +155,18 @@ public class DetailResultManager extends ResultManager{
         float  calc =0;
         for(int i=0; i< getLayerCalculator().index_couchePortante(); i++){
             ParamSolData data = getParamSolDataList().get(i);
-            detail.add_String("f<sub>"+(i+1)+"</sub>  · h<sub>"+(i+1)+"</sub>");
-            calc_str += resistanceSol_couche_Tm(i)+" · "+enfoncement_couche_index_ToDisplay(i);
-            calc += resistanceSol_couche_Tm(i) * getLayerCalculator().enfoncement_couche_index(i)/1000;
-            if(i != getLayerCalculator().index_couchePortante()-1){
+            detail.add_String("f<sub>"+(i+1)+"</sub>  · ");
+            calc_str += resistanceSol_couche_Tm(i)+" · ";
+            if(i == getLayerCalculator().index_couchePortante()-1){
+                detail.add_String("(h<sub>"+(i+1)+"</sub> - d<sub>hel</sub>)");
+                calc_str += round((getLayerCalculator().enfoncement_couche_index(i) - getPieuParamManagerData().Dhel_val())/1000,2) ; //- dhel
+                calc += resistanceSol_couche_Tm(i) * (getLayerCalculator().enfoncement_couche_index(i) - getPieuParamManagerData().Dhel_val())/1000;
+            }else{
+                detail.add_String("h<sub>"+(i+1)+"</sub>");
                 detail.add_String(" + ");
+                calc_str += enfoncement_couche_index_ToDisplay(i) ;
                 calc_str += " + ";
+                calc += resistanceSol_couche_Tm(i) * getLayerCalculator().enfoncement_couche_index(i)/1000;
             }
         }
         detail.add_String(") / h");

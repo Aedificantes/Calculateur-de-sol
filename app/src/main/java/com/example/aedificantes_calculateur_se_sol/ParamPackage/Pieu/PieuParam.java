@@ -3,11 +3,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
+import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
-
-import java.util.List;
 
 public class PieuParam implements VerificateObserver {
     private float value_PieuParam =0f;

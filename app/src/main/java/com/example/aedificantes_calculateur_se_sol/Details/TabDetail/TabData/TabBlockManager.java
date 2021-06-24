@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.TreeMap;
 
@@ -111,7 +112,7 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
 
         for (T eachKey : contentData.keySet()) {
             if (index == indexRow) {
-                  contentData.get(eachKey).add(indexNewColumn, value);
+                contentData.get(eachKey).add(indexNewColumn, value);
             } else {
                 contentData.get(eachKey).add(indexNewColumn, defaultVal);
             }
@@ -163,6 +164,18 @@ public class TabBlockManager<T extends Serializable & Comparable,V extends Seria
     public void setContentData(TreeMap<T,ArrayList<V>> contentData) {
         this.contentData = contentData;
         updateContentTabBlocks();
+    }
+
+    public String generateLogTab(){
+        String log = "\n ContentData - TabManager";
+        for(T each : this.contentData.keySet()){
+            log += " line: "+each.toString()+" -> ";
+            for(V eachVal : this.contentData.get(each)){
+                log += eachVal.toString()+" ";
+            }
+            log += "\n";
+        }
+        return log;
     }
 
     public MarkedElementsManager getMarquedElements() {

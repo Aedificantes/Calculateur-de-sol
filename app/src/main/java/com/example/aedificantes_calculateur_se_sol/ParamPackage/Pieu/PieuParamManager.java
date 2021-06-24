@@ -3,7 +3,7 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
+import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 import com.example.aedificantes_calculateur_se_sol.R;
@@ -18,7 +18,6 @@ public class PieuParamManager  implements VerificateObserver{
     public PieuParamManager(VerificateObservable verificator, View viewWhereElementArePLace) {
         this.verificator = verificator;
         this.verificator.addLikeObserver(this);
-        //TODO get editText from layout and add to listof PieuParam
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Dfut), "Dfut", verificator));
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Dhel), "DHel",verificator));
         list_PieuParam.add(new PieuParam((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Ip), "Ip",verificator));

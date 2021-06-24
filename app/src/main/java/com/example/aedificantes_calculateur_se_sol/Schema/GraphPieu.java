@@ -30,7 +30,7 @@ public class GraphPieu {
 
         Path path = new Path();
         Paint paint =new Paint();
-        paint.setColor(Color.parseColor("#91a4fa"));
+        paint.setColor(Color.parseColor("#2D59B2"));
         paint.setStrokeWidth(3);
         path.moveTo(cX+Xlenght, (float) (cY+Ylenght*percentHead));
         path.cubicTo(cX+Xlenght+leftP,(float) (cY+head+Ylenght*percentHead),cX+Xlenght+leftP,(float) (cY+5+Ylenght*percentHead), (float) (cX+(Xlenght/2)),(float) (cY+head*3+Ylenght*percentHead));//право
@@ -41,7 +41,7 @@ public class GraphPieu {
         canva.drawPath(path, paint);
 
         Paint paint2 = new Paint();
-        paint2.setShader(new LinearGradient(0,0,Xlenght,0,Color.parseColor("#E8EBFA"),Color.parseColor("#91a4fa"), Shader.TileMode.MIRROR));
+        paint2.setShader(new LinearGradient(0,0,Xlenght,0,Color.parseColor("#9BC6E7"),Color.parseColor("#2D59B2"), Shader.TileMode.MIRROR));
         Path path2 = new Path();
         path2.moveTo(cX,cY);
         path2.lineTo(cX,cY+Ylenght);

@@ -6,15 +6,9 @@ import android.widget.ExpandableListView;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.DetailResultManager;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
-import com.example.aedificantes_calculateur_se_sol.Error.ErrorCreater;
-import com.example.aedificantes_calculateur_se_sol.Error.ErrorListAdpatator;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 

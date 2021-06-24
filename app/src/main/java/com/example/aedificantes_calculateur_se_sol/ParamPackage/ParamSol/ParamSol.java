@@ -1,8 +1,7 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
+import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

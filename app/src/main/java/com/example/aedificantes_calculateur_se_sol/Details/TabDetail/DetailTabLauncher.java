@@ -4,5 +4,5 @@ import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.Tab
 
 public interface DetailTabLauncher {
 
-    public void openTabLayout(TabBlockManager tabDrawer);
+    public void openTabLayout(TabBlockManager tabBlockManager);
 }

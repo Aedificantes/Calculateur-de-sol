@@ -8,11 +8,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
-import com.example.aedificantes_calculateur_se_sol.Error.Error;
 import com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 

@@ -5,6 +5,10 @@ import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class TextView_TabBlock extends TabBlock implements Serializable {
@@ -23,6 +27,9 @@ public class TextView_TabBlock extends TabBlock implements Serializable {
     public void setHtmlText(String htmlText){
         this.htmlText = htmlText;
     }
+    public String getHtmlText(){
+        return htmlText;
+    }
 
     public TextView getTextView(Context context){
         TextView tamp_tv = new TextView(context);
@@ -33,5 +40,14 @@ public class TextView_TabBlock extends TabBlock implements Serializable {
     @Override
     public View getElementView(Context context) {
         return getTextView(context);
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        TextView_TabBlock tv = new TextView_TabBlock(this.getStartWidhtCell(),this.getStartHeightCell(),this.getNbWidhtCell(),this.getNbHeightCell(),htmlText);
+        return tv;
+        //return super.clone();
     }
 }

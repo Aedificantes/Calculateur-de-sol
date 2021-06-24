@@ -1,6 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
 import android.os.Build;
+import android.util.Log;
+
 
 import androidx.annotation.RequiresApi;
 
@@ -63,19 +65,33 @@ public class ResistanceSolCalculator {
                 }
             } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
 
-            float alpha1,alpha2;
-            k = (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
-            w = Ref.get(local_index[0]).get(index_column_argile[0]) - (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
-            alpha1 =  k*layerParam.Il()+w ;
+            /*
+            if(index_column_argile[0] == index_column_argile[1]) {
+                k = (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[1]))/(valueOfColumn_argile[0]-valueOfColumn_argile[1]);
+                w = Ref.get(local_index[0]).get(index_column_argile[0]) - (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[1]))/(valueOfColumn_argile[0]-valueOfColumn_argile[1])*valueOfColumn_argile[0];
+                System.out.println(" ResistanceSolCalculator -> resistanceSol_AVG("+index+","+layerParam+") detail: index:"+index+" argile: ["+index_column_argile[0]+","+layerParam.Il()+","+index_column_argile[1]+"] return: "+ (k*layerParam.Il()+w));
+                return (k*layerParam.Il()+w) ;
+            }else{
+            */
+                float alpha1,alpha2;
+                k = (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
+                w = Ref.get(local_index[0]).get(index_column_argile[0]) - (Ref.get(local_index[0]).get(index_column_argile[0]) - Ref.get(local_index[0]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
+                alpha1 =  k*layerParam.Il()+w ;
 
-            k = (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
-            w = Ref.get(local_index[1]).get(index_column_argile[0]) - (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
-            alpha2 =  k*layerParam.Il()+w ;
+                k = (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1]);
+                w = Ref.get(local_index[1]).get(index_column_argile[0]) - (Ref.get(local_index[1]).get(index_column_argile[0]) - Ref.get(local_index[1]).get(index_column_argile[0]))/(index_column_argile[0]-index_column_argile[1])*index_column_argile[0];
+                alpha2 =  k*layerParam.Il()+w ;
 
-            k = (alpha1 - alpha2)/(local_index[0]-local_index[1]);
-            w = alpha1 - (alpha1 - alpha2)/(local_index[0]-local_index[1])*local_index[0];
-            System.out.println(" ResistanceSolCalculator -> resistanceSol_AVG("+index+","+layerParam+") detail: index: "+index+ " argile: ["+index_column_argile[0]+","+layerParam.Il()+","+index_column_argile[1]+"], hauteur:["+local_index[0]+","+index+","+local_index[1]+"]  alpha1: "+alpha1+" alpha2: "+alpha2+" return: "+ (k*layerParam.Il()+w));
-            return (k*index+w) ;
+                k = (alpha1 - alpha2)/(local_index[0]-local_index[1]);
+                w = alpha1 - (alpha1 - alpha2)/(local_index[0]-local_index[1])*local_index[0];
+                System.out.println(" ResistanceSolCalculator -> resistanceSol_AVG("+index+","+layerParam+") detail: index: "+index+ " argile: ["+index_column_argile[0]+","+layerParam.Il()+","+index_column_argile[1]+"], hauteur:["+local_index[0]+","+index+","+local_index[1]+"]  alpha1: "+alpha1+" alpha2: "+alpha2+" return: "+ (k*layerParam.Il()+w));
+                return (k*index+w) ;
+            //}
+
+
+
+
+
 
         }
     }
@@ -91,22 +107,22 @@ public class ResistanceSolCalculator {
     }
 
     private int[] columnSolArgile(float Il){
-        if(Il <= 0.2) return new int[]{0,0};
-        if(Il < 0.3) return new int[]{0,1};
-        if(Il == 0.3) return new int[]{1,1};
-        if(Il < 0.4) return new int[]{1,2};
-        if(Il == 0.4) return new int[]{2,2};
-        if(Il < 0.5) return new int[]{2,3};
-        if(Il == 0.5) return new int[]{3,3};
-        if(Il < 0.6) return new int[]{3,4};
-        if(Il == 0.6) return new int[]{4,4};
-        if(Il < 0.7) return new int[]{4,5};
-        if(Il == 0.7) return new int[]{5,5};
-        if(Il < 0.8) return new int[]{5,6};
-        if(Il == 0.8) return new int[]{6,6};
-        if(Il < 0.9) return new int[]{6,7};
-        if(Il == 0.9) return new int[]{7,7};
-        if(Il < 1) return new int[]{7,8};
+        if(Il <= 0.2f){ return new int[]{0,0};}
+        if(Il < 0.3f){  return new int[]{0,1};}
+        if(Il == 0.3f){  return new int[]{1,1};}
+        if(Il < 0.4f){  return new int[]{1,2};}
+        if(Il == 0.4f){  return new int[]{2,2};}
+        if(Il < 0.5f){  return new int[]{2,3};}
+        if(Il == 0.5f){  return new int[]{3,3};}
+        if(Il < 0.6f){  return new int[]{3,4};}
+        if(Il == 0.6f){  return new int[]{4,4};}
+        if(Il < 0.7f){  return new int[]{4,5};}
+        if(Il == 0.7f){  return new int[]{5,5};}
+        if(Il < 0.8f){  return new int[]{5,6};}
+        if(Il == 0.8f){  return new int[]{6,6};}
+        if(Il < 0.9f){  return new int[]{6,7};}
+        if(Il == 0.9f){  return new int[]{7,7};}
+        if(Il < 1f){  return new int[]{7,8};}
         return new int[]{8,8};
     }
 
@@ -155,14 +171,52 @@ public class ResistanceSolCalculator {
         headTab.addBlock(8,4,1,1,"0.9");
         headTab.addBlock(9,4,1,1,"1");
 
-        TreeMap<Float, ArrayList<Float>>  tabRefWithIndex = (TreeMap<Float, ArrayList<Float>>) Ref.clone();
+        //TreeMap<Float, ArrayList<Float>>  tabRefWithIndex = (TreeMap<Float, ArrayList<Float>>) Ref.clone();
+        TreeMap<Float, ArrayList<Float>>  tabRefWithIndex = deepClone(this.Ref);
 
         TabBlockManager<Float, Float> tabManager = new TabBlockManager<>(headTab,tabRefWithIndex);
-        //tabManager.addColumn("test",0,2,3,4);
+        tabRefWithIndex.put(100f,new ArrayList<Float>(Arrays.asList(10f,10f,10f,10f,10f,10f,10f,10f,10f)));
+        tabManager.getContentData().put(200f,new ArrayList<Float>(Arrays.asList(20f,20f,20f,20f,20f,20f,20f,20f,20f)));
+
+        Log.d("constructTab() - before",generateLogTab(tabRefWithIndex,tabManager));
 
         treeChooser_generateTab(index,data,tabManager);
 
+        Log.d("constructTab() - after",generateLogTab(tabRefWithIndex,tabManager));
+
         return tabManager;
+    }
+
+    private TreeMap<Float, ArrayList<Float>> deepClone(TreeMap<Float, ArrayList<Float>> original){
+        TreeMap<Float, ArrayList<Float>> copy = new TreeMap<Float, ArrayList<Float>>();
+
+        for(Float key: original.keySet()){
+            copy.put(key, (ArrayList<Float>) original.get(key).clone());
+        }
+
+
+        return copy;
+    }
+
+    private String generateLogTab(TreeMap<Float, ArrayList<Float>> tabRefWithIndex, TabBlockManager tabBlockManager){
+        String log = "\n tabRefWithIndex ";
+        for(Float each : tabRefWithIndex.keySet()){
+            log += " line: "+each.toString()+" -> ";
+            for(Float eachVal : tabRefWithIndex.get(each)){
+                log += eachVal.toString()+" ";
+            }
+            log += "\n";
+        }
+        log+="\n Ref";
+        for(Float each : this.Ref.keySet()){
+            log += " line: "+each.toString()+" -> ";
+            for(Float eachVal : this.Ref.get(each)){
+                log += eachVal.toString()+" ";
+            }
+            log += "\n";
+        }
+        log+= tabBlockManager.generateLogTab();
+        return log;
     }
 
     private int indexOfGivenKey(Float key, TreeMap<Float, ArrayList<Float>> tabRefWithIndex){
@@ -184,6 +238,7 @@ public class ResistanceSolCalculator {
                 /*TODO
                     -highlight cell at line: local_index[0] & column: sandType
                  */
+                System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Sable local_index egaux ");
                 tabManager.getMarquedElements().add_marked_cell(indexOfGivenKey(local_index[0],this.Ref),sandType);
                 tabManager.updateContentTabBlocks();
                 return;
@@ -194,6 +249,7 @@ public class ResistanceSolCalculator {
                     -add value with 0 or nothing and just new calculate value at line: indexOfGivenKey(Float key,...) & column : sandType
                     -highlight line local_index[0]+1;
                  */
+            System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Sable local_index différent ");
             tabManager.addRowData_givenColumn(index,0f,resistanceSol_AVG(index,layerParam),sandType);
             return;
         } else {
@@ -203,6 +259,7 @@ public class ResistanceSolCalculator {
                 if (index_column_argile[0] == index_column_argile[1]) {
                     //return Ref.get(local_index[0])[index_column_argile[0]];
                     //TODO Highlight cell line:local_index[0] & column: index_column_argile[0]
+                    System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Argile local_index egaux  et index_column_argile egaux");
                     tabManager.getMarquedElements().add_marked_cell(indexOfGivenKey(local_index[0],this.Ref),index_column_argile[0]);
                     tabManager.updateContentTabBlocks();
                     return;
@@ -213,13 +270,16 @@ public class ResistanceSolCalculator {
                         -add values with 0 or nothing and just new calculate value in cell at line: local_index[0] & column : index_column_argile[0]+1
                         -highlight column index_column_argile[0]+1;
                     */
-
-                    //tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0,index_column_argile[0]+1, 3,10);//indexOfGivenKey(local_index[0],this.Ref)
+                    System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Argile local_index egaux  mais index_column_argile différent");
                     tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0f,index_column_argile[0]+1, indexOfGivenKey(local_index[0],this.Ref),resistanceSol_AVG(index,layerParam));//
                     return;
                 }
             } // si les deux valeurs sont identiques c'est que la valeur est dans le tableau
-
+            if(index_column_argile[0] == index_column_argile[1]) {
+                System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Argile local_index différent mais index_column_argile égal");
+                tabManager.addRowData_givenColumn(index, 0f, resistanceSol_AVG(index, layerParam), index_column_argile[0]);
+                return  ;
+            }else {
              /*TODO
                 -add line between local_index[0] and local_index[1]
                 -add line name index
@@ -228,11 +288,13 @@ public class ResistanceSolCalculator {
                 -add values with 0 or nothing and just new calculate value in cell at line: local_index[0]+1 & column : index_column_argile[0]+1
                 -highlight column index_column_argile[0]+1 and line local_index[0]+1 ;
              */
-            tabManager.addRowData_givenColumn(index,0,resistanceSol_AVG(index,layerParam),index_column_argile[0]);
-            tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()),0f,index_column_argile[0],indexOfGivenKey(local_index[0],this.Ref),resistanceSol_AVG(index,layerParam));
+                System.out.println("ResistanceSolCalculator ->  treeChooser_generateTab() -> Argile local_index and index_column_argile are both différent");
+                tabManager.addRowData_givenColumn(index, 0f, 0f, index_column_argile[0]);
+                tabManager.addColumn_dataGivenRow(String.valueOf(layerParam.Il()), 0f, index_column_argile[0] + 1, indexOfGivenKey(local_index[0], this.Ref) + 1, resistanceSol_AVG(index, layerParam));
 
 
-            return;
+                return;
+            }
 
         }
     }

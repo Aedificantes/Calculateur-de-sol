@@ -1,17 +1,11 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 import android.content.Context;
-import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.aedificantes_calculateur_se_sol.CanvaActivty;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 import  com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
@@ -29,12 +23,9 @@ public class ResultDisplayer {
     private LinearLayout LL_tab2_hauteur;
     private LinearLayout LL_tab2_f;
 
-    private Button BT_schema;
-    private Button BT_detail;
-
     private boolean isShow = false;
 
-    public ResultDisplayer(final ResultButtonLoader buttonLoader, ViewGroup parent) {
+    public ResultDisplayer(ViewGroup parent) {
         LL_Result = (LinearLayout) View.inflate(parent.getContext(), R.layout.result_layout, null);
         this.parent = parent;
         LL_tab2_couche = LL_Result.findViewById(R.id.LL_tab2_couche);
@@ -54,20 +45,16 @@ public class ResultDisplayer {
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_4));
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_5));
 
-        BT_schema = LL_Result.findViewById(R.id.BT_schema);
-        BT_schema.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonLoader.launchDrawing();
-            }
-        });
-        BT_detail = LL_Result.findViewById(R.id.BT_details);
-        BT_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonLoader.launchDetail();
-            }
-        });
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_6));
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_7));
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_8));
+
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_9));
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_10));
+        list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_11));
+
+
+
     }
 
     public void updateData(ResultManager resultManager){
@@ -92,6 +79,17 @@ public class ResultDisplayer {
         list_TV_tab2.get(0).setText(String.valueOf(resultManager.perimetre_section_transfersale_fut_toDisplay()));
         list_TV_tab2.get(1).setText(String.valueOf(resultManager.fdf_toDisplay()));
 
+        list_TV_tab2.get(2).setText(String.valueOf(resultManager.fdcomp_toDisplay()));
+        list_TV_tab2.get(3).setText(String.valueOf(resultManager.fdtrac_toDisplay()));
+        list_TV_tab2.get(4).setText(String.valueOf(resultManager.fdvar_toDisplay()));
+
+        list_TV_tab2.get(5).setText("Capacité portante sous: charges de compression Fd ( γc = "+resultManager.getCoef_comp()+")");
+        list_TV_tab2.get(6).setText("charges de traction Fd ( γc = "+resultManager.getCoef_trac()+")");
+        list_TV_tab2.get(7).setText("charges variables Fd ( γc = "+resultManager.getCoef_variableLoad()+")");
+
+
+
+
 
 
     }
@@ -109,19 +107,9 @@ public class ResultDisplayer {
         return tampTV;
     }
 
-    public void hide(){
-        if(isShow){
-            parent.removeView(LL_Result);
-            isShow = !isShow;
-        }
-    }
-
     public void show(){
-        if(!isShow){
-            parent.addView(LL_Result);
-            LL_Result.getLayoutParams().width = LL_Result.getLayoutParams().MATCH_PARENT;
-            LL_Result.getLayoutParams().height = LL_Result.getLayoutParams().MATCH_PARENT;
-            isShow = !isShow;
-        }
+        parent.addView(LL_Result);
+        LL_Result.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        LL_Result.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 }

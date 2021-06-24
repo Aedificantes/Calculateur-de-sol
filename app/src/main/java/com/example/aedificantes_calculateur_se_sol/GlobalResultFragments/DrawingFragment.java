@@ -1,14 +1,26 @@
 package com.example.aedificantes_calculateur_se_sol.GlobalResultFragments;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
+import com.example.aedificantes_calculateur_se_sol.Schema.LayerDrawer;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,14 +29,12 @@ import com.example.aedificantes_calculateur_se_sol.R;
  */
 public class DrawingFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ConstraintLayout CL_ConstraintLayout;
+
+    private ArrayList<ParamSolData> solData;
+    private PieuManagerData pieuManagerData;
+
 
     public DrawingFragment() {
         // Required empty public constructor
@@ -36,13 +46,12 @@ public class DrawingFragment extends Fragment {
      *
      * @return A new instance of fragment DrawingFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static DrawingFragment newInstance(/*String param1, String param2*/) {
+    public static DrawingFragment newInstance(ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
         DrawingFragment fragment = new DrawingFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
+        args.putSerializable("solData",SolData);
+        args.putSerializable("pieuManagerData",pieuManagerData);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -50,15 +59,38 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.solData = (ArrayList<ParamSolData>) getArguments().getSerializable("solData");
+            this.pieuManagerData = (PieuManagerData) getArguments().getSerializable("pieuManagerData");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawing, container, false);
+        View inflateView = inflater.inflate(R.layout.fragment_drawing, container, false);
+        CL_ConstraintLayout = inflateView.findViewById(R.id.CL_Frag_drawing);
+
+        ResultManager calculator = new ResultManager(solData,pieuManagerData);
+
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        Bitmap bg = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bg);
+
+        //dessin du sol fixe
+        LayerDrawer layerDrawer = new LayerDrawer(solData,pieuManagerData, canvas, getActivity().getWindowManager());
+
+        layerDrawer.toDrawDrawing(0.70f,0.20f,0.05f);
+        layerDrawer.toDrawChart(0.10f,0.40f,0.05f);
+
+
+        CL_ConstraintLayout.setBackground(new BitmapDrawable(bg));
+
+        return inflateView;
     }
 }

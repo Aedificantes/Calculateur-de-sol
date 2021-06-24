@@ -1,6 +1,7 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
-import com.example.aedificantes_calculateur_se_sol.MainActivity;
+import android.util.Log;
+
 
 import java.io.Serializable;
 
@@ -19,7 +20,11 @@ public class ParamEnabler {
     }
 
     public void update(){
-        enableElement();
+        if(holder != null) {
+            enableElement();
+        }else{
+            Log.d("ParamEnabler","if  holder is  null update is  cancel because object isn't visible");
+        }
     }
 
     private void enableElement(){

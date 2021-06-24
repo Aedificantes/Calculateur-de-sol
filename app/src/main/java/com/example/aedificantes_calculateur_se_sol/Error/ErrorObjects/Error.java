@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.Error;
+package com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects;
 
 public class Error {
     private String error_string;
