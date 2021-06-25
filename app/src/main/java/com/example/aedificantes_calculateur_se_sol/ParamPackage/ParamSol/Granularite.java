@@ -27,6 +27,15 @@ public enum Granularite implements Serializable {
         return  this.name;
     }
 
+    public static Granularite getGranularite_byId(int id){
+        for(Granularite each: values()){
+            if(id == each.getIndice()){
+                return each;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return  this.name;

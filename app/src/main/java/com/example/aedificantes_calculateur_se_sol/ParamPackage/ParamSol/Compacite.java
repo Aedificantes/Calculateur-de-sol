@@ -26,6 +26,15 @@ public enum Compacite implements Serializable {
         return  this.name;
     }
 
+    public static Compacite getCompacite_byId(int id){
+        for(Compacite each: values()){
+            if(id == each.getIndice()){
+                return each;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return  this.name;

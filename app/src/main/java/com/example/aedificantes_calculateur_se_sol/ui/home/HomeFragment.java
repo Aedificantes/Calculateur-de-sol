@@ -6,12 +6,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,6 +60,7 @@ import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSo
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileExporter;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileLoader;
 import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.databinding.FragmentHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -62,6 +68,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static androidx.core.content.ContextCompat.getSystemService;
@@ -128,12 +135,12 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         verificator = new Verificator(this);
         pieuParamManager = new PieuParamManager(verificator, global_LL_activity);
         resultManager = new ResultManager(listOfDataParamSol(),pieuParamManager.generate_pieuParamData());
-        paramContainer = new ParamContainer(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
+
 
         //place default value for PieuParamManager
         pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
 
-    mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, pieuParamManager);
+        mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, pieuParamManager);
 
         mLayoutManager = new LinearLayoutManager(this.getContext());
 
@@ -299,27 +306,21 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Log.d("subMenu","open of first sub menu from homeFragment");
-/*
-                final Dialog fbDialogue = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar);
-                Window window = fbDialogue.getWindow();
-                window.setGravity(Gravity.CENTER);
-                //window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                window.setBackgroundDrawable(new ColorDrawable(Color.argb(100, 0, 0, 0)));
-
-
-                fbDialogue.setContentView(R.layout.file_chooser);
-                fbDialogue.setCancelable(true);
-                fbDialogue.show();
-
- */
+                        Log.d("subMenu","open of IMPORT menu from homeFragment");
                         askPermissionAndBrowseFile();
                         return false;
                     }
                 });
             }
             if(item.getTitle() == getString(R.string.action_exportFile)){
-                askPermissionWrite();
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Log.d(LOG_TAG,"open of EXPORT menu from homeFragment");
+                        askPermissionWrite();
+                        return false;
+                    }
+                });
             }
         }
     }
@@ -364,7 +365,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 return;
             }
         }
-
+        paramContainer = new ParamContainer(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
         FileExporter exporter = new FileExporter(paramContainer);
         Log.d(LOG_TAG, "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
         exporter.save();
@@ -392,12 +393,9 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
                 // Note: If request is cancelled, the result arrays are empty.
                 // Permissions granted (CALL_PHONE).
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i( LOG_TAG,"Permission granted!");
                     Toast.makeText(getActivity().getApplicationContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
-
                     this.doBrowseFile();
                 }
                 // Cancelled or denied.
@@ -418,6 +416,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                     Log.i( LOG_TAG,"Permission granted!");
                     Toast.makeText(getActivity().getApplicationContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
 
+                    paramContainer = new ParamContainer(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
                     FileExporter exporter = new FileExporter(paramContainer);
                     Log.d("MAINACTIVITY", "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
                     exporter.save();
@@ -440,14 +439,31 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 if (resultCode == Activity.RESULT_OK ) {
                     if(data != null)  {
                         Uri fileUri = data.getData();
-                        Log.i(LOG_TAG, "Url: " + fileUri.getPath());
+                        Log.i(LOG_TAG, "Uri: " + fileUri.getPath()+"\n"+fileUri.toString());
+                        Log.i(LOG_TAG, "Uri info: "
+                        +"\n"+fileUri.getAuthority()
+                                +"\n"+fileUri.getLastPathSegment()
+                                +"\n"+fileUri.getQuery()
+                                +"\n"+fileUri.getEncodedPath());
+                        //fileUri.getLastPathSegment().split(":")[1]
+                        FileLoader loader2 = new FileLoader(fileUri.getLastPathSegment().split(":")[1]);
+                        ParamContainer container = loader2.loadAndParse();
+                        Log.i(LOG_TAG, "ParamContainer after Parse: \n"+container.toString());
 
+                        listParams.clear();
+                        for(ParamSolData each : container.getSol_data_list()){
+                            listParams.add(new ParamSol(each));
+                        }
 
-                        //this.editTextPath.setText(filePath);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.smoothScrollToPosition(listParams.size());
+                        pieuParamManager.setValues(container.getPieuManagerData());
                     }
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

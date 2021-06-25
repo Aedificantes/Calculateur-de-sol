@@ -39,6 +39,15 @@ public enum TypeSol implements Serializable {
         return  this.name;
     }
 
+    public static TypeSol getTypeSol_byId(int id){
+        for(TypeSol each: values()){
+            if(id == each.getIndice()){
+                return each;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return  this.name;

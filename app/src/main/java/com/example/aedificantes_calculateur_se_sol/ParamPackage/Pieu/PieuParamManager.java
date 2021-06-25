@@ -37,6 +37,15 @@ public class PieuParamManager  implements VerificateObserver{
         verificator.notifyDataChange();
     }
 
+    public void setValues(PieuManagerData pieuData){
+        list_PieuParam.get(0).setValue(pieuData.Dfut_val());
+        list_PieuParam.get(1).setValue(pieuData.Dhel_val());
+        list_PieuParam.get(2).setValue(pieuData.Ip_val());
+        list_PieuParam.get(3).setValue(pieuData.Hk_val());
+        list_PieuParam.get(4).setValue(pieuData.H_val());
+        verificator.notifyDataChange();
+    }
+
     public List<Error> generateError(){
         ArrayList<Error> list =  new ArrayList<>();
         for(PieuParam each : list_PieuParam){

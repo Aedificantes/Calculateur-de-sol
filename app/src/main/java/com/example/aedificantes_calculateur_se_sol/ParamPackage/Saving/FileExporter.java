@@ -34,12 +34,12 @@ public class FileExporter {
 
     public JSONObject generate(){
         JSONObject main = new JSONObject();
-        JSONArray pieu = new JSONArray();
         JSONArray sol = new JSONArray();
         try {
             for (ParamSolData solData : paramContainer.getSol_data_list()) {
                 sol.put(solData.convert_to_json());
             }
+            main.put("PIEU",paramContainer.getPieuManagerData().convert_to_JSON());
             main.put("SOL", sol);
         }catch (Exception e){
             Log.d(LOG_TAG, e.getMessage());
@@ -58,12 +58,6 @@ public class FileExporter {
 
     private void writeFileOnInternalStorage(String sFileName, String sBody){
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        //File dir = new File(mcoContext.getFilesDir(), "mydir");
-        /*
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-         */
 
         try {
             File gpxfile = new File(dir, sFileName);

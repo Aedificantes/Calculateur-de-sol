@@ -84,6 +84,55 @@ public class ParamSolData implements Serializable {
         return this.params.get(6);
     }
 
+    public void set_Il(float val){
+        if(params.size() == 0){
+            fillToIndex(0);
+        }
+        this.params.set(0, val);
+    }
+    public void set_e(float val){
+        if(params.size() == 1){
+            fillToIndex(1);
+        }
+         this.params.set(1,val);
+    }
+    public void set_cT(float val){
+        if(params.size() <= 2){
+            fillToIndex(2);
+        }
+         this.params.set(2,val);
+    }
+    public void set_fi(float val){
+        if(params.size() <= 3){
+            fillToIndex(3);
+        }
+         this.params.set(3,val);
+    }
+    public void set_yT(float val){
+        if(params.size() <= 4){
+            fillToIndex(4);
+        }
+         this.params.set(4,val);
+    }
+    public void set_Sr(float val){
+        if(params.size() <= 5){
+            fillToIndex(5);
+        }
+         this.params.set(5,val);
+    }
+    public void set_h(float val){ // en metre
+        if(params.size() <= 6){
+            fillToIndex(6);
+        }
+         this.params.set(6,val);
+    }
+
+    private void fillToIndex(int index){
+        for(int i=params.size()-1; i < index; i++ ){
+            params.add(0f);
+        }
+    }
+
     public void setLogNameParam(ArrayList<String> logNameParam) {
         this.logNameParam = logNameParam;
     }
@@ -103,5 +152,15 @@ public class ParamSolData implements Serializable {
         solDataJSON.put("YT", this.yT());
 
         return solDataJSON;
+    }
+
+    @Override
+    public String toString() {
+        return "ParamSolData{" +
+                "compacite=" + compacite +
+                ", granularite=" + granularite +
+                ", typeSol=" + typeSol +
+                ", params=" + params +
+                '}';
     }
 }

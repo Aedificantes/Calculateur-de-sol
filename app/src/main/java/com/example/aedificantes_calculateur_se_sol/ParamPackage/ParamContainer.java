@@ -31,4 +31,16 @@ public class ParamContainer implements Serializable {
     public void setPieuManagerData(PieuManagerData pieuManagerData) {
         this.pieuManagerData = pieuManagerData;
     }
+
+    @Override
+    public String toString() {
+        String dataSol_toString="";
+        for(ParamSolData each : sol_data_list){
+            dataSol_toString+="\n"+each.toString();
+        }
+        return "ParamContainer{" +
+                "sol_data_list=" + dataSol_toString +
+                ",\n pieuManagerData=" + pieuManagerData.toString() +
+                '}';
+    }
 }

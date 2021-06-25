@@ -1,11 +1,14 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
 
+import android.util.Log;
+
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParamSol {
+    private static final String LOG_TAG = "CLA_04";
     private ParamSolData data;
 
     public ArrayList<Integer> paramToSet = new ArrayList<>();
@@ -18,13 +21,7 @@ public class ParamSol {
         for(int i=0; i<7; i++) {
             data.params.add(0f);
         }
-        data.logNameParam.add("Facteur de plasticité des sols argileux");
-        data.logNameParam.add("Indices des vides");
-        data.logNameParam.add("Cohésion du sol");
-        data.logNameParam.add("Angle de frottement interne des sols");
-        data.logNameParam.add("Masse volumique de l'horizon");
-        data.logNameParam.add("Indice d'humidite");
-        data.logNameParam.add("Epaisseur de l'horizon");
+        addLogName();
 
     }
     public ParamSol(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
@@ -39,6 +36,18 @@ public class ParamSol {
             data.params.add(0f);
         }
         System.out.println("Create ParamSol with :"+data.params.size() + " values : details: "+data.params.toString());
+        addLogName();
+
+        paramEnabler = new ParamEnabler(this);
+    }
+
+    public ParamSol(ParamSolData data) {
+        this.data = data;
+        this.paramEnabler = new ParamEnabler(this);
+        addLogName();
+    }
+
+    private void addLogName(){
         data.logNameParam.add("Facteur de plasticité des sols argileux");
         data.logNameParam.add("Indices des vides");
         data.logNameParam.add("Cohésion du sol");
@@ -46,8 +55,6 @@ public class ParamSol {
         data.logNameParam.add("Masse volumique de l'horizon");
         data.logNameParam.add("Indice d'humidite");
         data.logNameParam.add("Epaisseur de l'horizon");
-
-        paramEnabler = new ParamEnabler(this);
     }
 
     public boolean isAllFill(){
@@ -142,6 +149,7 @@ public class ParamSol {
 
     public List<Error> generateError() {
         ArrayList<Error> list =  new ArrayList<>();
+        Log.e(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+paramToSet.toString());
         for(int each : paramToSet){
             if(data.params.get(each) == 0){
                 list.add(new Error(" - "+data.logNameParam.get(each)+" n'a pas de valeur"));
