@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+/**
+ * Calculator class based on ref table
+ */
 public class AlphaCalculator {
 
     private TreeMap<Float, ArrayList<Float>> alphaRef = new TreeMap<Float, ArrayList<Float>>();
@@ -60,7 +63,11 @@ public class AlphaCalculator {
         return new Float[]{13f, 13f};
     }
 
-
+    /**
+     * Generate a table to display on line detail clicking in DetailFagment
+     * @param index value to estimate alpha values
+     * @return table builder to give to DetailtabDrawer
+     */
     public TabBlockManager constructTab(Float index) {
         HeadTab headTab = new HeadTab(3,2);
         headTab.addBlock(0,0,1,2,"Valeur de frottement<br>interne dans la zone<br>de calcul φI, degrés");

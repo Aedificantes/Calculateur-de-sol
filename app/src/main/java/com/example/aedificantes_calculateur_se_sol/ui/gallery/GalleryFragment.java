@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.aedificantes_calculateur_se_sol.databinding.FragmentGalleryBinding;
 
+/**
+ * !!! Pas utilisé à ce jour, construit automatiquement par AndroidStudio, peut servir d'éxemple ou de support pour créer une nouvelle page affichable dans le menu activity_main_drawer.xml
+ */
 public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;

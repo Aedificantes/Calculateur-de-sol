@@ -36,16 +36,16 @@ import com.example.aedificantes_calculateur_se_sol.Error.Verificator;
 import com.example.aedificantes_calculateur_se_sol.GlobalResultActivity;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.LineProfilSolAdaptater;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Compacite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Granularite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.LineProfilSolAdaptater;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileParamManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileExporter;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileLoader;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.Eaux_souterraines;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater;
 import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.databinding.FragmentHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,6 +54,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * Activity générant l'ensemble des éléments affichable pour les paramètres necéssaire aux calculs
+ */
 public class HomeFragment extends Fragment  implements ResultUpdatable, ResultButtonLoader {
 
     private static final String LOG_TAG = "Frag_01";
@@ -70,12 +73,12 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    final ArrayList<ParamSol> listParams =  new ArrayList<>();
+    final ArrayList<ParamLayer> listParams =  new ArrayList<>();
     private ParamContainer paramContainer;
 
     public static ResultManager resultManager;
-    private PieuParamManager pieuParamManager;
-    private Eaux_souterraines eaux_souterraines;
+    private ScrewPileParamManager screwPileParamManager;
+    private GroundWater groundWater;
     private ErrorDisplayer errorDisplayer;
     private GoodValuesInterfaceDisplayer goodValueDisplayer;
     private Verificator verificator;
@@ -91,7 +94,6 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
         setHasOptionsMenu(true);
 
-
         global_LL_activity = globalContainer.findViewById(R.id.LL_main_activity);
         Button bt = globalContainer.findViewById(R.id.BT_add);
         layout_Const_Result = globalContainer.findViewById(R.id.Layout_Const_Result);
@@ -105,49 +107,45 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
 
         // place default params to test
-        listParams.add(new ParamSol(TypeSol.LOAM_SABLEUX, Granularite.FIN, Compacite.FRIABLE,0.85f,0.65f,0.5f,23f,1.6f,0f,1.55f));
-        listParams.add(new ParamSol(TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0f,0.5f,28f,2f,0.75f,5.4f));
-        listParams.add(new ParamSol(TypeSol.LIMONEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0.65f,0.5f,0f,22f,1.8f,0f,8.5f));
-        listParams.add(new ParamSol(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0f,0f,30f,2f,0.25f,0f));
+        listParams.add(new ParamLayer(TypeSol.LOAM_SABLEUX, Granularite.FIN, Compacite.FRIABLE,0.85f,0.65f,0.5f,23f,1.6f,0f,1.55f));
+        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0f,0.5f,28f,2f,0.75f,5.4f));
+        listParams.add(new ParamLayer(TypeSol.LIMONEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0.65f,0.5f,0f,22f,1.8f,0f,8.5f));
+        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0f,0f,30f,2f,0.25f,0f));
         //listParams.add(new ParamSol());
 
         verificator = new Verificator(this);
-        pieuParamManager = new PieuParamManager(verificator, global_LL_activity);
-        eaux_souterraines = new Eaux_souterraines(verificator,global_LL_activity);
+        screwPileParamManager = new ScrewPileParamManager(verificator, global_LL_activity);
+        groundWater = new GroundWater(verificator,global_LL_activity);
 
 
         //generate all needed class
-        paramContainer = new ParamContainer(this.listParams, this.pieuParamManager, this.eaux_souterraines);
+        paramContainer = new ParamContainer(this.listParams, this.screwPileParamManager, this.groundWater);
         errorDisplayer = new ErrorDisplayer(this.getActivity().getApplicationContext(), layout_Const_Result);
         goodValueDisplayer = new GoodValuesInterfaceDisplayer(this, layout_Const_Result);
         resultManager = new ResultManager(paramContainer.get_ParamContainerData());
 
-        pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
+        // place default params to test
+        screwPileParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
 
-
-
-        //place default value for PieuParamManager
-
-        mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, pieuParamManager);
-
+        //manage recyclerView
+        mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, screwPileParamManager);
         mLayoutManager = new LinearLayoutManager(this.getContext());
-
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+        //button that add line to recyclerView
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mRecyclerView.smoothScrollToPosition(listParams.size()-1);
-                listParams.add(new ParamSol());
+                listParams.add(new ParamLayer());
                 mAdapter.notifyItemInserted(listParams.size()-1);
                 mRecyclerView.smoothScrollToPosition(listParams.size());
                 allValuesAreNotSet();
 
             }
         });
-
+        //launch result activity
         FAB_param.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,12 +156,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         return root;
     }
 
-
-
-
-
-
-
+    //allow to write HTML title for parameter
     private void setTitle(){
         ArrayList<TextView> title_list =new ArrayList<>();
         title_list.add(globalContainer.findViewById(R.id.TV_title_P1));
@@ -237,7 +230,9 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     }
 
 
-
+    /**
+     * @see ResultUpdatable
+     */
     @Override
     public void allValuesAreSet() {
         System.out.println("SET CORRECTLY SO CALCULATE");
@@ -246,6 +241,9 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         //goodValueDisplayer.show();
         FAB_param.setVisibility(View.VISIBLE);
     }
+    /**
+     * @see ResultUpdatable
+     */
     @Override
     public void allValuesAreNotSet() {
         System.out.println("NOT SET CORRECTLY SO PRINT ERROR");
@@ -253,12 +251,16 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         errorDisplayer.generateAndDisplay(paramContainer);
         FAB_param.setVisibility(View.INVISIBLE);
     }
-
+    /**
+     * @see ResultUpdatable
+     */
     @Override
     public void updateCalculator() {
         resultManager.updateData(paramContainer.get_ParamContainerData());
     }
-
+    /**
+     * @see ResultButtonLoader
+     */
     @Override
     public void launchResultsView() {
         //Intent intent = new Intent(this, DetailsActivity.class);
@@ -279,7 +281,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         binding = null;
     }
 
-
+//place special menu for this page
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -308,7 +310,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         }
     }
 
-
+    //method used to launch file browser
     private void askPermissionAndBrowseFile()  {
         // With Android Level >= 23, you have to ask the user
         // for permission to access External Storage.
@@ -330,6 +332,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         this.doBrowseFile();
     }
 
+    //method used to launch file browser
     private void askPermissionWrite()  {
         // With Android Level >= 23, you have to ask the user
         // for permission to access External Storage.
@@ -353,6 +356,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         exporter.save();
     }
 
+    //method used to launch file browser
     private void doBrowseFile()  {
         Intent chooseFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
         chooseFileIntent.setType("*/*");
@@ -412,7 +416,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         }
     }
 
-
+    //Catch when the browse activity (generate by android) is close to get file
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -432,14 +436,14 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                         Log.i(LOG_TAG, "ParamContainer after Parse: \n"+container.toString());
 
                         listParams.clear();
-                        for(ParamSolData each : container.getSol_data_list()){
-                            listParams.add(new ParamSol(each));
+                        for(ParamLayerData each : container.getSol_data_list()){
+                            listParams.add(new ParamLayer(each));
                         }
 
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.smoothScrollToPosition(listParams.size());
-                        pieuParamManager.setValues(container.getPieuManagerData());
-                        eaux_souterraines.setValues(container.getEauxSouterraines_data());
+                        screwPileParamManager.setValues(container.getScrewPileManagerData());
+                        groundWater.setValues(container.getGroundWater_data());
                     }
                 }
                 break;

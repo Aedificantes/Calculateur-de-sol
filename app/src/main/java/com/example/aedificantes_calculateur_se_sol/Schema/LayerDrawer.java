@@ -10,15 +10,18 @@ import android.view.WindowManager;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileManagerData;
 
 import java.util.ArrayList;
 
+/**
+ * Draw elements in the drawing fragment in result activity
+ */
 public class LayerDrawer {
     private ResultManager calculator;
-    private PieuManagerData pieuParamManagerData;
-    private ArrayList<ParamSolData> paramSolDataList;
+    private ScrewPileManagerData pieuParamManagerData;
+    private ArrayList<ParamLayerData> paramLayerDataList;
     private Paint lineColor,font;
 
     private float width_screen=0, height_screen=0;
@@ -33,8 +36,8 @@ public class LayerDrawer {
 
     public LayerDrawer(ParamContainerData paramContainerData, Canvas canva, WindowManager manager) {
         calculator = new ResultManager(paramContainerData);
-        this.pieuParamManagerData = paramContainerData.getPieuManagerData();
-        this.paramSolDataList = paramContainerData.getSol_data_list();
+        this.pieuParamManagerData = paramContainerData.getScrewPileManagerData();
+        this.paramLayerDataList = paramContainerData.getSol_data_list();
         lineColor = new Paint();
         lineColor.setColor(Color.BLACK);
         lineColor.setStyle(Paint.Style.STROKE);
@@ -236,7 +239,7 @@ public class LayerDrawer {
 
         canvas.save();
         for(int i=0; i < index_coucheportante; i++){
-            ParamSolData data = paramSolDataList.get(i);
+            ParamLayerData data = paramLayerDataList.get(i);
             if(i == 0){
                 float HkheightDraw = ((pieuParamManagerData.Hk_val()/1000)*heightMax)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000);
                 float H_pieu = (data.h()*heightMax)/(calculator.getLayerCalculator().accumulation_h_couche_index(index_coucheportante-1) /1000);
@@ -269,7 +272,7 @@ public class LayerDrawer {
 
         canvas.save();
         for(int i=0; i < index_coucheportante; i++){
-            ParamSolData data = paramSolDataList.get(i);
+            ParamLayerData data = paramLayerDataList.get(i);
             if(i == 0){
                 float HkheightDraw = ((pieuParamManagerData.Hk_val()/1000)*heightMax)/(calculator.getLayerCalculator().accumulation_enfoncement_couche_index(index_coucheportante-1)/1000);
                 float H_pieu = ((calculator.getLayerCalculator().enfoncement_couche_index(i)/1000)*heightMax)/(calculator.getLayerCalculator().accumulation_enfoncement_couche_index(index_coucheportante-1) /1000);
@@ -302,16 +305,16 @@ public class LayerDrawer {
         pieuDrawHeight = ((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000);
         diff_outGround = (((pieuParamManagerData.Ip_val() - pieuParamManagerData.H_val())/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000) ;
         System.out.println(((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000));
-        GraphPieu graphPieu = new GraphPieu(canvas,startX,START_TOP-diff_outGround,pieuDrawHeight,40);
-        graphPieu.draw();
+        GraphScrewPile graphScrewPile = new GraphScrewPile(canvas,startX,START_TOP-diff_outGround,pieuDrawHeight,40);
+        graphScrewPile.draw();
     }
 
     private void drawPieu_focus(float HkheightDraw, float START_TOP, float height_screen, float startX){
         pieuDrawHeight = ((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_enfoncement_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000);
         diff_outGround = (((pieuParamManagerData.Ip_val() - pieuParamManagerData.H_val())/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_enfoncement_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000) ;
         System.out.println(((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_enfoncement_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000));
-        GraphPieu graphPieu = new GraphPieu(canvas,startX,START_TOP-diff_outGround,pieuDrawHeight,40);
-        graphPieu.draw();
+        GraphScrewPile graphScrewPile = new GraphScrewPile(canvas,startX,START_TOP-diff_outGround,pieuDrawHeight,40);
+        graphScrewPile.draw();
     }
 
     private void drawLegend(float[][] tabLayer, float width_screen, float height_screen, float offset_X_rect, float size_X_rect, float heigtMaxLayers, int index_couchePortante){

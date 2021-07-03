@@ -5,7 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -35,12 +35,12 @@ public class FileExporter {
         JSONObject main = new JSONObject();
         JSONArray sol = new JSONArray();
         try {
-            for (ParamSolData solData : paramContainerData.getSol_data_list()) {
+            for (ParamLayerData solData : paramContainerData.getSol_data_list()) {
                 sol.put(solData.convert_to_json());
             }
-            main.put("PIEU", paramContainerData.getPieuManagerData().convert_to_JSON());
+            main.put("PIEU", paramContainerData.getScrewPileManagerData().convert_to_JSON());
             main.put("SOL", sol);
-            main.put("EAUX_SOUTERRAINES", paramContainerData.getEauxSouterraines_data().convert_to_JSON());
+            main.put("EAUX_SOUTERRAINES", paramContainerData.getGroundWater_data().convert_to_JSON());
         }catch (Exception e){
             Log.d(LOG_TAG, e.getMessage());
         }

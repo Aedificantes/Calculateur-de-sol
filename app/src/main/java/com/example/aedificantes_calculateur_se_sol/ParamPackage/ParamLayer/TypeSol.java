@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer;
 
 import android.graphics.Color;
 

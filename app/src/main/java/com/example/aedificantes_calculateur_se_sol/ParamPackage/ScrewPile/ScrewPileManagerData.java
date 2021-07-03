@@ -1,19 +1,19 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile;
 
-import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-public class PieuManagerData implements Serializable, VerificateObserver {
+/**
+ * Like every other param classes ScrewPileManagerData has his own data classes that can be serializable to be place in ParamContainerData and transfert to other Activity
+ */
+public class ScrewPileManagerData implements Serializable, VerificateObserver {
     private ArrayList<Float> listData = new ArrayList<>();
 
-    public PieuManagerData(float... data) {
+    public ScrewPileManagerData(float... data) {
         for(float each :  data){
             listData.add(each);
         }

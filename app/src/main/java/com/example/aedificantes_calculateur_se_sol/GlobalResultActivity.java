@@ -2,18 +2,16 @@ package com.example.aedificantes_calculateur_se_sol;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
 import com.example.aedificantes_calculateur_se_sol.GlobalResultFragments.GlobalResultPageAdaptater;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-
+/**
+ * Activity permettant d'afficher différents onglets de résultats sous forme de fragment (tableau, detail, dessin)
+ */
 public class GlobalResultActivity extends AppCompatActivity {
 
     @Override

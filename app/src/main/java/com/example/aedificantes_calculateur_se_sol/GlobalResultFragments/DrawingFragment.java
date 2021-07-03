@@ -16,12 +16,8 @@ import android.view.ViewGroup;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.Schema.LayerDrawer;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,10 +1,9 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.Eaux_souterraines;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater;
 
 import java.util.ArrayList;
 
@@ -14,47 +13,47 @@ import java.util.ArrayList;
  */
 public class ParamContainer {
 
-    ArrayList<ParamSol> sol_list;
-    PieuParamManager pieuManager;
-    Eaux_souterraines eaux_souterraines;
+    ArrayList<ParamLayer> sol_list;
+    ScrewPileParamManager pieuManager;
+    GroundWater groundWater;
 
-    public ParamContainer(ArrayList<ParamSol> sol_list, PieuParamManager pieuManager, Eaux_souterraines eaux_souterraines) {
+    public ParamContainer(ArrayList<ParamLayer> sol_list, ScrewPileParamManager pieuManager, GroundWater groundWater) {
         this.sol_list = sol_list;
         this.pieuManager = pieuManager;
-        this.eaux_souterraines = eaux_souterraines;
+        this.groundWater = groundWater;
     }
 
-    public ArrayList<ParamSol> getSol_list() {
+    public ArrayList<ParamLayer> getSol_list() {
         return sol_list;
     }
 
-    public void setSol_list(ArrayList<ParamSol> sol_list) {
+    public void setSol_list(ArrayList<ParamLayer> sol_list) {
         this.sol_list = sol_list;
     }
 
-    public PieuParamManager getPieuManager() {
+    public ScrewPileParamManager getPieuManager() {
         return pieuManager;
     }
 
-    public void setPieuManager(PieuParamManager pieuManager) {
+    public void setPieuManager(ScrewPileParamManager pieuManager) {
         this.pieuManager = pieuManager;
     }
 
     public ParamContainerData get_ParamContainerData(){
-        return new ParamContainerData(listOfDataParamSol(), this.pieuManager.generate_pieuParamData(), this.eaux_souterraines.generate_eauxSouterrainesData());
+        return new ParamContainerData(listOfDataParamSol(), this.pieuManager.generate_pieuParamData(), this.groundWater.generate_eauxSouterrainesData());
     }
 
-    public Eaux_souterraines getEaux_souterraines() {
-        return eaux_souterraines;
+    public GroundWater getGroundWater() {
+        return groundWater;
     }
 
-    public void setEaux_souterraines(Eaux_souterraines eaux_souterraines) {
-        this.eaux_souterraines = eaux_souterraines;
+    public void setGroundWater(GroundWater groundWater) {
+        this.groundWater = groundWater;
     }
 
-    private ArrayList<ParamSolData> listOfDataParamSol(){
-        ArrayList<ParamSolData> listDataParamSol = new ArrayList<>();
-        for(ParamSol each : this.sol_list){
+    private ArrayList<ParamLayerData> listOfDataParamSol(){
+        ArrayList<ParamLayerData> listDataParamSol = new ArrayList<>();
+        for(ParamLayer each : this.sol_list){
             listDataParamSol.add(each.getData());
         }
         return listDataParamSol;

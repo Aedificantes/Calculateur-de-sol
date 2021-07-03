@@ -1,28 +1,24 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import android.os.Build;
 import android.util.Log;
 
 
-import androidx.annotation.RequiresApi;
-
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.HeadTab;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Compacite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Granularite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.TreeMap;
 
-public class ResistanceSolCalculator {
+public class SoilResistanceCalculator {
     private TreeMap<Float,ArrayList<Float>> Ref = new TreeMap<>();
 
-    public ResistanceSolCalculator() {
+    public SoilResistanceCalculator() {
         Ref.put(1f, new ArrayList<Float>(Arrays.asList(35f,23f,15f,12f,8f,4f,4f,3f,2f)));//new Integer[]{35,23,15,12,8,4,4,3,2});
         Ref.put(2f, new ArrayList<Float>(Arrays.asList(42f,30f,21f,17f,12f,7f,5f,4f,4f)));// new Integer[]{42,30,21,17,12,7,5,4,4});
         Ref.put(3f, new ArrayList<Float>(Arrays.asList(48f,35f,25f,20f,14f,8f,7f,6f,5f)));// new Integer[]{48,35,25,20,14,8,7,6,5});
@@ -39,7 +35,7 @@ public class ResistanceSolCalculator {
         Ref.put(40f, new ArrayList<Float>(Arrays.asList(107f,75f,53f,38f,23f,14f,9f,8f,7f)));// new Integer[]{107,75,53,38,23,14,9,8,7});
     }
 
-    public float resistanceSol_AVG(float index, ParamSolData layerParam){
+    public float resistanceSol_AVG(float index, ParamLayerData layerParam){
         if(index < 1) index = 1f;
         Float[] local_index = placeOfIndex(index);
         float k,w;
@@ -126,6 +122,7 @@ public class ResistanceSolCalculator {
         return new int[]{8,8};
     }
 
+    //find between wich value index param is
     private Float[] placeOfIndex(float index){
         ArrayList<Float> list = new ArrayList<>(Ref.keySet());
         Collections.sort(list);
@@ -141,8 +138,13 @@ public class ResistanceSolCalculator {
     }
 
 
-
-    public TabBlockManager constructTab(Float index, ParamSolData data) {
+    /**
+     * Generate a table to display on line detail clicking in DetailFagment
+     * @param index value to estimate alpha values
+     * @param data ParamLayerData is needed because sevral parameter need to be verify
+     * @return table builder to give to DetailtabDrawer
+     */
+    public TabBlockManager constructTab(Float index, ParamLayerData data) {
         HeadTab headTab = new HeadTab(10,5);
 
         headTab.addBlock(0,0,1,5,"partie gauche");
@@ -228,7 +230,7 @@ public class ResistanceSolCalculator {
         return tabRefWithIndex.keySet().size()-1;
     }
 
-    private void treeChooser_generateTab(float index, ParamSolData layerParam, TabBlockManager tabManager) {
+    private void treeChooser_generateTab(float index, ParamLayerData layerParam, TabBlockManager tabManager) {
         if (index < 1) index = 1;
         Float[] local_index = placeOfIndex(index);
         float k, w;

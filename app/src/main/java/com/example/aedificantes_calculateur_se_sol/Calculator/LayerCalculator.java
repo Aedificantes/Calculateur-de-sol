@@ -1,36 +1,34 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileManagerData;
 
 import java.util.List;
 
 public class LayerCalculator {
-    private List<ParamSolData> paramSolDataList;
-    private PieuManagerData pieuParamManagerData;
+    private List<ParamLayerData> paramLayerDataList;
+    private ScrewPileManagerData pieuParamManagerData;
 
-    public LayerCalculator(List<ParamSolData> paramSolList, PieuManagerData pieuParamManagerData) {
-        this.paramSolDataList = paramSolList;
+    public LayerCalculator(List<ParamLayerData> paramSolList, ScrewPileManagerData pieuParamManagerData) {
+        this.paramLayerDataList = paramSolList;
         this.pieuParamManagerData = pieuParamManagerData;
     }
 
     public int index_couchePortante(){
         float sum = 0f;
         int index =1;
-        for(ParamSolData each_PS : paramSolDataList){
+        for(ParamLayerData each_PS : paramLayerDataList){
             sum += each_PS.h()*1000;
             if(pieuParamManagerData.H_val() < sum) {
                 return index;
             }
             index++;
         }
-        return paramSolDataList.size(); //Si aucune correspondance on renvoi le dernier
+        return paramLayerDataList.size(); //Si aucune correspondance on renvoi le dernier
     }
 
-    public ParamSolData ParamSol_couchePortante(){
-        return this.paramSolDataList.get(index_couchePortante()-1);
+    public ParamLayerData ParamSol_couchePortante(){
+        return this.paramLayerDataList.get(index_couchePortante()-1);
     }
 
     public float profondeurPieu(){
@@ -62,10 +60,10 @@ public class LayerCalculator {
         System.out.println(" LayerCalculator -> enfoncement_couche_index("+indexCouche+")");
         if(pieuParamManagerData.H_val() > accumulation_h_couche_index(indexCouche)){
             if(indexCouche == 0){
-                sizePieuCalc = paramSolDataList.get(0).h()*1000 - pieuParamManagerData.Hk_val();
+                sizePieuCalc = paramLayerDataList.get(0).h()*1000 - pieuParamManagerData.Hk_val();
                 System.out.println("1 -e ");
             }else {
-                sizePieuCalc = paramSolDataList.get(indexCouche).h() * 1000;
+                sizePieuCalc = paramLayerDataList.get(indexCouche).h() * 1000;
                 System.out.println("2 -e" );
             }
         }else{
@@ -88,9 +86,9 @@ public class LayerCalculator {
     public float accumulation_h_couche_index(int index){
         System.out.println(" LayerCalculator -> accumulation_h_couche_index("+index+")");
         float size = 0f;
-        if(index < paramSolDataList.size()-1){
+        if(index < paramLayerDataList.size()-1){
             for (int i = 0; i <= index; i++) {
-                size += paramSolDataList.get(i).h()*1000;
+                size += paramLayerDataList.get(i).h()*1000;
             }
         }else{
             size =  Float.POSITIVE_INFINITY;
@@ -109,8 +107,8 @@ public class LayerCalculator {
         return size;
     }
 
-    public void updateData(List<ParamSolData> paramSolDataList, PieuManagerData pieuParamManagerData) {
-        this.paramSolDataList =paramSolDataList;
+    public void updateData(List<ParamLayerData> paramLayerDataList, ScrewPileManagerData pieuParamManagerData) {
+        this.paramLayerDataList = paramLayerDataList;
         this.pieuParamManagerData = pieuParamManagerData;
     }
 }

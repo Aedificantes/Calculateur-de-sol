@@ -3,9 +3,8 @@ package com.example.aedificantes_calculateur_se_sol.Calculator;
 import com.example.aedificantes_calculateur_se_sol.Details.Detail;
 import com.example.aedificantes_calculateur_se_sol.Details.DetailTitle;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +84,7 @@ public class DetailResultManager extends ResultManager{
         String  calc_str ="";
         float  calc =0;
         for(int i=0; i< getLayerCalculator().index_couchePortante(); i++){
-            ParamSolData data = getParamSolDataList().get(i);
+            ParamLayerData data = getParamSolDataList().get(i);
             detail.add_String("γ<sub>"+(i+1)+"</sub>  · h<sub>"+(i+1)+"</sub>");
             calc_str += data.yT()+" · "+enfoncement_couche_index_ToDisplay(i);
             calc += data.yT() * getLayerCalculator().enfoncement_couche_index(i)/1000;
@@ -103,7 +102,7 @@ public class DetailResultManager extends ResultManager{
 
     public Detail detail_fd0_comp(){
         Detail detail= new Detail("pour les charges de compression");
-        ParamSolData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
+        ParamLayerData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
         detail.add_ln_String(" = <b>F<sub>d0,comp</sub></b> = ( α<sub>1</sub> · cT + α<sub>2</sub> · y1 · (H+Hk) ) · A<sub>comp</sub>");
         detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getPieuParamManagerData().H_val()+getPieuParamManagerData().Hk_val())/1000+") · "+fd0_Acomp());
         detail.add_ln_String(" = "+fd0_comp());
@@ -111,15 +110,15 @@ public class DetailResultManager extends ResultManager{
     }
     public Detail detail_fd0_trac(){
         Detail detail= new Detail("pour les charges de traction");
-        ParamSolData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
+        ParamLayerData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
         detail.add_ln_String(" = <b>F<sub>d0,trac</sub></b> = ( α<sub>1</sub> · cT + α<sub>2</sub> · y1 · (H+Hk) ) · A<sub>trac</sub>");
         detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getPieuParamManagerData().H_val()+getPieuParamManagerData().Hk_val())/1000+") · "+fd0_ATrac());
         detail.add_ln_String(" = "+fd0_trac());
         return detail;
     }
     public Detail detail_Resistance_sol_par_couche(int index ){
-        ParamSolData data = getParamSolDataList().get(index);
-        Detail detail= new Detail(getResistanceSolCalculator().constructTab(round(getLayerCalculator().profondeur_couche_index(index),2),data));
+        ParamLayerData data = getParamSolDataList().get(index);
+        Detail detail= new Detail(getSoilResistanceCalculator().constructTab(round(getLayerCalculator().profondeur_couche_index(index),2),data));
         detail.add_ln_String("pour les charges de traction");
 
         float hauteur_de_toit=0;
@@ -155,7 +154,7 @@ public class DetailResultManager extends ResultManager{
         String  calc_str ="";
         float  calc =0;
         for(int i=0; i< getLayerCalculator().index_couchePortante(); i++){
-            ParamSolData data = getParamSolDataList().get(i);
+            ParamLayerData data = getParamSolDataList().get(i);
             detail.add_String("f<sub>"+(i+1)+"</sub>  · ");
             calc_str += resistanceSol_couche_Tm(i)+" · ";
             if(i == getLayerCalculator().index_couchePortante()-1){

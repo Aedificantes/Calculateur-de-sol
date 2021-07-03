@@ -9,16 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,7 +65,7 @@ public class ResultFragment extends Fragment {
         this.CL_result = view.findViewById(R.id.CL_result);
         ResultDisplayer displayer = new ResultDisplayer(CL_result);
 
-        if(this.paramContainerData.getSol_data_list() == null || this.paramContainerData.getPieuManagerData() == null){
+        if(this.paramContainerData.getSol_data_list() == null || this.paramContainerData.getScrewPileManagerData() == null){
             Log.e("NullException", "soldata ou pieumanager are null");
         }
 

@@ -1,26 +1,22 @@
 package com.example.aedificantes_calculateur_se_sol.Error;
 
-import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorManager;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorOrder;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorParamSolManager;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorPieuxParamManager;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.Eaux_souterraines;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 
 public class ErrorCreater {
 
     public ErrorCreater() {
     }
 
-    public List<ErrorManager> generate_LineEmptyError(List<ParamSol> listParam){
+    public List<ErrorManager> generate_LineEmptyError(List<ParamLayer> listParam){
         List<ErrorManager> listTamp = new ArrayList<>();
         for(int i=0; i < listParam.size(); i++){
             if(!listParam.get(i).isAllFill()){
@@ -30,7 +26,7 @@ public class ErrorCreater {
         return listTamp;
     }
 
-    public List<ErrorManager> generate_PieuEmptyError(PieuParamManager manager){
+    public List<ErrorManager> generate_PieuEmptyError(ScrewPileParamManager manager){
         List<ErrorManager> listTamp = new ArrayList<>();
         if(!manager.isFill()){
             listTamp.add( new ErrorPieuxParamManager(manager.generateError(), ErrorOrder.PIEUX));
@@ -38,10 +34,10 @@ public class ErrorCreater {
         return listTamp;
     }
 
-    public List<ErrorManager> generate_EauxSouterainesEmptyError(Eaux_souterraines eaux_souterraines){
+    public List<ErrorManager> generate_EauxSouterainesEmptyError(GroundWater groundWater){
         List<ErrorManager> listTamp = new ArrayList<>();
-        if(!eaux_souterraines.isFill()){
-            listTamp.add( new ErrorPieuxParamManager(eaux_souterraines.generateError(), ErrorOrder.EAUX_SOUTERRAINES));
+        if(!groundWater.isFill()){
+            listTamp.add( new ErrorPieuxParamManager(groundWater.generateError(), ErrorOrder.EAUX_SOUTERRAINES));
         }
         return listTamp;
     }

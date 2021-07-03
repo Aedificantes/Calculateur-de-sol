@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer;
 
 import android.util.Log;
 
@@ -7,24 +7,27 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamSol{
+/**
+ * Class that manage element display in ReclyclerView ParamLayer
+ */
+public class ParamLayer {
     private static final String LOG_TAG = "CLA_04";
-    private ParamSolData data;
+    private ParamLayerData data;
 
     private ParamEnabler paramEnabler;
 
 
-    public ParamSol() {
+    public ParamLayer() {
         paramEnabler = new ParamEnabler(this);
-        data = new ParamSolData();
+        data = new ParamLayerData();
         for(int i=0; i<7; i++) {
             data.params.add(0f);
         }
         addLogName();
 
     }
-    public ParamSol(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
-        data = new ParamSolData();
+    public ParamLayer(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
+        data = new ParamLayerData();
         this.data.setTypeSol(sol);
         this.data.setGranularite(granularite);
         this.setCompacite(comp);
@@ -40,7 +43,7 @@ public class ParamSol{
         paramEnabler = new ParamEnabler(this);
     }
 
-    public ParamSol(ParamSolData data) {
+    public ParamLayer(ParamLayerData data) {
         this.data = data;
         this.paramEnabler = new ParamEnabler(this);
         addLogName();
@@ -142,7 +145,7 @@ public class ParamSol{
         data.setLoadLayer(loadLayer);
     }
 
-    public ParamSolData getData() {
+    public ParamLayerData getData() {
         return data;
     }
 

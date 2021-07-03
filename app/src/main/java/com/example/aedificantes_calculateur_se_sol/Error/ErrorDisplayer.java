@@ -9,7 +9,6 @@ import android.widget.ExpandableListView;
 
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class ErrorDisplayer {
         List<ErrorManager> tampHash = new ArrayList<ErrorManager>();
         tampHash.addAll(errorCreater.generate_LineEmptyError(paramContainer.getSol_list()) );
         tampHash.addAll(errorCreater.generate_PieuEmptyError(paramContainer.getPieuManager()) );
-        tampHash.addAll(errorCreater.generate_EauxSouterainesEmptyError(paramContainer.getEaux_souterraines()) );
+        tampHash.addAll(errorCreater.generate_EauxSouterainesEmptyError(paramContainer.getGroundWater()) );
 
         display(tampHash);
         errorListAdpatator.notifyDataSetChanged();

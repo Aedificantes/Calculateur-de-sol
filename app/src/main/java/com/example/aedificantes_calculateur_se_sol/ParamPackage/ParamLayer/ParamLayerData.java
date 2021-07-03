@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,7 +6,10 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ParamSolData implements Serializable {
+/**
+ * Like every other param classes ParamLayerData has his own data classes that can be serializable to be place in ParamContainerData and transfert to other Activity
+ */
+public class ParamLayerData implements Serializable {
     private Compacite compacite = Compacite.FRIABLE;
     private Granularite granularite = Granularite.GRAVELEUX;
     private TypeSol typeSol = TypeSol.REMBLAI;
@@ -16,7 +19,7 @@ public class ParamSolData implements Serializable {
     private boolean isLoadLayer = false;
 
 
-    public ParamSolData() {
+    public ParamLayerData() {
     }
 
     public Compacite getCompacite() {

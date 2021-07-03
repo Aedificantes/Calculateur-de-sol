@@ -15,11 +15,7 @@ import com.example.aedificantes_calculateur_se_sol.Details.DetailsDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.

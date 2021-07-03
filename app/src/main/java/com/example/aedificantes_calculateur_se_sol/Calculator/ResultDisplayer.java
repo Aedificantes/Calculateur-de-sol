@@ -11,6 +11,10 @@ import  com.example.aedificantes_calculateur_se_sol.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class has to display element in give, viewParent
+ * give table result from calculate value
+ */
 public class ResultDisplayer {
     private ViewGroup parent;
 

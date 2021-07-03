@@ -1,18 +1,13 @@
 package com.example.aedificantes_calculateur_se_sol.GlobalResultFragments;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
     private ParamContainerData paramContainerData;

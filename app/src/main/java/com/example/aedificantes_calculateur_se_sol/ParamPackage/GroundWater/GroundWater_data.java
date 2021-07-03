@@ -1,22 +1,25 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class EauxSouterraines_data implements Serializable {
+/**
+ * Like every other param classes GroundWater has his own data classes that can be serializable to be place in ParamContainerData and transfert to other Activity
+ */
+public class GroundWater_data implements Serializable {
     private boolean isChecked;
     private float nes;
     private float aquifere;
 
-    public EauxSouterraines_data(boolean isChecked, float nes, float aquifere) {
+    public GroundWater_data(boolean isChecked, float nes, float aquifere) {
         this.isChecked = isChecked;
         this.nes = nes;
         this.aquifere = aquifere;
     }
 
-    public EauxSouterraines_data() {
+    public GroundWater_data() {
         this.isChecked = false;
         this.aquifere = 0f;
         this.nes = 0f;

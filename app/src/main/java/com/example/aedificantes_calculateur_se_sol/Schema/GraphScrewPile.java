@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
 
-public class GraphPieu {
+/**
+ * this class is specially create to draw Piles in ground in drawing activity
+ */
+public class GraphScrewPile {
     float cX=100;
     float  cY=100;
     float Xlenght = 10;
@@ -16,7 +19,7 @@ public class GraphPieu {
     float percentHead = 0.9f;
     private Canvas canva;
 
-    public GraphPieu(Canvas canva, float x, float y, float height, float width ) {
+    public GraphScrewPile(Canvas canva, float x, float y, float height, float width ) {
         this.canva = canva;
         this.cX = x;
         this.cY = y;

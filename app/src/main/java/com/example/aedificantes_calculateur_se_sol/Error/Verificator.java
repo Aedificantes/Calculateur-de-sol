@@ -1,11 +1,13 @@
 package com.example.aedificantes_calculateur_se_sol.Error;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Observable Object that verify is all parameter are fill
+ */
 public class Verificator implements  VerificateObservable{
 
     private ResultUpdatable updater;

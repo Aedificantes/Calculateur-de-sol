@@ -7,8 +7,6 @@ import android.widget.ExpandableListView;
 import com.example.aedificantes_calculateur_se_sol.Calculator.DetailResultManager;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
 import java.util.List;
 import java.util.TreeMap;

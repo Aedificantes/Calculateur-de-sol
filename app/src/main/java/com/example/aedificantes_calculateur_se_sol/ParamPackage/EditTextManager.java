@@ -7,6 +7,11 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 
+/**
+ * Class that is used by several other class to manage control of EditText, especially set listener, getter for value, call back VerificateObservable in chnages
+ * @see VerificateObservable
+ */
+
 public class EditTextManager implements VerificateObserver {
     private float value_PieuParam =0f;
     private String nameOfElement;

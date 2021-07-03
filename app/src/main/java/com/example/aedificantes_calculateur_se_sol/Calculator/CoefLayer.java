@@ -1,26 +1,17 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TreeMap;
 
+/**
+ * Calculator class based on ref table
+ */
 public class CoefLayer {
 
-    //private TreeMap<String, ArrayList<Float>> Ref = new TreeMap<>();
     private ArrayList<Float[]> REF = new ArrayList<>();
 
     public CoefLayer() {
-        /*
-        Ref.put("argile et limon solide, semi-solide et plastique rigide", new ArrayList<Float>(Arrays.asList(0.8f,0.7f,0.7f)));
-        Ref.put("argile et limon plastique souple", new ArrayList<Float>(Arrays.asList(0.8f,0.7f,0.6f)));
-        Ref.put("argile et limon fluide-plastique", new ArrayList<Float>(Arrays.asList(0.7f,0.6f,0.4f)));
-        Ref.put("sables à faible humidité et loam sableux solide", new ArrayList<Float>(Arrays.asList(0.8f,0.7f,0.5f)));
-        Ref.put("sables humides et loam sableux plastique", new ArrayList<Float>(Arrays.asList(0.7f,0.6f,0.4f)));
-        Ref.put("sables à forte teneur en eau et loams sableux fluides", new ArrayList<Float>(Arrays.asList(0.6f,0.5f,0.3f)));
-         */
         REF.add(new Float[]{0.8f,0.7f,0.7f});
         REF.add(new Float[]{0.8f,0.7f,0.6f});
         REF.add(new Float[]{0.7f,0.6f,0.4f});
@@ -29,20 +20,20 @@ public class CoefLayer {
         REF.add(new Float[]{0.6f,0.5f,0.3f});
     }
 
-    public float getCoef_comp(ParamSolData layerParam) throws RemblaiSupportLayerException {
+    public float getCoef_comp(ParamLayerData layerParam) throws RemblaiSupportLayerException {
             return rowOfCoef(layerParam)[0];
     }
 
-    public float getCoef_trac(ParamSolData layerParam) throws RemblaiSupportLayerException {
+    public float getCoef_trac(ParamLayerData layerParam) throws RemblaiSupportLayerException {
             return rowOfCoef(layerParam)[1];
     }
 
-    public float getCoef_variableLoad(ParamSolData layerParam) throws RemblaiSupportLayerException {
+    public float getCoef_variableLoad(ParamLayerData layerParam) throws RemblaiSupportLayerException {
         return rowOfCoef(layerParam)[2];
     }
 
 
-    private Float[] rowOfCoef(ParamSolData layerParam) throws RemblaiSupportLayerException{
+    private Float[] rowOfCoef(ParamLayerData layerParam) throws RemblaiSupportLayerException{
         switch (layerParam.getTypeSol()){
             case ARGILEUX:
             case LIMONEUX:

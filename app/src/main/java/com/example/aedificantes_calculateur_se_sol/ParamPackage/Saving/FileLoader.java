@@ -11,12 +11,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.EauxSouterraines_data;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Compacite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Granularite;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileManagerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater_data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,10 +43,10 @@ public class FileLoader {
 
     public ParamContainerData loadAndParse(){
         String content ="";
-        ArrayList<ParamSolData> list_sol_data = new ArrayList<>();
-        PieuManagerData pieuManagerData;
+        ArrayList<ParamLayerData> list_sol_data = new ArrayList<>();
+        ScrewPileManagerData screwPileManagerData;
         ParamContainerData paramContainer;
-        EauxSouterraines_data eauxSouterraines_data;
+        GroundWater_data groundWater_data;
         try {
             content = readFile(url);
         }catch (Exception e){
@@ -59,7 +59,7 @@ public class FileLoader {
             JSONArray solArray = main.getJSONArray("SOL");
             for(int i=0; i<solArray.length(); i++){
                 JSONObject rowSol = (JSONObject) solArray.get(i);
-                ParamSolData tampSol = new ParamSolData();
+                ParamLayerData tampSol = new ParamLayerData();
                 tampSol.setTypeSol(TypeSol.getTypeSol_byId(rowSol.getInt("TYPE_SOL")));
                 tampSol.setGranularite(Granularite.getGranularite_byId(rowSol.getInt("GRANULARITE")));
                 tampSol.setCompacite(Compacite.getCompacite_byId(rowSol.getInt("COMPACITE")));
@@ -73,7 +73,7 @@ public class FileLoader {
                 list_sol_data.add(tampSol);
             }
             JSONObject pieu = main.getJSONObject("PIEU");
-            pieuManagerData = new PieuManagerData(
+            screwPileManagerData = new ScrewPileManagerData(
                     (float) pieu.getDouble("DFUT"),
                     (float) pieu.getDouble("DHEL"),
                     (float) pieu.getDouble("IP"),
@@ -81,12 +81,12 @@ public class FileLoader {
                     (float) pieu.getDouble("H"));
 
             JSONObject eauxSouterraines = main.getJSONObject("EAUX_SOUTERRAINES");
-            eauxSouterraines_data = new EauxSouterraines_data(
+            groundWater_data = new GroundWater_data(
                     (boolean) eauxSouterraines.getBoolean("IS_CHECKED"),
                     (float) eauxSouterraines.getDouble("NES"),
                     (float) eauxSouterraines.getDouble("AQUIFERE"));
 
-            paramContainer = new ParamContainerData(list_sol_data, pieuManagerData,eauxSouterraines_data);
+            paramContainer = new ParamContainerData(list_sol_data, screwPileManagerData, groundWater_data);
             return paramContainer;
         } catch (JSONException e) {
             Log.e(LOG_TAG, "error loadAndParse->JSONPARSING \n"+e.getMessage()+"\n"+e.getCause());

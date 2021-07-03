@@ -24,6 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Classe mère de l'ensemble des affichages et des éxécutions.
+ */
 public class MainNavigationActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;

@@ -1,8 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.EauxSouterraines_data;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileManagerData;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater_data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,49 +13,49 @@ import java.util.ArrayList;
  */
 public class ParamContainerData implements Serializable {
 
-    ArrayList<ParamSolData> sol_data_list;
-    PieuManagerData pieuManagerData;
-    EauxSouterraines_data eauxSouterraines_data;
+    ArrayList<ParamLayerData> sol_data_list;
+    ScrewPileManagerData screwPileManagerData;
+    GroundWater_data groundWater_data;
 
-    public ParamContainerData(ArrayList<ParamSolData> sol_data_list, PieuManagerData pieuManagerData, EauxSouterraines_data eauxSouterraines_data) {
+    public ParamContainerData(ArrayList<ParamLayerData> sol_data_list, ScrewPileManagerData screwPileManagerData, GroundWater_data groundWater_data) {
         this.sol_data_list = sol_data_list;
-        this.pieuManagerData = pieuManagerData;
-        this.eauxSouterraines_data = eauxSouterraines_data;
+        this.screwPileManagerData = screwPileManagerData;
+        this.groundWater_data = groundWater_data;
     }
 
-    public ArrayList<ParamSolData> getSol_data_list() {
+    public ArrayList<ParamLayerData> getSol_data_list() {
         return sol_data_list;
     }
 
-    public void setSol_data_list(ArrayList<ParamSolData> sol_data_list) {
+    public void setSol_data_list(ArrayList<ParamLayerData> sol_data_list) {
         this.sol_data_list = sol_data_list;
     }
 
-    public PieuManagerData getPieuManagerData() {
-        return pieuManagerData;
+    public ScrewPileManagerData getScrewPileManagerData() {
+        return screwPileManagerData;
     }
 
-    public void setPieuManagerData(PieuManagerData pieuManagerData) {
-        this.pieuManagerData = pieuManagerData;
+    public void setScrewPileManagerData(ScrewPileManagerData screwPileManagerData) {
+        this.screwPileManagerData = screwPileManagerData;
     }
 
-    public EauxSouterraines_data getEauxSouterraines_data() {
-        return eauxSouterraines_data;
+    public GroundWater_data getGroundWater_data() {
+        return groundWater_data;
     }
 
-    public void setEauxSouterraines_data(EauxSouterraines_data eauxSouterraines_data) {
-        this.eauxSouterraines_data = eauxSouterraines_data;
+    public void setGroundWater_data(GroundWater_data groundWater_data) {
+        this.groundWater_data = groundWater_data;
     }
 
     @Override
     public String toString() {
         String dataSol_toString="";
-        for(ParamSolData each : sol_data_list){
+        for(ParamLayerData each : sol_data_list){
             dataSol_toString+="\n"+each.toString();
         }
         return "ParamContainer{" +
                 "sol_data_list=" + dataSol_toString +
-                ",\n pieuManagerData=" + pieuManagerData.toString() +
+                ",\n pieuManagerData=" + screwPileManagerData.toString() +
                 '}';
     }
 }

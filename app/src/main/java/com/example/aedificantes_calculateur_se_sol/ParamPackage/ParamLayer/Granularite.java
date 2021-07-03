@@ -1,18 +1,19 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer;
 
 import java.io.Serializable;
 
-public enum Compacite implements Serializable {
+public enum Granularite implements Serializable {
 
-    FRIABLE(0,"fiable"),
-    MOYEN_DENSE(1,"moyennement dense"),
-    DENSE_SOND_ST(2,"dense sondate stat"),
-    DENSE_SANS_SOND_ST(3,"dense SANS sondage stat");
+    GRAVELEUX(0,"graveleux"),
+    GROSSIER(1,"grossier"),
+    MOYEN(2,"moyen"),
+    FIN(3,"fin"),
+    PULVERULENT(4,"pulverulent");
 
     private int indice ;
     private String name ;
 
-    private Compacite(int indice,String name) {
+    private Granularite(int indice,String name) {
         this.indice = indice ;
         this.name = name;
     }
@@ -26,8 +27,8 @@ public enum Compacite implements Serializable {
         return  this.name;
     }
 
-    public static Compacite getCompacite_byId(int id){
-        for(Compacite each: values()){
+    public static Granularite getGranularite_byId(int id){
+        for(Granularite each: values()){
             if(id == each.getIndice()){
                 return each;
             }
@@ -40,3 +41,4 @@ public enum Compacite implements Serializable {
         return  this.name;
     }
 }
+

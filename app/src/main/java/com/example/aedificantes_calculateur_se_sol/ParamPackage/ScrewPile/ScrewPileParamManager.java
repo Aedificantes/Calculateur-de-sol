@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile;
 
 import android.view.View;
 import android.widget.EditText;
@@ -12,11 +12,14 @@ import com.example.aedificantes_calculateur_se_sol.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PieuParamManager  implements VerificateObserver{
+/**
+ * Manage every screw pile parameter in home activity
+ */
+public class ScrewPileParamManager implements VerificateObserver{
     private List<EditTextManager> list_PieuParam = new ArrayList<>();
     private VerificateObservable verificator;
 
-    public PieuParamManager(VerificateObservable verificator, View viewWhereElementArePLace) {
+    public ScrewPileParamManager(VerificateObservable verificator, View viewWhereElementArePLace) {
         this.verificator = verificator;
         this.verificator.addLikeObserver(this);
         list_PieuParam.add(new EditTextManager((EditText) viewWhereElementArePLace.findViewById(R.id.ET_Dfut), "Dfut", verificator));
@@ -38,7 +41,7 @@ public class PieuParamManager  implements VerificateObserver{
         verificator.notifyDataChange();
     }
 
-    public void setValues(PieuManagerData pieuData){
+    public void setValues(ScrewPileManagerData pieuData){
         list_PieuParam.get(0).setValue(pieuData.Dfut_val());
         list_PieuParam.get(1).setValue(pieuData.Dhel_val());
         list_PieuParam.get(2).setValue(pieuData.Ip_val());
@@ -57,8 +60,8 @@ public class PieuParamManager  implements VerificateObserver{
         return list;
     }
 
-    public PieuManagerData generate_pieuParamData(){
-        return new PieuManagerData(
+    public ScrewPileManagerData generate_pieuParamData(){
+        return new ScrewPileManagerData(
                 Dfut_val(),
                 Dhel_val(),
                 Ip_val(),

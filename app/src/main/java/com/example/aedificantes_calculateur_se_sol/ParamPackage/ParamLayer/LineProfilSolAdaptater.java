@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer;
 
 import android.content.Context;
 import android.text.Editable;
@@ -18,23 +18,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
-import com.example.aedificantes_calculateur_se_sol.MainNavigationActivity;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileParamManager;
 import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 
+/**
+ * Complexe class to create recyclerView and display LayerParam inside
+ */
 public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAdaptater.LineProfilSolViewHolder> implements VerificateObserver {
 
     private Context context;
-    private ArrayList<ParamSol> mListparamSols;
+    private ArrayList<ParamLayer> mListparamLayers;
     public OnItemClickListener mListener;
     private VerificateObservable verificator;
-    private PieuParamManager pieuParamManager;
+    private ScrewPileParamManager screwPileParamManager;
     private boolean allAreSet = false;
 
     public interface OnItemClickListener {
@@ -46,6 +47,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
     }
 
 
+    //manage each element to display line by line
     public static class LineProfilSolViewHolder  extends RecyclerView.ViewHolder {
         public Button BT_delete_line;
         public TextView TV_number;
@@ -99,23 +101,23 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         LineProfilSolViewHolder ipvh = new LineProfilSolViewHolder(v, mListener);
         return ipvh;
     }
-    public LineProfilSolAdaptater(Context context, ArrayList<ParamSol> listParams, VerificateObservable verificator, PieuParamManager managerPieu){
-        mListparamSols = listParams;
+    public LineProfilSolAdaptater(Context context, ArrayList<ParamLayer> listParams, VerificateObservable verificator, ScrewPileParamManager managerPieu){
+        mListparamLayers = listParams;
         this.verificator =  verificator;
-        this.pieuParamManager = managerPieu;
+        this.screwPileParamManager = managerPieu;
         verificator.addLikeObserver(this);
         this.context = context;
     }
-    public LineProfilSolAdaptater(Context context, VerificateObservable verificator, PieuParamManager managerPieu){
-        mListparamSols = new ArrayList<>();
+    public LineProfilSolAdaptater(Context context, VerificateObservable verificator, ScrewPileParamManager managerPieu){
+        mListparamLayers = new ArrayList<>();
         this.verificator =  verificator;
-        this.pieuParamManager = managerPieu;
+        this.screwPileParamManager = managerPieu;
         verificator.addLikeObserver(this);
         this.context = context;
     }
     @Override
     public void onBindViewHolder(@NonNull final LineProfilSolViewHolder holder, final int position) {
-        final ParamSol currentItem = mListparamSols.get(position);
+        final ParamLayer currentItem = mListparamLayers.get(position);
 
         setParamSolLastElement();
         currentItem.getParamEnabler().manage(holder);
@@ -134,14 +136,14 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         holder.SP_Compacite.setSelection(currentItem.getCompacite().getIndice());
 
         holder.BT_delete_line.setEnabled(true);
+        //on delete line button press
         holder.BT_delete_line.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mListparamSols.size()>1) {
-                        mListparamSols.remove(position);
+                    if(mListparamLayers.size()>1) {
+                        mListparamLayers.remove(position);
                         notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, mListparamSols.size() - position);
-                        System.out.println(currentItem.toString());
+                        notifyItemRangeChanged(position, mListparamLayers.size() - position);
                         setParamSolLastElement();
                         updateAll_ET_Element();
                         verificator.notifyDataChange();
@@ -187,7 +189,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
         if(!allAreSet){ // permet d'identifier si toutes les lignes ont été crées, autrement, l'appel de updateAll_ET_Element() pose un problème sur les lignes dont le holder n'a pas été placé dans ParamEnabler
             updatePOS_ET_Element(position);
-            if(position == mListparamSols.size()-1)
+            if(position == mListparamLayers.size()-1)
                 allAreSet = true;
         }else{
             updateAll_ET_Element();
@@ -196,7 +198,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
     }
 
 
-    private void setEditTextListener(LineProfilSolViewHolder holder, final ParamSol paramSol){
+    private void setEditTextListener(LineProfilSolViewHolder holder, final ParamLayer paramLayer){
         for (int i = 0; i< holder.ET_List.size(); i++) {
             final int finalI = i;
             holder.ET_List.get(i).addTextChangedListener(new TextWatcher() {
@@ -214,9 +216,9 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                 public void onTextChanged(CharSequence s, int start,
                                           int before, int count) {
                     if (s.toString().length() > 0) {
-                        paramSol.setValueByIndex(finalI, Float.parseFloat(s.toString()));
+                        paramLayer.setValueByIndex(finalI, Float.parseFloat(s.toString()));
                     } else {
-                        paramSol.setValueByIndex(finalI, 0);
+                        paramLayer.setValueByIndex(finalI, 0);
                     }
                     verificator.notifyDataChange();
                 }
@@ -225,25 +227,25 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
     }
 
     private void setParamSolLastElement(){
-        for(ParamSol each: mListparamSols){
+        for(ParamLayer each: mListparamLayers){
             each.getParamEnabler().setLast(false);
         }
-        mListparamSols.get(mListparamSols.size()-1).getParamEnabler().setLast(true);
+        mListparamLayers.get(mListparamLayers.size()-1).getParamEnabler().setLast(true);
     }
 
     private void updateAll_ET_Element(){
-        for(ParamSol each: mListparamSols){
+        for(ParamLayer each: mListparamLayers){
             each.getParamEnabler().update();
         }
     }
     private void updatePOS_ET_Element(int pos){
-            mListparamSols.get(pos).getParamEnabler().update();
+            mListparamLayers.get(pos).getParamEnabler().update();
     }
 
 
     @Override
     public int getItemCount() {
-        return mListparamSols.size();
+        return mListparamLayers.size();
     }
 
     @Override
@@ -260,14 +262,14 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
     @Override
     public boolean isFill() {
-        if(pieuParamManager.isFill()){
-            for(ParamSol each: mListparamSols){
+        if(screwPileParamManager.isFill()){
+            for(ParamLayer each: mListparamLayers){
                 each.setLoadLayer(false);
             }
             HomeFragment.resultManager.getLayerCalculator().ParamSol_couchePortante().setLoadLayer(true);
             updateAll_ET_Element();
         }
-        for(ParamSol each_PS : mListparamSols){
+        for(ParamLayer each_PS : mListparamLayers){
             if(!each_PS.isAllFill())
                 return false;
         }

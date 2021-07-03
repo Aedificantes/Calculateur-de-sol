@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater;
 
 import android.view.View;
 import android.widget.CompoundButton;
@@ -14,7 +14,10 @@ import com.example.aedificantes_calculateur_se_sol.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Eaux_souterraines implements VerificateObserver {
+/**
+ * Control every element in groundwater parameter
+ */
+public class GroundWater implements VerificateObserver {
 
     //private List<PieuParam> list_PieuParam = new ArrayList<>();
     private Switch enable_Param;
@@ -22,7 +25,7 @@ public class Eaux_souterraines implements VerificateObserver {
     private EditTextManager ETM_aquifere;
     private VerificateObservable verificator;
 
-    public Eaux_souterraines(VerificateObservable verificator, View viewWhereElementArePLace) {
+    public GroundWater(VerificateObservable verificator, View viewWhereElementArePLace) {
         this.verificator = verificator;
         this.verificator.addLikeObserver(this);
         enable_Param = viewWhereElementArePLace.findViewById(R.id.SWITCH_eaux_souterraines);
@@ -54,10 +57,10 @@ public class Eaux_souterraines implements VerificateObserver {
 
     }
 
-    public void setValues(EauxSouterraines_data eauxSouterraines_data) {
-        this.enable_Param.setChecked(eauxSouterraines_data.isChecked());
-        this.ETM_nes.setValue(eauxSouterraines_data.getNes());
-        this.ETM_aquifere.setValue(eauxSouterraines_data.getAquifere());
+    public void setValues(GroundWater_data groundWater_data) {
+        this.enable_Param.setChecked(groundWater_data.isChecked());
+        this.ETM_nes.setValue(groundWater_data.getNes());
+        this.ETM_aquifere.setValue(groundWater_data.getAquifere());
     }
 
     @Override
@@ -81,7 +84,7 @@ public class Eaux_souterraines implements VerificateObserver {
         return list;
     }
 
-    public EauxSouterraines_data generate_eauxSouterrainesData() {
-        return new EauxSouterraines_data(enable_Param.isChecked(), ETM_nes.value(), ETM_aquifere.value());
+    public GroundWater_data generate_eauxSouterrainesData() {
+        return new GroundWater_data(enable_Param.isChecked(), ETM_nes.value(), ETM_aquifere.value());
     }
 }
