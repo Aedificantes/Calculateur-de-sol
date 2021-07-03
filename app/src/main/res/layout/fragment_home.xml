@@ -555,11 +555,13 @@
                     android:layout_weight="1" />
 
                 <Switch
-                    android:id="@+id/switch2"
+                    android:id="@+id/SWITCH_eaux_souterraines"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:enabled="false"
-                    android:text="Eaux souterraines  "
+                    android:checked="false"
+                    android:enabled="true"
+                    android:gravity="center"
+                    android:text="Activer\nEaux Souterraines"
                     android:textSize="18dp" />
 
                 <LinearLayout
@@ -583,7 +585,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:enabled="false"
+                        android:enabled="true"
                         android:gravity="center"
                         android:inputType="numberDecimal" />
 
@@ -616,7 +618,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:enabled="false"
+                        android:enabled="true"
                         android:gravity="center"
                         android:inputType="numberDecimal" />
 

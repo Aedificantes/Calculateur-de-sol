@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 
 import com.example.aedificantes_calculateur_se_sol.GlobalResultFragments.GlobalResultPageAdaptater;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.google.android.material.tabs.TabLayout;
@@ -24,13 +25,13 @@ public class GlobalResultActivity extends AppCompatActivity {
 
     private void configureViewPagerAndTabs(){
 
-        ArrayList<ParamSolData> listParamSolData =  (ArrayList<ParamSolData>)getIntent().getSerializableExtra("listParamSolData");
-        PieuManagerData pieuManagerData =  (PieuManagerData) getIntent().getSerializableExtra("pieuManagerData");
+
+        ParamContainerData paramContainerData =  (ParamContainerData) getIntent().getSerializableExtra("paramContainerData");
 
         //Get ViewPager from layout
         ViewPager pager = (ViewPager)findViewById(R.id.activity_main_viewpager);
         //Set Adapter PageAdapter and glue it together
-        pager.setAdapter(new GlobalResultPageAdaptater(getSupportFragmentManager(), listParamSolData, pieuManagerData));
+        pager.setAdapter(new GlobalResultPageAdaptater(getSupportFragmentManager(), paramContainerData));
         // 1 - Get TabLayout from layout
         TabLayout tabs= (TabLayout)findViewById(R.id.activity_main_tabs);
         // 2 - Glue TabLayout and ViewPager together

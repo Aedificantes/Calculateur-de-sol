@@ -6,7 +6,9 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorOrder
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorParamSolManager;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorPieuxParamManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.Eaux_souterraines;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,14 @@ public class ErrorCreater {
         List<ErrorManager> listTamp = new ArrayList<>();
         if(!manager.isFill()){
             listTamp.add( new ErrorPieuxParamManager(manager.generateError(), ErrorOrder.PIEUX));
+        }
+        return listTamp;
+    }
+
+    public List<ErrorManager> generate_EauxSouterainesEmptyError(Eaux_souterraines eaux_souterraines){
+        List<ErrorManager> listTamp = new ArrayList<>();
+        if(!eaux_souterraines.isFill()){
+            listTamp.add( new ErrorPieuxParamManager(eaux_souterraines.generateError(), ErrorOrder.EAUX_SOUTERRAINES));
         }
         return listTamp;
     }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
@@ -32,8 +33,7 @@ public class DrawingFragment extends Fragment {
 
     private ConstraintLayout CL_ConstraintLayout;
 
-    private ArrayList<ParamSolData> solData;
-    private PieuManagerData pieuManagerData;
+    private ParamContainerData paramContainerData;
 
 
     public DrawingFragment() {
@@ -46,11 +46,10 @@ public class DrawingFragment extends Fragment {
      *
      * @return A new instance of fragment DrawingFragment.
      */
-    public static DrawingFragment newInstance(ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
+    public static DrawingFragment newInstance(ParamContainerData data) {
         DrawingFragment fragment = new DrawingFragment();
         Bundle args = new Bundle();
-        args.putSerializable("solData",SolData);
-        args.putSerializable("pieuManagerData",pieuManagerData);
+        args.putSerializable("paramContainerData",data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,8 +58,7 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.solData = (ArrayList<ParamSolData>) getArguments().getSerializable("solData");
-            this.pieuManagerData = (PieuManagerData) getArguments().getSerializable("pieuManagerData");
+            this.paramContainerData = (ParamContainerData) getArguments().getSerializable("paramContainerData");
         }
     }
 
@@ -70,7 +68,7 @@ public class DrawingFragment extends Fragment {
         View inflateView = inflater.inflate(R.layout.fragment_drawing, container, false);
         CL_ConstraintLayout = inflateView.findViewById(R.id.CL_Frag_drawing);
 
-        ResultManager calculator = new ResultManager(solData,pieuManagerData);
+        ResultManager calculator = new ResultManager(paramContainerData);
 
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -83,7 +81,7 @@ public class DrawingFragment extends Fragment {
         Canvas canvas = new Canvas(bg);
 
         //dessin du sol fixe
-        LayerDrawer layerDrawer = new LayerDrawer(solData,pieuManagerData, canvas, getActivity().getWindowManager());
+        LayerDrawer layerDrawer = new LayerDrawer(paramContainerData, canvas, getActivity().getWindowManager());
 
         layerDrawer.toDrawDrawing(0.70f,0.20f,0.05f);
         layerDrawer.toDrawChart(0.10f,0.40f,0.05f);

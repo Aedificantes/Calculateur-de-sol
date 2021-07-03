@@ -6,36 +6,30 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
-import com.google.gson.JsonObject;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.EauxSouterraines_data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
 
+/**
+ * Parse un fichier json en ParamContainer
+ */
 
 public class FileLoader {
 
@@ -47,11 +41,12 @@ public class FileLoader {
         this.url = url;
     }
 
-    public ParamContainer loadAndParse(){
+    public ParamContainerData loadAndParse(){
         String content ="";
         ArrayList<ParamSolData> list_sol_data = new ArrayList<>();
         PieuManagerData pieuManagerData;
-        ParamContainer paramContainer;
+        ParamContainerData paramContainer;
+        EauxSouterraines_data eauxSouterraines_data;
         try {
             content = readFile(url);
         }catch (Exception e){
@@ -81,11 +76,17 @@ public class FileLoader {
             pieuManagerData = new PieuManagerData(
                     (float) pieu.getDouble("DFUT"),
                     (float) pieu.getDouble("DHEL"),
+                    (float) pieu.getDouble("IP"),
                     (float) pieu.getDouble("HK"),
-                    (float) pieu.getDouble("H"),
-                    (float) pieu.getDouble("IP"));
+                    (float) pieu.getDouble("H"));
 
-            paramContainer = new ParamContainer(list_sol_data, pieuManagerData);
+            JSONObject eauxSouterraines = main.getJSONObject("EAUX_SOUTERRAINES");
+            eauxSouterraines_data = new EauxSouterraines_data(
+                    (boolean) eauxSouterraines.getBoolean("IS_CHECKED"),
+                    (float) eauxSouterraines.getDouble("NES"),
+                    (float) eauxSouterraines.getDouble("AQUIFERE"));
+
+            paramContainer = new ParamContainerData(list_sol_data, pieuManagerData,eauxSouterraines_data);
             return paramContainer;
         } catch (JSONException e) {
             Log.e(LOG_TAG, "error loadAndParse->JSONPARSING \n"+e.getMessage()+"\n"+e.getCause());

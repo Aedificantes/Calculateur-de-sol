@@ -2,43 +2,27 @@ package com.example.aedificantes_calculateur_se_sol.ui.home;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,8 +34,8 @@ import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Error.Verificator;
 import com.example.aedificantes_calculateur_se_sol.GlobalResultActivity;
-import com.example.aedificantes_calculateur_se_sol.MainNavigationActivity;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Compacite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.Granularite;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.LineProfilSolAdaptater;
@@ -61,17 +45,14 @@ import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileExporter;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving.FileLoader;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.Souterrain.Eaux_souterraines;
 import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.databinding.FragmentHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class HomeFragment extends Fragment  implements ResultUpdatable, ResultButtonLoader {
 
@@ -94,6 +75,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
     public static ResultManager resultManager;
     private PieuParamManager pieuParamManager;
+    private Eaux_souterraines eaux_souterraines;
     private ErrorDisplayer errorDisplayer;
     private GoodValuesInterfaceDisplayer goodValueDisplayer;
     private Verificator verificator;
@@ -129,16 +111,22 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         listParams.add(new ParamSol(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0f,0f,30f,2f,0.25f,0f));
         //listParams.add(new ParamSol());
 
-        //generate all needed class
-        errorDisplayer = new ErrorDisplayer(this.getActivity().getApplicationContext(), layout_Const_Result);
-        goodValueDisplayer = new GoodValuesInterfaceDisplayer(this, layout_Const_Result);
         verificator = new Verificator(this);
         pieuParamManager = new PieuParamManager(verificator, global_LL_activity);
-        resultManager = new ResultManager(listOfDataParamSol(),pieuParamManager.generate_pieuParamData());
+        eaux_souterraines = new Eaux_souterraines(verificator,global_LL_activity);
+
+
+        //generate all needed class
+        paramContainer = new ParamContainer(this.listParams, this.pieuParamManager, this.eaux_souterraines);
+        errorDisplayer = new ErrorDisplayer(this.getActivity().getApplicationContext(), layout_Const_Result);
+        goodValueDisplayer = new GoodValuesInterfaceDisplayer(this, layout_Const_Result);
+        resultManager = new ResultManager(paramContainer.get_ParamContainerData());
+
+        pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
+
 
 
         //place default value for PieuParamManager
-        pieuParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
 
         mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, pieuParamManager);
 
@@ -173,14 +161,6 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
 
 
-
-    private ArrayList<ParamSolData> listOfDataParamSol(){
-        ArrayList<ParamSolData> listDataParamSol = new ArrayList<>();
-        for(ParamSol each : listParams){
-            listDataParamSol.add(each.getData());
-        }
-        return listDataParamSol;
-    }
 
 
 
@@ -262,7 +242,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     public void allValuesAreSet() {
         System.out.println("SET CORRECTLY SO CALCULATE");
         errorDisplayer.hide();
-        resultManager.updateData(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
+        resultManager.updateData(paramContainer.get_ParamContainerData());
         //goodValueDisplayer.show();
         FAB_param.setVisibility(View.VISIBLE);
     }
@@ -270,21 +250,24 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     public void allValuesAreNotSet() {
         System.out.println("NOT SET CORRECTLY SO PRINT ERROR");
         //goodValueDisplayer.hide();
-        errorDisplayer.generateAndDisplay(listParams,pieuParamManager);
+        errorDisplayer.generateAndDisplay(paramContainer);
         FAB_param.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void updateCalculator() {
-        resultManager.updateData(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
+        resultManager.updateData(paramContainer.get_ParamContainerData());
     }
 
     @Override
     public void launchResultsView() {
         //Intent intent = new Intent(this, DetailsActivity.class);
         Intent intent = new Intent(this.getContext(), GlobalResultActivity.class);
+        /*
         intent.putExtra("listParamSolData",listOfDataParamSol() );
         intent.putExtra("pieuManagerData",pieuParamManager.generate_pieuParamData() );
+         */
+        intent.putExtra("paramContainerData",paramContainer.get_ParamContainerData() );
         this.startActivity(intent);
     }
 
@@ -365,8 +348,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 return;
             }
         }
-        paramContainer = new ParamContainer(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
-        FileExporter exporter = new FileExporter(paramContainer);
+        FileExporter exporter = new FileExporter(paramContainer.get_ParamContainerData());
         Log.d(LOG_TAG, "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
         exporter.save();
     }
@@ -416,8 +398,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                     Log.i( LOG_TAG,"Permission granted!");
                     Toast.makeText(getActivity().getApplicationContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
 
-                    paramContainer = new ParamContainer(listOfDataParamSol(), pieuParamManager.generate_pieuParamData());
-                    FileExporter exporter = new FileExporter(paramContainer);
+                    FileExporter exporter = new FileExporter(paramContainer.get_ParamContainerData());
                     Log.d("MAINACTIVITY", "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
                     exporter.save();
                 }
@@ -447,7 +428,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                                 +"\n"+fileUri.getEncodedPath());
                         //fileUri.getLastPathSegment().split(":")[1]
                         FileLoader loader2 = new FileLoader(fileUri.getLastPathSegment().split(":")[1]);
-                        ParamContainer container = loader2.loadAndParse();
+                        ParamContainerData container = loader2.loadAndParse();
                         Log.i(LOG_TAG, "ParamContainer after Parse: \n"+container.toString());
 
                         listParams.clear();
@@ -458,6 +439,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                         mAdapter.notifyDataSetChanged();
                         mRecyclerView.smoothScrollToPosition(listParams.size());
                         pieuParamManager.setValues(container.getPieuManagerData());
+                        eaux_souterraines.setValues(container.getEauxSouterraines_data());
                     }
                 }
                 break;

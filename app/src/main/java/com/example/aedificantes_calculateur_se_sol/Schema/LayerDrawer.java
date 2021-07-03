@@ -9,6 +9,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
@@ -30,10 +31,10 @@ public class LayerDrawer {
     float pieuDrawHeight; // hauteur du pieu dessiné
 
 
-    public LayerDrawer(ArrayList<ParamSolData> listParamSolData,PieuManagerData pieuParamManagerData, Canvas canva, WindowManager manager) {
-        calculator = new ResultManager(listParamSolData,pieuParamManagerData);
-        this.pieuParamManagerData = pieuParamManagerData;
-        this.paramSolDataList = listParamSolData;
+    public LayerDrawer(ParamContainerData paramContainerData, Canvas canva, WindowManager manager) {
+        calculator = new ResultManager(paramContainerData);
+        this.pieuParamManagerData = paramContainerData.getPieuManagerData();
+        this.paramSolDataList = paramContainerData.getSol_data_list();
         lineColor = new Paint();
         lineColor.setColor(Color.BLACK);
         lineColor.setStyle(Paint.Style.STROKE);
@@ -68,7 +69,7 @@ public class LayerDrawer {
         System.out.println(((pieuParamManagerData.Hk_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000));
 
 
-        float[][] tabLayer = drawLayer_focus(index_couchePortante,heightMaxLayers,offset_y+HkheightDraw,offset_X_rect,size_X_rect);
+        float[][] tabLayer = drawLayer_focus(index_couchePortante,heightMaxLayers,offset_y,offset_X_rect,size_X_rect);
         drawPieu_focus(HkheightDraw,offset_y+HkheightDraw,height_screen,offset_StartX);
 
         float[] tab_resistance;
@@ -81,7 +82,9 @@ public class LayerDrawer {
             if(i == index_couchePortante-1){ enfoncement[i] += pieuParamManagerData.Dhel_val();} // if it's support layer, add dhel size
         }
         float org_fdComp = calculator.fd0_comp();
+        float last_x_stop_pos = offset_StartX;
         for(int i=0; i < index_couchePortante; i++){
+            float x_start_pos_line=0,x_stop_pos_line=0;
             for(int j=0; j < number_value_chart+1; j++ ){
                 float y_pos =0, first_divider_reduce_height = 0;
                 if(j == 0){
@@ -95,14 +98,27 @@ public class LayerDrawer {
                 Log.d("toDrawChart"," new H set :"+ reduce_height);
                 pieuParamManagerData.set_H_val(reduce_height);
                 float x_pos_legend = offset_StartX + (calculator.fd0_comp() * size_to_right_border_legend)/org_fdComp ;
-                writeTextCanvas(0,x_pos_legend,y_pos, calculator.fdcomp_toDisplay());
+                writeTextCanvas(0,x_pos_legend+50,y_pos, calculator.fdcomp_toDisplay());
                 if(j == 0){
+                    x_start_pos_line = x_pos_legend;
                    reduce_height -= first_divider_reduce_height;
+                }else if(j == number_value_chart){
+                    x_stop_pos_line = x_pos_legend;
                 }
             }
+            canvas.drawLine(last_x_stop_pos, tabLayer[i][0],x_start_pos_line,tabLayer[i][0], lineColor);
+            canvas.drawLine(x_start_pos_line, tabLayer[i][0],x_stop_pos_line,tabLayer[i][1], lineColor);
+            last_x_stop_pos = x_stop_pos_line;
 
+            Log.d("toDrawChart"," filal H set :"+ reduce_height +"original one was "+base_H);
         }
-        Log.d("toDrawChart"," filal H set :"+ reduce_height +"original one was "+base_H);
+        canvas.drawLine(size_X_rect+offset_X_rect+50, offset_y, size_X_rect+offset_X_rect+50, (tabLayer[tabLayer.length-1][1]),lineColor);
+        float sum_enfoncement = calculator.getLayerCalculator().accumulation_enfoncement_couche_index(calculator.getLayerCalculator().index_couchePortante());
+        float size_chart = tabLayer[tabLayer.length-1][1] - offset_y;
+        float onUnit_size = (size_chart*1000)/sum_enfoncement;
+        for(int i=0; i*onUnit_size < size_chart; i++){
+            writeTextCanvas(0,size_X_rect+offset_X_rect+50,offset_y+(onUnit_size*i), i+" m");
+        }
 
 
     }

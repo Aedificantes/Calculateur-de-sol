@@ -6,6 +6,7 @@ import android.widget.ExpandableListView;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.DetailResultManager;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
@@ -37,9 +38,9 @@ public class DetailsDisplayer {
         show();
     }
 
-    public void generateAndDisplay(List<ParamSolData> listParam, PieuManagerData pieuManager){
+    public void generateAndDisplay(ParamContainerData data){
         TreeMap<DetailTitle,List<Detail>> tampHash = new TreeMap<DetailTitle,List<Detail>>();
-        this.detailResultManager = new DetailResultManager(listParam,pieuManager);
+        this.detailResultManager = new DetailResultManager(data);
         tampHash = detailResultManager.generateDetails();
 
         display(tampHash);

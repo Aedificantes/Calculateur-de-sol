@@ -2,6 +2,7 @@ package com.example.aedificantes_calculateur_se_sol.Calculator;
 
 import com.example.aedificantes_calculateur_se_sol.Details.Detail;
 import com.example.aedificantes_calculateur_se_sol.Details.DetailTitle;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
@@ -11,8 +12,8 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class DetailResultManager extends ResultManager{
-    public DetailResultManager(List<ParamSolData> paramSolDataList, PieuManagerData pieuParamManagerData) {
-        super(paramSolDataList, pieuParamManagerData);
+    public DetailResultManager(ParamContainerData data) {
+        super(data);
     }
 
     public Detail detail_capacite_portante(){

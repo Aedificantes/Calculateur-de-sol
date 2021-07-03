@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Calculator.ResultManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
@@ -30,8 +31,7 @@ public class ResultFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private ArrayList<ParamSolData> solData;
-    private PieuManagerData pieuManagerData;
+    private ParamContainerData paramContainerData;
     // TODO: Rename and change types of parameters
 
     public ResultFragment() {
@@ -45,11 +45,10 @@ public class ResultFragment extends Fragment {
      * @return A new instance of fragment ResultFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ResultFragment newInstance(ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
+    public static ResultFragment newInstance(ParamContainerData paramContainerData) {
         ResultFragment fragment = new ResultFragment();
         Bundle args = new Bundle();
-        args.putSerializable("solData",SolData);
-        args.putSerializable("pieuManagerData",pieuManagerData);
+        args.putSerializable("paramContainerData",paramContainerData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,11 +57,8 @@ public class ResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.solData = (ArrayList<ParamSolData>) getArguments().getSerializable("solData");
-            this.pieuManagerData = (PieuManagerData) getArguments().getSerializable("pieuManagerData");
+            this.paramContainerData = (ParamContainerData) getArguments().getSerializable("paramContainerData");
         }
-
-
     }
 
     @Override
@@ -74,11 +70,11 @@ public class ResultFragment extends Fragment {
         this.CL_result = view.findViewById(R.id.CL_result);
         ResultDisplayer displayer = new ResultDisplayer(CL_result);
 
-        if(this.solData == null || this.pieuManagerData == null){
+        if(this.paramContainerData.getSol_data_list() == null || this.paramContainerData.getPieuManagerData() == null){
             Log.e("NullException", "soldata ou pieumanager are null");
         }
 
-        ResultManager resultManager = new ResultManager(this.solData,this.pieuManagerData);
+        ResultManager resultManager = new ResultManager(paramContainerData);
         displayer.updateData(resultManager);
         displayer.show();
 

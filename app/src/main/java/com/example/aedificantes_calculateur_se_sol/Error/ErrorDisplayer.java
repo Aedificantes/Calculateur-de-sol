@@ -7,16 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 
-import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorManager;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSol;
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuParamManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class ErrorDisplayer {
 
@@ -49,11 +46,12 @@ public class ErrorDisplayer {
         errorListAdpatator.display(dataList);
         show();
     }
-
-    public void generateAndDisplay(List<ParamSol> listParam, PieuParamManager pieuManager){
+//List<ParamSol> listParam, PieuParamManager pieuManager
+    public void generateAndDisplay(ParamContainer paramContainer){
         List<ErrorManager> tampHash = new ArrayList<ErrorManager>();
-        tampHash.addAll(errorCreater.generate_LineEmptyError(listParam) );
-        tampHash.addAll(errorCreater.generate_PieuEmptyError(pieuManager) );
+        tampHash.addAll(errorCreater.generate_LineEmptyError(paramContainer.getSol_list()) );
+        tampHash.addAll(errorCreater.generate_PieuEmptyError(paramContainer.getPieuManager()) );
+        tampHash.addAll(errorCreater.generate_EauxSouterainesEmptyError(paramContainer.getEaux_souterraines()) );
 
         display(tampHash);
         errorListAdpatator.notifyDataSetChanged();

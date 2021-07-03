@@ -4,18 +4,19 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ResultManager {
 
 
-    private List<ParamSolData> paramSolDataList;
-    private PieuManagerData pieuParamManagerData;
+    private ParamContainerData paramContainerData;
 
     private AlphaCalculator alphaCalculator = new AlphaCalculator();
     private LayerCalculator layerCalculator;
@@ -23,10 +24,9 @@ public class ResultManager {
     private CoefLayer coefLayer = new CoefLayer();
 
 
-    public ResultManager(List<ParamSolData> paramSolDataList, PieuManagerData pieuParamManagerData){
-        this.paramSolDataList = paramSolDataList;
-        this.pieuParamManagerData = pieuParamManagerData;
-        layerCalculator = new LayerCalculator(paramSolDataList,pieuParamManagerData);
+    public ResultManager(ParamContainerData data){
+        this.paramContainerData = data;
+        layerCalculator = new LayerCalculator(paramContainerData.getSol_data_list(),paramContainerData.getPieuManagerData());
     }
 
     public float round(float value, int nbAfterComa){
@@ -56,7 +56,7 @@ public class ResultManager {
 
     public float[] fd0_comp_toLayer(int index){//TODO on dev
         float[] resultArray = new float[2];
-        ParamSolData couche = paramSolDataList.get(index);
+        ParamSolData couche = paramContainerData.getSol_data_list().get(index);
 
         resultArray[0] = (getAlpha1() * couche.cT() + getAlpha2() * AVG_masse_volumique_sols_supérieurs() * layerCalculator.profondeurPieu() ) * fd0_Acomp();
         resultArray[1] = (getAlpha1() * couche.cT() + getAlpha2() * AVG_masse_volumique_sols_supérieurs() * layerCalculator.profondeurPieu() ) * fd0_Acomp();
@@ -68,7 +68,7 @@ public class ResultManager {
     }
 
     public float fd0_Acomp(){ // return π · ( dhel /2 )2 =  xxx mm2 = 0.0xx m2
-        float value =  (float) (Math.PI*(Math.pow((pieuParamManagerData.Dhel_val()/2),2)));
+        float value =  (float) (Math.PI*(Math.pow((paramContainerData.getPieuManagerData().Dhel_val()/2),2)));
         value = Math.round(value/1000);
         value = value/1000;
         return value;
@@ -83,8 +83,8 @@ public class ResultManager {
     }
 
     public float fd0_ATrac(){ // return π · ( dhel /2 )2 =  xxx mm2 = 0.0xx m2
-        float value_dfut =  (float) (Math.PI*(Math.pow((pieuParamManagerData.Dfut_val()/2),2)));
-        float value_dhel =  (float) (Math.PI*(Math.pow((pieuParamManagerData.Dhel_val()/2),2)));
+        float value_dfut =  (float) (Math.PI*(Math.pow((paramContainerData.getPieuManagerData().Dfut_val()/2),2)));
+        float value_dhel =  (float) (Math.PI*(Math.pow((paramContainerData.getPieuManagerData().Dhel_val()/2),2)));
         value_dfut = value_dhel - value_dfut;
         value_dfut = Math.round(value_dfut/1000);
         value_dfut = value_dfut/1000;
@@ -100,7 +100,7 @@ public class ResultManager {
     }
 
     public float resistanceSol_couche_Tm(int index){
-            ParamSolData paramSolIndex = paramSolDataList.get(index);
+            ParamSolData paramSolIndex = paramContainerData.getSol_data_list().get(index);
             double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
             System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
             tamp = (tamp/9.80665); // x.xxxxxxx T/m²
@@ -112,14 +112,14 @@ public class ResultManager {
     }
 
     public float resistanceSol_couche_Kpa(int index){
-        ParamSolData paramSolIndex = paramSolDataList.get(index);
+        ParamSolData paramSolIndex = paramContainerData.getSol_data_list().get(index);
         double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
         System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
         return (float) tamp;
     }
 
     public String resistanceSol_couche_toDisplay(int index){
-        if(paramSolDataList.get(index).getTypeSol() == TypeSol.REMBLAI){
+        if(paramContainerData.getSol_data_list().get(index).getTypeSol() == TypeSol.REMBLAI){
             return "-";
         }else{
             return String.valueOf(resistanceSol_couche_Tm(index));
@@ -129,7 +129,7 @@ public class ResultManager {
 
 
     public float perimetre_section_transfersale_fut(){
-        return (float) ((Math.PI*pieuParamManagerData.Dfut_val())/1000);
+        return (float) ((Math.PI*paramContainerData.getPieuManagerData().Dfut_val())/1000);
     }
     public String perimetre_section_transfersale_fut_toDisplay(){
         float tamp = perimetre_section_transfersale_fut();
@@ -138,25 +138,25 @@ public class ResultManager {
     }
 
     public float fdf(){
-        float fdf = round(perimetre_section_transfersale_fut(),2) * resistance_AVG_long_du_fut() * (pieuParamManagerData.Ip_val()/1000 - pieuParamManagerData.Dhel_val()/1000);
+        float fdf = round(perimetre_section_transfersale_fut(),2) * resistance_AVG_long_du_fut() * (paramContainerData.getPieuManagerData().Ip_val()/1000 - paramContainerData.getPieuManagerData().Dhel_val()/1000);
         fdf = round(fdf*100, 0);
         fdf = fdf/100;
-        System.out.println(" ResultManager -> fdf() -> detail: "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_AVG_long_du_fut()+ " * ("+pieuParamManagerData.Ip_val()/1000 + " - "+pieuParamManagerData.Dhel_val()/1000+") = "+fdf);
+        System.out.println(" ResultManager -> fdf() -> detail: "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_AVG_long_du_fut()+ " * ("+paramContainerData.getPieuManagerData().Ip_val()/1000 + " - "+paramContainerData.getPieuManagerData().Dhel_val()/1000+") = "+fdf);
         return fdf ;
     }
 
     public float[] fdf_toLayer(int index){
         float[] resultArray = new float[2];
-        resultArray[0] = round(perimetre_section_transfersale_fut(),2) * resistance_long_du_fut_hauteur_couche(index)[0] * (pieuParamManagerData.Ip_val()/1000 - pieuParamManagerData.Dhel_val()/1000);
-        resultArray[1] = round(perimetre_section_transfersale_fut(),2) * resistance_long_du_fut_hauteur_couche(index)[1] * (pieuParamManagerData.Ip_val()/1000 - pieuParamManagerData.Dhel_val()/1000);
+        resultArray[0] = round(perimetre_section_transfersale_fut(),2) * resistance_long_du_fut_hauteur_couche(index)[0] * (paramContainerData.getPieuManagerData().Ip_val()/1000 - paramContainerData.getPieuManagerData().Dhel_val()/1000);
+        resultArray[1] = round(perimetre_section_transfersale_fut(),2) * resistance_long_du_fut_hauteur_couche(index)[1] * (paramContainerData.getPieuManagerData().Ip_val()/1000 - paramContainerData.getPieuManagerData().Dhel_val()/1000);
 
         resultArray[0] = round(resultArray[0]*100, 0);
         resultArray[0] = resultArray[0]/100;
         resultArray[1] = round(resultArray[1]*100, 0);
         resultArray[1] = resultArray[1]/100;
 
-        Log.d(" ResultManager"," -> fdf_toLayer() -> detail: "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_long_du_fut_hauteur_couche(index)[0]+ " * ("+pieuParamManagerData.Ip_val()/1000 + " - "+pieuParamManagerData.Dhel_val()/1000+") = "+resultArray[0] +"" +
-                "\n "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_long_du_fut_hauteur_couche(index)[1]+ " * ("+pieuParamManagerData.Ip_val()/1000 + " - "+pieuParamManagerData.Dhel_val()/1000+") = "+resultArray[1]);
+        Log.d(" ResultManager"," -> fdf_toLayer() -> detail: "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_long_du_fut_hauteur_couche(index)[0]+ " * ("+paramContainerData.getPieuManagerData().Ip_val()/1000 + " - "+paramContainerData.getPieuManagerData().Dhel_val()/1000+") = "+resultArray[0] +"" +
+                "\n "+round(perimetre_section_transfersale_fut(),2)+" * "+resistance_long_du_fut_hauteur_couche(index)[1]+ " * ("+paramContainerData.getPieuManagerData().Ip_val()/1000 + " - "+paramContainerData.getPieuManagerData().Dhel_val()/1000+") = "+resultArray[1]);
 
         return resultArray ;
     }
@@ -207,8 +207,8 @@ public class ResultManager {
             return tamp;
         }else {
             for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
-                if (i == layerCalculator.index_couchePortante()-1){//paramSolDataList.size() - 1) {
-                    logArray[i][0] = (layerCalculator.enfoncement_couche_index(i) - pieuParamManagerData.Dhel_val()) / 1000;
+                if (i == layerCalculator.index_couchePortante()-1){//paramContainerData.getSol_data_list().size() - 1) {
+                    logArray[i][0] = (layerCalculator.enfoncement_couche_index(i) - paramContainerData.getPieuManagerData().Dhel_val()) / 1000;
                 } else {
                     logArray[i][0] = layerCalculator.enfoncement_couche_index(i) / 1000;
                 }
@@ -228,8 +228,8 @@ public class ResultManager {
     public float[] resistance_long_du_fut_hauteur_couche(int index){
         float[] logArray = new float[3];
         float[] resultArray = new float[2];
-        if (index == layerCalculator.index_couchePortante()-1){//paramSolDataList.size() - 1) {
-            logArray[0] = (layerCalculator.accumulation_enfoncement_couche_index(index) - pieuParamManagerData.Dhel_val()) / 1000;
+        if (index == layerCalculator.index_couchePortante()-1){//paramContainerData.getSol_data_list().size() - 1) {
+            logArray[0] = (layerCalculator.accumulation_enfoncement_couche_index(index) - paramContainerData.getPieuManagerData().Dhel_val()) / 1000;
         } else {
             logArray[0] = layerCalculator.accumulation_enfoncement_couche_index(index) / 1000;
         }
@@ -259,7 +259,7 @@ public class ResultManager {
             return tamp;
         }else {
             for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
-                logArray[i][0] = paramSolDataList.get(i).yT();
+                logArray[i][0] = paramContainerData.getSol_data_list().get(i).yT();
                 logArray[i][1] = layerCalculator.enfoncement_couche_index(i)/1000;
                 tamp += logArray[i][0] * logArray[i][1];
                 sum_enfoncement += layerCalculator.enfoncement_couche_index(i) / 1000;
@@ -285,7 +285,7 @@ public class ResultManager {
             return tamp;
         }else {
             for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
-                logArray[i][0] = paramSolDataList.get(i).yT();
+                logArray[i][0] = paramContainerData.getSol_data_list().get(i).yT();
                 logArray[i][1] = layerCalculator.enfoncement_couche_index(i)/1000;
                 tamp += logArray[i][0] * logArray[i][1];
                 sum_enfoncement += layerCalculator.enfoncement_couche_index(i) / 1000;
@@ -301,7 +301,7 @@ public class ResultManager {
     }
 
     public float diff_H_Ip_Pieu(){
-        return pieuParamManagerData.Ip_val() - pieuParamManagerData.H_val();
+        return paramContainerData.getPieuManagerData().Ip_val() - paramContainerData.getPieuManagerData().H_val();
     }
 
     public float getCoef_comp(){
@@ -332,10 +332,9 @@ public class ResultManager {
     }
 
 
-    public void updateData(List<ParamSolData> paramSolDataList, PieuManagerData pieuParamManagerData){ // propagation du changement de données
-        this.paramSolDataList =paramSolDataList;
-        this.pieuParamManagerData = pieuParamManagerData;
-        this.layerCalculator.updateData(paramSolDataList,pieuParamManagerData);
+    public void updateData(ParamContainerData newData){ // propagation du changement de données
+        this.paramContainerData = newData;
+        this.layerCalculator.updateData(paramContainerData.getSol_data_list(),paramContainerData.getPieuManagerData());
     }
 
 
@@ -348,12 +347,16 @@ public class ResultManager {
         return layerCalculator;
     }
 
-    public List<ParamSolData> getParamSolDataList() {
-        return paramSolDataList;
+    public ParamContainerData getParamContainerData() {
+        return paramContainerData;
     }
 
-    public PieuManagerData getPieuParamManagerData() {
-        return pieuParamManagerData;
+    public PieuManagerData getPieuParamManagerData(){
+        return this.paramContainerData.getPieuManagerData();
+    }
+
+    public ArrayList<ParamSolData> getParamSolDataList(){
+        return this.paramContainerData.getSol_data_list();
     }
 
     public ResistanceSolCalculator getResistanceSolCalculator() {

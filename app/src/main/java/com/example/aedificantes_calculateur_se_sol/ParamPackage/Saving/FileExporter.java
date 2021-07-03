@@ -3,9 +3,8 @@ package com.example.aedificantes_calculateur_se_sol.ParamPackage.Saving;
 import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,29 +17,30 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
+/**
+ * Parse un ParamContainer en  json
+ */
 public class FileExporter {
 
     private static final String LOG_TAG = "CLA_02";
 
-    private ParamContainer paramContainer;
+    private ParamContainerData paramContainerData;
 
-    public FileExporter(ParamContainer containerParam) {
-        paramContainer = containerParam;
+    public FileExporter(ParamContainerData containerParam) {
+        paramContainerData = containerParam;
     }
 
     public JSONObject generate(){
         JSONObject main = new JSONObject();
         JSONArray sol = new JSONArray();
         try {
-            for (ParamSolData solData : paramContainer.getSol_data_list()) {
+            for (ParamSolData solData : paramContainerData.getSol_data_list()) {
                 sol.put(solData.convert_to_json());
             }
-            main.put("PIEU",paramContainer.getPieuManagerData().convert_to_JSON());
+            main.put("PIEU", paramContainerData.getPieuManagerData().convert_to_JSON());
             main.put("SOL", sol);
+            main.put("EAUX_SOUTERRAINES", paramContainerData.getEauxSouterraines_data().convert_to_JSON());
         }catch (Exception e){
             Log.d(LOG_TAG, e.getMessage());
         }

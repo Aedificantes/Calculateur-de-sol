@@ -8,9 +8,5 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_equalizer"
             android:title="@string/menu_parameter" />
-        <item
-            android:id="@+id/nav_import"
-            android:icon="@android:drawable/ic_menu_upload"
-            android:title="Importer" />
     </group>
 </menu>

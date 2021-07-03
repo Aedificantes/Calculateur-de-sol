@@ -14,6 +14,7 @@ import com.example.aedificantes_calculateur_se_sol.DetailTabActivity;
 import com.example.aedificantes_calculateur_se_sol.Details.DetailsDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.DetailTabLauncher;
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 import com.example.aedificantes_calculateur_se_sol.R;
@@ -29,8 +30,7 @@ public class DetailFragment extends Fragment implements DetailTabLauncher {
 
     private ConstraintLayout CL_ConstraintLayout;
 
-    private ArrayList<ParamSolData> solData;
-    private PieuManagerData pieuManagerData;
+    private ParamContainerData paramContainerData;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -43,11 +43,10 @@ public class DetailFragment extends Fragment implements DetailTabLauncher {
      * @return A new instance of fragment DetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
+    public static DetailFragment newInstance(ParamContainerData data) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable("solData",SolData);
-        args.putSerializable("pieuManagerData",pieuManagerData);
+        args.putSerializable("paramContainerData",data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +55,7 @@ public class DetailFragment extends Fragment implements DetailTabLauncher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.solData = (ArrayList<ParamSolData>) getArguments().getSerializable("solData");
-            this.pieuManagerData = (PieuManagerData) getArguments().getSerializable("pieuManagerData");
+            this.paramContainerData = (ParamContainerData) getArguments().getSerializable("paramContainerData");
         }
     }
 
@@ -69,7 +67,7 @@ public class DetailFragment extends Fragment implements DetailTabLauncher {
 
         CL_ConstraintLayout = inflateView.findViewById(R.id.CL_Frag_detail);
         DetailsDisplayer displayer = new DetailsDisplayer(this.getContext(),CL_ConstraintLayout, this);
-        displayer.generateAndDisplay(solData,pieuManagerData);
+        displayer.generateAndDisplay(paramContainerData);
 
         return inflateView;
     }

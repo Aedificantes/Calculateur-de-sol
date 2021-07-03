@@ -12,6 +12,7 @@ public class ParamSolData implements Serializable {
     private TypeSol typeSol = TypeSol.REMBLAI;
     public ArrayList<Float> params = new ArrayList<>();
     public ArrayList<String> logNameParam = new ArrayList<>();
+    public ArrayList<Integer> paramToSet = new ArrayList<>();
     private boolean isLoadLayer = false;
 
 
@@ -131,6 +132,16 @@ public class ParamSolData implements Serializable {
         for(int i=params.size()-1; i < index; i++ ){
             params.add(0f);
         }
+    }
+
+    public boolean isAllFill(){
+        boolean returned = true;
+        for(int each : paramToSet){
+            if(params.get(each) == 0){
+                return false;
+            }
+        }
+        return returned;
     }
 
     public void setLogNameParam(ArrayList<String> logNameParam) {

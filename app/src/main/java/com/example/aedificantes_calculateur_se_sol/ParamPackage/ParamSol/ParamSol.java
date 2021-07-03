@@ -7,11 +7,10 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamSol {
+public class ParamSol{
     private static final String LOG_TAG = "CLA_04";
     private ParamSolData data;
 
-    public ArrayList<Integer> paramToSet = new ArrayList<>();
     private ParamEnabler paramEnabler;
 
 
@@ -59,7 +58,7 @@ public class ParamSol {
 
     public boolean isAllFill(){
         boolean returned = true;
-        for(int each : paramToSet){
+        for(int each : data.paramToSet){
             if(data.params.get(each) == 0){
                 return false;
             }
@@ -67,9 +66,9 @@ public class ParamSol {
         return returned;
     }
     public void setParamToSet(int... index){
-        paramToSet.clear();
+        data.paramToSet.clear();
         for(int each: index){
-            paramToSet.add(each);
+            data.paramToSet.add(each);
         }
     }
 
@@ -96,7 +95,7 @@ public class ParamSol {
     }
 
     public void addParamToSet(int index){
-        paramToSet.add(index);
+        data.paramToSet.add(index);
     }
 
     public void setValueByIndex(int index, float value){
@@ -149,8 +148,8 @@ public class ParamSol {
 
     public List<Error> generateError() {
         ArrayList<Error> list =  new ArrayList<>();
-        Log.e(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+paramToSet.toString());
-        for(int each : paramToSet){
+        Log.e(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
+        for(int each : data.paramToSet){
             if(data.params.get(each) == 0){
                 list.add(new Error(" - "+data.logNameParam.get(each)+" n'a pas de valeur"));
             }
@@ -165,7 +164,7 @@ public class ParamSol {
                 ", granularite=" + data.getGranularite() +
                 ", typeSol=" + data.getTypeSol() +
                 ", params=" + data.params +
-                ", paramToSet=" + paramToSet +
+                ", paramToSet=" + data.paramToSet +
                 ", paramEnabler=" + paramEnabler +
                 '}';
     }

@@ -1,5 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu;
 
+import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
+import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,7 +10,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class PieuManagerData implements Serializable {
+public class PieuManagerData implements Serializable, VerificateObserver {
     private ArrayList<Float> listData = new ArrayList<>();
 
     public PieuManagerData(float... data) {
@@ -67,5 +70,15 @@ public class PieuManagerData implements Serializable {
         obj.put("IP",Ip_val());
         obj.put("H",H_val());
         return obj;
+    }
+
+    @Override
+    public boolean isFill() {
+        return
+                Dhel_val() != 0f &&
+                Dfut_val() != 0f &&
+                Ip_val() != 0f &&
+                H_val() != 0f &&
+                Hk_val() != 0f;
     }
 }

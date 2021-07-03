@@ -1,4 +1,4 @@
-package com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu;
+package com.example.aedificantes_calculateur_se_sol.ParamPackage;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -7,13 +7,13 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 
-public class PieuParam implements VerificateObserver {
+public class EditTextManager implements VerificateObserver {
     private float value_PieuParam =0f;
     private String nameOfElement;
     private VerificateObservable verificator; //Pour cette classe on ne s'enregistre pas, c'est le PieuParamManager qui en aura la responsabilité
     private EditText ET;
 
-    public PieuParam(EditText ET, String nameOfElement, final VerificateObservable verificator) {
+    public EditTextManager(EditText ET, String nameOfElement, final VerificateObservable verificator) {
         this.verificator = verificator;
         this.nameOfElement = nameOfElement;
         this.ET = ET;
@@ -39,6 +39,10 @@ public class PieuParam implements VerificateObserver {
                 verificator.notifyDataChange();
             }
         });
+    }
+
+    public void setEnabled(boolean value){
+        this.ET.setEnabled(value);
     }
 
     public void setValue(float value){

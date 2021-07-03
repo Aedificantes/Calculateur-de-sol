@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamSol.ParamSolData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.Pieu.PieuManagerData;
 
@@ -14,12 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
-    private ArrayList<ParamSolData> solData;
-    private PieuManagerData pieuManagerData;
-    public GlobalResultPageAdaptater(@NonNull @NotNull FragmentManager fm, ArrayList<ParamSolData> SolData, PieuManagerData pieuManagerData) {
+    private ParamContainerData paramContainerData;
+    public GlobalResultPageAdaptater(@NonNull @NotNull FragmentManager fm, ParamContainerData data) {
         super(fm);
-        this.solData = SolData;
-        this.pieuManagerData =pieuManagerData;
+        this.paramContainerData = data;
     }
 
     @Override
@@ -31,11 +30,11 @@ public class GlobalResultPageAdaptater extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0: //Page number 1
-                return ResultFragment.newInstance(solData,pieuManagerData);
+                return ResultFragment.newInstance(paramContainerData);
             case 1: //Page number 2
-                return DrawingFragment.newInstance(solData,pieuManagerData);
+                return DrawingFragment.newInstance(paramContainerData);
             case 2: //Page number 3
-                return DetailFragment.newInstance(solData,pieuManagerData);
+                return DetailFragment.newInstance(paramContainerData);
             default:
                 return null;
         }
