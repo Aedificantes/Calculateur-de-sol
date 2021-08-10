@@ -9,6 +9,8 @@ import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.PointTe
 import com.example.aedificantes_calculateur_se_sol.Schema.texturePackage.Texture;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum IndexColumnName implements Serializable {
 
@@ -56,6 +58,17 @@ public enum IndexColumnName implements Serializable {
             }
         }
         return null;
+    }
+
+    public static List<IndexColumnName> valuesToIndex(int index){
+        int local_index = 0;
+       List<IndexColumnName> indexColumnName_return = new ArrayList<>();
+        for(IndexColumnName each : IndexColumnName.values()){
+            if(local_index == index){break;}
+            indexColumnName_return.add(each);
+            local_index++;
+        }
+        return indexColumnName_return;
     }
 
     @Override

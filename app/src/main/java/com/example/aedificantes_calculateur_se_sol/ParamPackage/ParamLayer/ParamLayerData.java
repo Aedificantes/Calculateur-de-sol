@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Like every other param classes ParamLayerData has his own data classes that can be serializable to be place in ParamContainerData and transfert to other Activity
@@ -13,9 +15,9 @@ public class ParamLayerData implements Serializable {
     private Compacite compacite = Compacite.FRIABLE;
     private Granularite granularite = Granularite.GRAVELEUX;
     private TypeSol typeSol = TypeSol.REMBLAI;
-    public ArrayList<Float> params = new ArrayList<>();
-    public ArrayList<String> logNameParam = new ArrayList<>();
-    public ArrayList<Integer> paramToSet = new ArrayList<>();
+    protected Map<IndexColumnName,Float> params= new HashMap<>();
+    protected ArrayList<String> logNameParam = new ArrayList<>();
+    protected ArrayList<IndexColumnName> paramToSet = new ArrayList<>();
     private boolean isLoadLayer = false;
 
 
@@ -46,12 +48,8 @@ public class ParamLayerData implements Serializable {
         this.typeSol = typeSol;
     }
 
-    public ArrayList<Float> getParams() {
+    public Map<IndexColumnName, Float> getParams() {
         return params;
-    }
-
-    public void setParams(ArrayList<Float> params) {
-        this.params = params;
     }
 
     public ArrayList<String> getLogNameParam() {
@@ -67,79 +65,71 @@ public class ParamLayerData implements Serializable {
     }
 
     public float Il(){
-        return this.params.get(0);
+        return this.params.get(IndexColumnName.IL);
     }
     public float e(){
-        return this.params.get(1);
+        return this.params.get(IndexColumnName.E);
     }
     public float cT(){
-        return this.params.get(2);
+        return this.params.get(IndexColumnName.CT);
     }
     public float fi(){
-        return this.params.get(3);
+        return this.params.get(IndexColumnName.FI);
     }
     public float yT(){
-        return this.params.get(4);
+        return this.params.get(IndexColumnName.YT);
     }
     public float Sr(){
-        return this.params.get(5);
+        return this.params.get(IndexColumnName.SR);
     }
     public float h(){ // en metre
-        return this.params.get(6);
+        return this.params.get(IndexColumnName.H);
     }
 
     public void set_Il(float val){
-        if(params.size() == 0){
-            fillToIndex(0);
-        }
-        this.params.set(0, val);
+        this.params.put(IndexColumnName.IL,val);
+
     }
     public void set_e(float val){
-        if(params.size() == 1){
-            fillToIndex(1);
-        }
-         this.params.set(1,val);
+        this.params.put(IndexColumnName.E,val);
     }
     public void set_cT(float val){
-        if(params.size() <= 2){
-            fillToIndex(2);
-        }
-         this.params.set(2,val);
+        this.params.put(IndexColumnName.CT,val);
     }
     public void set_fi(float val){
-        if(params.size() <= 3){
-            fillToIndex(3);
-        }
-         this.params.set(3,val);
+        this.params.put(IndexColumnName.FI,val);
     }
     public void set_yT(float val){
-        if(params.size() <= 4){
-            fillToIndex(4);
-        }
-         this.params.set(4,val);
+        this.params.put(IndexColumnName.YT,val);
     }
     public void set_Sr(float val){
-        if(params.size() <= 5){
-            fillToIndex(5);
-        }
-         this.params.set(5,val);
+        this.params.put(IndexColumnName.SR,val);
     }
     public void set_h(float val){ // en metre
+        /*
         if(params.size() <= 6){
             fillToIndex(6);
         }
-         this.params.set(6,val);
+         this.params.set(6,val);*/
+        this.params.put(IndexColumnName.H,val);
+
     }
 
     private void fillToIndex(int index){
+        /*
         for(int i=params.size()-1; i < index; i++ ){
-            params.add(0f);
+            //params.add(0f);
         }
+         */
+        for(IndexColumnName each : IndexColumnName.values()){
+            this.params.put(each,0f);
+        }
+
     }
 
     public boolean isAllFill(){
         boolean returned = true;
-        for(int each : paramToSet){
+        for(IndexColumnName each : paramToSet){
             if(params.get(each) == 0){
                 return false;
             }
@@ -148,33 +138,33 @@ public class ParamLayerData implements Serializable {
     }
 
     public boolean is_Il_paramToSet(){
-        return find_is_paramToSet(0);
+        return this.paramToSet.contains(IndexColumnName.IL);
     }
 
     public boolean is_e_paramToSet(){
-        return find_is_paramToSet(1);
+        return this.paramToSet.contains(IndexColumnName.E);
     }
 
     public boolean is_CT_paramToSet(){
-        return find_is_paramToSet(2);
+        return this.paramToSet.contains(IndexColumnName.CT);
     }
 
     public boolean is_FI_paramToSet(){
-        return find_is_paramToSet(3);
+        return this.paramToSet.contains(IndexColumnName.FI);
     }
 
     public boolean is_YT_paramToSet(){
-        return find_is_paramToSet(4);
+        return this.paramToSet.contains(IndexColumnName.YT);
     }
 
     public boolean is_SR_paramToSet(){
-        return find_is_paramToSet(5);
+        return this.paramToSet.contains(IndexColumnName.SR);
     }
 
     public boolean is_h_paramToSet(){
-       return find_is_paramToSet(6);
+       return this.paramToSet.contains(IndexColumnName.H);
     }
-
+/*
     public boolean find_is_paramToSet(int indexParam){
         for(int each : paramToSet){
             if(each == indexParam){
@@ -183,6 +173,8 @@ public class ParamLayerData implements Serializable {
         }
         return false;
     }
+
+ */
 
     public void setLogNameParam(ArrayList<String> logNameParam) {
         this.logNameParam = logNameParam;

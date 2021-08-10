@@ -5,6 +5,7 @@ import  com.example.aedificantes_calculateur_se_sol.R;
 
 import android.content.Context;
 import android.icu.text.AlphabeticIndex;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +105,7 @@ public class ErrorListAdpatator extends BaseExpandableListAdapter {
         TextView tvItem = (TextView) convertView.findViewById(R.id.TV_error);
 
         Error error = (Error) getChild(groupPosition, childPosition);
-        tvItem.setText(error.getError_string());
+        tvItem.setText(Html.fromHtml(error.getError_string()));
 
 
         return convertView;

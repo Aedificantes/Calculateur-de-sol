@@ -10,7 +10,7 @@ public class ParamEnabler {
     private LineProfilSolAdaptater.LineProfilSolViewHolder holder;
     private ParamLayer paramLayer;
     private Boolean isLast = true;
-    private boolean[] forceParamToSet = new boolean[6];
+    private boolean[] forceParamToSet = new boolean[IndexColumnName.values().length-1];
 
     public ParamEnabler(ParamLayer current) {
         paramLayer = current;
@@ -40,38 +40,38 @@ public class ParamEnabler {
         if (paramLayer.getTypeSol() == TypeSol.SABLEUX) {
             holder.SP_Granularite.setEnabled(true);
             holder.SP_Compacite.setEnabled(true);
-            set_ET_Enable(3,4,5);
+            set_ET_Enable(IndexColumnName.FI, IndexColumnName.YT, IndexColumnName.SR);
         } else {
             holder.SP_Granularite.setEnabled(false);
             holder.SP_Compacite.setEnabled(false);
             switch (paramLayer.getTypeSol()){
                 case REMBLAI:
-                    set_ET_Enable(4);
+                    set_ET_Enable(IndexColumnName.YT);
                     break;
                 case ARGILEUX:
                 case LOAM_SABLEUX:
                 case LIMONEUX:
-                    set_ET_Enable(0,1,3,4);
+                    set_ET_Enable(IndexColumnName.IL, IndexColumnName.E, IndexColumnName.FI, IndexColumnName.YT);
                     break;
             }
 
         }
     }
 
-    private void set_ET_Enable(int... toEnableETIndex){
+    private void set_ET_Enable(IndexColumnName... toEnableETIndex){
         holder.set_All_ET_Desable();
         this.paramLayer.setParamToSet(toEnableETIndex);
-        for(int each_ET_index : toEnableETIndex){
-            holder.get_ET_index(each_ET_index).setEnabled(true);
+        for(IndexColumnName each_ET_index : toEnableETIndex){
+            holder.get_ET_index(each_ET_index.getIndice()).setEnabled(true);
         }
         holder.get_ET_index(6).setEnabled(!isLast);
-        if(!isLast){ this.paramLayer.addParamToSet(6); }
+        if(!isLast){ this.paramLayer.addParamToSet(IndexColumnName.H); }
         holder.get_ET_index(2).setEnabled(paramLayer.isLoadLayer());
-        if(paramLayer.isLoadLayer()){ this.paramLayer.addParamToSet(2); }
+        if(paramLayer.isLoadLayer()){ this.paramLayer.addParamToSet(IndexColumnName.CT); }
         for(int i=0; i< forceParamToSet.length; i++){
             if(forceParamToSet[i]) {
                 holder.get_ET_index(i).setEnabled(true);
-                this.paramLayer.addParamToSet(i);
+                this.paramLayer.addParamToSet(IndexColumnName.getIndexColumnName_byId(i));
             }
         }
     }
@@ -79,6 +79,6 @@ public class ParamEnabler {
     public void setLast(Boolean last) {
         isLast = last;
     }
-    public void forceParam_e(boolean bool){ forceParamToSet[1] = bool;}
-    public void remove_forceParam(){ forceParamToSet = new boolean[6];}
+    public void forceParam_e(boolean bool){ forceParamToSet[IndexColumnName.E.getIndice()] = bool;}
+    public void remove_forceParam(){ forceParamToSet = new boolean[IndexColumnName.values().length -1];}
 }

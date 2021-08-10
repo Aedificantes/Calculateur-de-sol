@@ -5,7 +5,9 @@ import android.util.Log;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class that manage element display in ReclyclerView ParamLayer
@@ -20,10 +22,10 @@ public class ParamLayer {
     public ParamLayer() {
         paramEnabler = new ParamEnabler(this);
         data = new ParamLayerData();
-        for(int i=0; i<7; i++) {
-            data.params.add(0f);
+        for(IndexColumnName each: IndexColumnName.values()) {
+            data.params.put(each,0f);
         }
-        addLogName();
+        //addLogName();
 
     }
     public ParamLayer(TypeSol sol, Granularite granularite, Compacite comp, float... value) {
@@ -31,14 +33,17 @@ public class ParamLayer {
         this.data.setTypeSol(sol);
         this.data.setGranularite(granularite);
         this.setCompacite(comp);
+        int local_index = 0;
         for(float each: value){
-            data.params.add(each);
+            data.params.put(IndexColumnName.getIndexColumnName_byId(local_index), each);
+            local_index++;
         }
         for(int i=value.length; i<7; i++) {
-            data.params.add(0f);
+            data.params.put(IndexColumnName.getIndexColumnName_byId(local_index), 0f);
+            local_index++;
         }
-        System.out.println("Create ParamSol with :"+data.params.size() + " values : details: "+data.params.toString());
-        addLogName();
+        Log.d(LOG_TAG,"Create ParamSol with :"+data.params.size() + " values : details: "+data.params.toString());
+        //addLogName();
 
         paramEnabler = new ParamEnabler(this);
     }
@@ -46,10 +51,10 @@ public class ParamLayer {
     public ParamLayer(ParamLayerData data) {
         this.data = data;
         this.paramEnabler = new ParamEnabler(this);
-        addLogName();
+        //addLogName();
     }
 
-    private void addLogName(){
+   /* private void addLogName(){
         data.logNameParam.add("Facteur de plasticité des sols argileux");
         data.logNameParam.add("Indices des vides");
         data.logNameParam.add("Cohésion du sol");
@@ -58,21 +63,20 @@ public class ParamLayer {
         data.logNameParam.add("Indice d'humidite");
         data.logNameParam.add("Epaisseur de l'horizon");
     }
+    */
 
     public boolean isAllFill(){
         boolean returned = true;
-        for(int each : data.paramToSet){
+        for(IndexColumnName each : data.paramToSet){
             if(data.params.get(each) == 0){
                 return false;
             }
         }
         return returned;
     }
-    public void setParamToSet(int... index){
+    public void setParamToSet(IndexColumnName... columnNames){
         data.paramToSet.clear();
-        for(int each: index){
-            data.paramToSet.add(each);
-        }
+        data.paramToSet.addAll(Arrays.asList(columnNames));
     }
 
     public float Il(){
@@ -97,19 +101,19 @@ public class ParamLayer {
         return this.data.h();
     }
 
-    public void addParamToSet(int index){
+    public void addParamToSet(IndexColumnName index){
         data.paramToSet.add(index);
     }
 
-    public void setValueByIndex(int index, float value){
-        data.params.set(index,value);
+    public void setValueByColumnName(IndexColumnName index, float value){
+        data.params.put(index,value);
     }
 
     public ParamEnabler getParamEnabler() {
         return paramEnabler;
     }
 
-    public ArrayList<Float> getParams() {
+    public Map<IndexColumnName,Float> getParams() {
         return data.params;
     }
 
@@ -152,9 +156,9 @@ public class ParamLayer {
     public List<Error> generateEmptyError() {
         ArrayList<Error> list =  new ArrayList<>();
         Log.e(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
-        for(int each : data.paramToSet){
+        for(IndexColumnName each : data.paramToSet){
             if(data.params.get(each) == 0){
-                list.add(new Error(" - "+data.logNameParam.get(each)+" n'a pas de valeur"));
+                list.add(new Error(" - "+each.getHTMLName()+" n'a pas de valeur"));
             }
         }
         return list;

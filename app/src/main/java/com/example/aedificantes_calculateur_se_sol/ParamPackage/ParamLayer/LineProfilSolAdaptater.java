@@ -124,6 +124,10 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
 
         holder.TV_number.setText(String.valueOf(position));
+        for(IndexColumnName each: IndexColumnName.values()){
+            holder.ET_List.get(each.getIndice()).setText(String.valueOf(currentItem.getParams().get(each)));
+        }
+        /*
         holder.ET_List.get(0).setText(String.valueOf(currentItem.getParams().get(0)));
         holder.ET_List.get(1).setText(String.valueOf(currentItem.getParams().get(1)));
         holder.ET_List.get(2).setText(String.valueOf(currentItem.getParams().get(2)));
@@ -131,6 +135,8 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         holder.ET_List.get(4).setText(String.valueOf(currentItem.getParams().get(4)));
         holder.ET_List.get(5).setText(String.valueOf(currentItem.getParams().get(5)));
         holder.ET_List.get(6).setText(String.valueOf(currentItem.getParams().get(6)));
+
+         */
         holder.SP_TypeSol.setSelection(currentItem.getTypeSol().getIndice());
         holder.SP_Granularite.setSelection(currentItem.getGranularite().getIndice());
         holder.SP_Compacite.setSelection(currentItem.getCompacite().getIndice());
@@ -216,9 +222,9 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                 public void onTextChanged(CharSequence s, int start,
                                           int before, int count) {
                     if (s.toString().length() > 0) {
-                        paramLayer.setValueByIndex(finalI, Float.parseFloat(s.toString()));
+                        paramLayer.setValueByColumnName(IndexColumnName.getIndexColumnName_byId(finalI), Float.parseFloat(s.toString()));
                     } else {
-                        paramLayer.setValueByIndex(finalI, 0);
+                        paramLayer.setValueByColumnName(IndexColumnName.getIndexColumnName_byId(finalI), 0);
                     }
                     verificator.notifyDataChange();
                 }
