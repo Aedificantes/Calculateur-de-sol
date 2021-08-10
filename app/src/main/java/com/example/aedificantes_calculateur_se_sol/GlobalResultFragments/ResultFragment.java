@@ -66,7 +66,7 @@ public class ResultFragment extends Fragment {
         ResultDisplayer displayer = new ResultDisplayer(CL_result);
 
         if(this.paramContainerData.getSol_data_list() == null || this.paramContainerData.getScrewPileManagerData() == null){
-            Log.e("NullException", "soldata ou pieumanager are null");
+            Log.e("NullException", "sol data ou pieumanager are null");
         }
 
         ResultManager resultManager = new ResultManager(paramContainerData);

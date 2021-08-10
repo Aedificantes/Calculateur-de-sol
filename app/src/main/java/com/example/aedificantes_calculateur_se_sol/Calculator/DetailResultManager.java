@@ -2,6 +2,7 @@ package com.example.aedificantes_calculateur_se_sol.Calculator;
 
 import com.example.aedificantes_calculateur_se_sol.Details.Detail;
 import com.example.aedificantes_calculateur_se_sol.Details.DetailTitle;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater_data;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
@@ -33,7 +34,7 @@ public class DetailResultManager extends ResultManager{
     public Detail detail_Acomp(){
         Detail detail= new Detail("Pour les charges de compression");
         detail.add_ln_String("<b>A<sub>comp</sub></b> = π · ( d<sub>hel</sub> /2 )<sup>2</sup> =");
-        detail.add_String(" π · ( "+getPieuParamManagerData().Dhel_val()+"/2 )<sup>2</sup> =");
+        detail.add_String(" π · ( "+getScrewPileManagerData().Dhel_val()+"/2 )<sup>2</sup> =");
         detail.add_String(" "+fd0_Acomp()*1000000+" mm<sup>2</sup> = <b>"+fd0_Acomp()+"</b> m<sup>2</sup>");
 
         return detail;
@@ -41,14 +42,14 @@ public class DetailResultManager extends ResultManager{
     public Detail detail_Atrac(){
         Detail detail= new Detail("Pour les charges de traction");
         detail.add_ln_String("<b>A<sub>tr</sub></b> = π · ( d<sub>hel</sub> / 2 )<sup>2</sup> - π · ( d<sub>fut</sub> / 2 )<sup>2</sup> =");
-        detail.add_String(" π · ( "+getPieuParamManagerData().Dhel_val()+"/2 )<sup>2</sup> - π · ("+getPieuParamManagerData().Dfut_val()+"/2 )<sup>2</sup>=");
+        detail.add_String(" π · ( "+getScrewPileManagerData().Dhel_val()+"/2 )<sup>2</sup> - π · ("+getScrewPileManagerData().Dfut_val()+"/2 )<sup>2</sup>=");
         detail.add_String(" "+fd0_ATrac()*1000000+" mm<sup>2</sup> = <b>"+fd0_ATrac()+"</b> m<sup>2</sup>");
 
         return detail;
     }
     public Detail detail_perimetre_section_transfersale_fut(){
         Detail detail= new Detail("<b>u</b> = π · d<sub>fut</sub> =");
-        detail.add_String(" π · "+getPieuParamManagerData().Dfut_val()+" = "+perimetre_section_transfersale_fut()+" mm =");
+        detail.add_String(" π · "+getScrewPileManagerData().Dfut_val()+" = "+perimetre_section_transfersale_fut()+" mm =");
         detail.add_String(" <b>"+perimetre_section_transfersale_fut_toDisplay()+"</b> m");
 
         return detail;
@@ -56,14 +57,14 @@ public class DetailResultManager extends ResultManager{
     public Detail detail_profondeur_enfoncemement(){
         Detail detail= new Detail("profondeur enfoncement <b>h<sub>1</sub></b> =");
         detail.add_String(" H + h<sub>k</sub> =");
-        detail.add_String(" "+getPieuParamManagerData().H_val()+" + "+getPieuParamManagerData().Hk_val()+" =");
+        detail.add_String(" "+getScrewPileManagerData().H_val()+" + "+getScrewPileManagerData().Hk_val()+" =");
         detail.add_String(" "+getLayerCalculator().profondeurPieu()*1000+"mm = <b>"+getLayerCalculator().profondeurPieu()+"</b> m");
 
         return detail;
     }
     public Detail detail_Longueur_fut_enfoncement_sol(){
         Detail detail= new Detail("Longueur du fut enfoncé dans le sol <b>h</b> = H =");
-        detail.add_String(" "+getPieuParamManagerData().H_val()+"mm = <b>"+getPieuParamManagerData().H_val()/1000+"</b> m");
+        detail.add_String(" "+getScrewPileManagerData().H_val()+"mm = <b>"+getScrewPileManagerData().H_val()/1000+"</b> m");
 
         return detail;
     }
@@ -83,12 +84,84 @@ public class DetailResultManager extends ResultManager{
         detail.add_ln_String("<b>γ<sub>1</sub></b> = (");
         String  calc_str ="";
         float  calc =0;
-        for(int i=0; i< getLayerCalculator().index_couchePortante(); i++){
+        for(int i=0; i< getLayerCalculator().index_couchePortante(); i++) {
             ParamLayerData data = getParamSolDataList().get(i);
-            detail.add_String("γ<sub>"+(i+1)+"</sub>  · h<sub>"+(i+1)+"</sub>");
-            calc_str += data.yT()+" · "+enfoncement_couche_index_ToDisplay(i);
-            calc += data.yT() * getLayerCalculator().enfoncement_couche_index(i)/1000;
-            if(i != getLayerCalculator().index_couchePortante()-1){
+            if (getParamContainerData().getGroundWater_data().isChecked()){
+                ParamContainerData paramContainerData = getParamContainerData();
+                GroundWater_data groundWater_data = paramContainerData.getGroundWater_data();
+                ArrayList<float[]> log_layer = new ArrayList<>();
+
+                float startHeight;
+                if(i == 0) {
+                    startHeight = paramContainerData.getScrewPileManagerData().Hk_val();
+                }else{
+                    startHeight = getLayerCalculator().accumulation_enfoncement_couche_index(i-1) + paramContainerData.getScrewPileManagerData().Hk_val();
+                }
+
+                if(groundWater_data.getNes() <= startHeight) {
+                    if(groundWater_data.getAquifere() <= startHeight){
+                        log_layer.add(new float[]{getLayerCalculator().enfoncement_couche_index(i), paramContainerData.getSol_data_list().get(i).yT()});
+                        detail.add_String("γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                        calc_str += paramContainerData.getSol_data_list().get(i).yT() + " · " + getLayerCalculator().enfoncement_couche_index(i)/1000;
+                        calc += (paramContainerData.getSol_data_list().get(i).yT() * getLayerCalculator().enfoncement_couche_index(i)) / 1000;
+
+                    }else if(groundWater_data.getAquifere() < getLayerCalculator().accumulation_enfoncement_couche_index(i)){
+                        log_layer.add(new float[]{groundWater_data.getAquifere() - startHeight, ysb(i)});
+                        detail.add_String("γ<sub>sb" + (i + 1) + "</sub>  · h<sub>sb" + (i + 1) + "</sub>");
+                        calc_str += ysb(i) + " · " + (groundWater_data.getAquifere() - startHeight)/1000;
+                        calc += (ysb(i) * (groundWater_data.getAquifere() - startHeight)) / 1000;
+
+                        log_layer.add(new float[]{getLayerCalculator().enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        detail.add_String("+ γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                        calc_str += " + "+paramContainerData.getSol_data_list().get(i).yT() + " · " + (getLayerCalculator().enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight))/1000;
+                        calc += (paramContainerData.getSol_data_list().get(i).yT() * (getLayerCalculator().enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight)))/ 1000;
+                    }else{
+                        log_layer.add(new float[]{getLayerCalculator().enfoncement_couche_index(i), ysb(i)});
+                        detail.add_String("γ<sub>sb" + (i + 1) + "</sub>  · h<sub>sb" + (i + 1) + "</sub>");
+                        calc_str += ysb(i) + " · " + (getLayerCalculator().enfoncement_couche_index(i))/1000;
+                        calc += (ysb(i) * getLayerCalculator().enfoncement_couche_index(i))/ 1000;
+                    }
+                }else if(groundWater_data.getNes() < getLayerCalculator().accumulation_enfoncement_couche_index(i)){
+                    if(groundWater_data.getAquifere() < getLayerCalculator().accumulation_enfoncement_couche_index(i)){
+                        log_layer.add(new float[]{(groundWater_data.getNes() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        detail.add_String("γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                        calc_str += paramContainerData.getSol_data_list().get(i).yT() + " · " + (groundWater_data.getNes() - startHeight) /1000;
+                        calc += (paramContainerData.getSol_data_list().get(i).yT() * (groundWater_data.getNes() - startHeight)) /1000;
+
+                        log_layer.add(new float[]{groundWater_data.getAquifere() - groundWater_data.getNes(), ysb(i)});
+                        detail.add_String("+ γ<sub>sb" + (i + 1) + "</sub>  · h<sub>sb" + (i + 1) + "</sub>");
+                        calc_str += " + "+ysb(i) + " · " + (groundWater_data.getAquifere() - groundWater_data.getNes())/1000;
+                        calc += (ysb(i) * (groundWater_data.getAquifere() - groundWater_data.getNes()))/ 1000;
+
+                        log_layer.add(new float[]{getLayerCalculator().accumulation_enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        detail.add_String("+ γ<sub>sb" + (i + 1) + "</sub>  · h<sub>sb" + (i + 1) + "</sub>");
+                        calc_str += " + "+paramContainerData.getSol_data_list().get(i).yT() + " · " + (getLayerCalculator().accumulation_enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight))/1000;
+                        calc += (paramContainerData.getSol_data_list().get(i).yT() * (getLayerCalculator().accumulation_enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight)))/ 1000;
+
+                    }else{
+                        log_layer.add(new float[]{(groundWater_data.getNes() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        detail.add_String("γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                        calc_str += paramContainerData.getSol_data_list().get(i).yT() + " · " + (groundWater_data.getNes() - startHeight)/1000;
+                        calc += (paramContainerData.getSol_data_list().get(i).yT() * (groundWater_data.getNes() - startHeight))/ 1000;
+
+                        log_layer.add(new float[]{getLayerCalculator().accumulation_enfoncement_couche_index(i) -(groundWater_data.getNes() - startHeight) , ysb(i)});
+                        detail.add_String("+ γ<sub>sb" + (i + 1) + "</sub>  · h<sub>sb" + (i + 1) + "</sub>");
+                        calc_str += " + "+ysb(i) + " · " + (getLayerCalculator().accumulation_enfoncement_couche_index(i) -(groundWater_data.getNes() - startHeight))/1000;
+                        calc += (ysb(i) * (getLayerCalculator().accumulation_enfoncement_couche_index(i) -(groundWater_data.getNes() - startHeight)))/ 1000;
+                    }
+                }else{
+                    log_layer.add(new float[]{getLayerCalculator().enfoncement_couche_index(i), paramContainerData.getSol_data_list().get(i).yT()});
+                    detail.add_String("γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                    calc_str += paramContainerData.getSol_data_list().get(i).yT() + " · " + (getLayerCalculator().enfoncement_couche_index(i))/1000;
+                    calc += (paramContainerData.getSol_data_list().get(i).yT() * getLayerCalculator().enfoncement_couche_index(i))/ 1000;
+                }
+            }else{
+                detail.add_String("γ<sub>" + (i + 1) + "</sub>  · h<sub>" + (i + 1) + "</sub>");
+                calc_str += data.yT() + " · " + enfoncement_couche_index_ToDisplay(i);
+                calc += data.yT() * getLayerCalculator().enfoncement_couche_index(i) / 1000;
+            }
+
+            if (i != getLayerCalculator().index_couchePortante() - 1) {
                 detail.add_String(" + ");
                 calc_str += " + ";
             }
@@ -104,7 +177,7 @@ public class DetailResultManager extends ResultManager{
         Detail detail= new Detail("pour les charges de compression");
         ParamLayerData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
         detail.add_ln_String(" = <b>F<sub>d0,comp</sub></b> = ( α<sub>1</sub> · cT + α<sub>2</sub> · y1 · (H+Hk) ) · A<sub>comp</sub>");
-        detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getPieuParamManagerData().H_val()+getPieuParamManagerData().Hk_val())/1000+") · "+fd0_Acomp());
+        detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getScrewPileManagerData().H_val()+getScrewPileManagerData().Hk_val())/1000+") · "+fd0_Acomp());
         detail.add_ln_String(" = "+fd0_comp());
         return detail;
     }
@@ -112,7 +185,7 @@ public class DetailResultManager extends ResultManager{
         Detail detail= new Detail("pour les charges de traction");
         ParamLayerData data = getParamSolDataList().get(getLayerCalculator().index_couchePortante()-1);
         detail.add_ln_String(" = <b>F<sub>d0,trac</sub></b> = ( α<sub>1</sub> · cT + α<sub>2</sub> · y1 · (H+Hk) ) · A<sub>trac</sub>");
-        detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getPieuParamManagerData().H_val()+getPieuParamManagerData().Hk_val())/1000+") · "+fd0_ATrac());
+        detail.add_ln_String(" = ("+getAlpha1()+" · "+data.cT()+" + "+getAlpha2()+" · "+AVG_masse_volumique_sols_supérieurs()+" · "+(getScrewPileManagerData().H_val()+getScrewPileManagerData().Hk_val())/1000+") · "+fd0_ATrac());
         detail.add_ln_String(" = "+fd0_trac());
         return detail;
     }
@@ -124,14 +197,14 @@ public class DetailResultManager extends ResultManager{
         float hauteur_de_toit=0;
         if(data.getTypeSol() != TypeSol.REMBLAI)
         if(index == 0){
-            hauteur_de_toit = getPieuParamManagerData().Hk_val()/1000;
+            hauteur_de_toit = getScrewPileManagerData().Hk_val()/1000;
         }else{
             hauteur_de_toit = getLayerCalculator().accumulation_h_couche_index(index-1)/1000;
         }
         detail.add_ln_String("<u> Horizon numéro "+(index+1)+", sol "+data.getTypeSol().getNameLowerCase()+", toit à la profondeur "+hauteur_de_toit+" m , puissance "+round(getLayerCalculator().profondeur_couche_index(index),3)+" m </u>");
         detail.add_ln_String("Profondeur de calcul de l horizon l"+(index+1)+" =");
         if(index == 0){ //calcul différent si c'est la première couche ou non.
-            detail.add_String(" "+getPieuParamManagerData().Hk_val()/1000+" + "+getLayerCalculator().enfoncement_couche_index(index)/1000+" / 2 =");
+            detail.add_String(" "+getScrewPileManagerData().Hk_val()/1000+" + "+getLayerCalculator().enfoncement_couche_index(index)/1000+" / 2 =");
         }else{
             detail.add_String(" "+getLayerCalculator().accumulation_h_couche_index(index-1)/1000+" + "+getLayerCalculator().enfoncement_couche_index(index)/1000+" / 2 =");
         }
@@ -159,8 +232,8 @@ public class DetailResultManager extends ResultManager{
             calc_str += resistanceSol_couche_Tm(i)+" · ";
             if(i == getLayerCalculator().index_couchePortante()-1){
                 detail.add_String("(h<sub>"+(i+1)+"</sub> - d<sub>hel</sub>)");
-                calc_str += round((getLayerCalculator().enfoncement_couche_index(i) - getPieuParamManagerData().Dhel_val())/1000,2) ; //- dhel
-                calc += resistanceSol_couche_Tm(i) * (getLayerCalculator().enfoncement_couche_index(i) - getPieuParamManagerData().Dhel_val())/1000;
+                calc_str += round((getLayerCalculator().enfoncement_couche_index(i) - getScrewPileManagerData().Dhel_val())/1000,2) ; //- dhel
+                calc += resistanceSol_couche_Tm(i) * (getLayerCalculator().enfoncement_couche_index(i) - getScrewPileManagerData().Dhel_val())/1000;
             }else{
                 detail.add_String("h<sub>"+(i+1)+"</sub>");
                 detail.add_String(" + ");
@@ -181,7 +254,7 @@ public class DetailResultManager extends ResultManager{
         detail.add_String("<b>F<sub>df</sub></b> = u · f · (I<sub>p</sub> - D<sub>hel</sub>)");
         detail.add_ln_String("<b>F<sub>df</sub></b> = ");
         detail.add_String(round(perimetre_section_transfersale_fut(),2)+" · "+round(resistance_AVG_long_du_fut(),2)+" · ");
-        detail.add_String("("+getPieuParamManagerData().Ip_val()/1000+" - "+getPieuParamManagerData().Dhel_val()/1000+")");
+        detail.add_String("("+getScrewPileManagerData().Ip_val()/1000+" - "+getScrewPileManagerData().Dhel_val()/1000+")");
         detail.add_String(" = <b>"+fdf_toDisplay()+"</b>T");
 
         return detail;

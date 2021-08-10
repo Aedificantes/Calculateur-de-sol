@@ -20,7 +20,8 @@
     <string name="nav_header_subtitle">Calculateur de force</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_loadFile">Importer un fichier</string>
-    <string name="action_exportFile">Exporter un fichier</string>
+    <string name="action_exportFile">Sauvegarder</string>
+    <string name="action_generate_pdf">Exporter en PDF</string>
 
 
     <string name="menu_parameter">Paramètres</string>

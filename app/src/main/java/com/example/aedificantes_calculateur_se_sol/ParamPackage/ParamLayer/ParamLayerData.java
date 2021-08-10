@@ -147,6 +147,43 @@ public class ParamLayerData implements Serializable {
         return returned;
     }
 
+    public boolean is_Il_paramToSet(){
+        return find_is_paramToSet(0);
+    }
+
+    public boolean is_e_paramToSet(){
+        return find_is_paramToSet(1);
+    }
+
+    public boolean is_CT_paramToSet(){
+        return find_is_paramToSet(2);
+    }
+
+    public boolean is_FI_paramToSet(){
+        return find_is_paramToSet(3);
+    }
+
+    public boolean is_YT_paramToSet(){
+        return find_is_paramToSet(4);
+    }
+
+    public boolean is_SR_paramToSet(){
+        return find_is_paramToSet(5);
+    }
+
+    public boolean is_h_paramToSet(){
+       return find_is_paramToSet(6);
+    }
+
+    public boolean find_is_paramToSet(int indexParam){
+        for(int each : paramToSet){
+            if(each == indexParam){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setLogNameParam(ArrayList<String> logNameParam) {
         this.logNameParam = logNameParam;
     }

@@ -149,7 +149,7 @@ public class ParamLayer {
         return data;
     }
 
-    public List<Error> generateError() {
+    public List<Error> generateEmptyError() {
         ArrayList<Error> list =  new ArrayList<>();
         Log.e(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
         for(int each : data.paramToSet){
@@ -157,6 +157,32 @@ public class ParamLayer {
                 list.add(new Error(" - "+data.logNameParam.get(each)+" n'a pas de valeur"));
             }
         }
+        return list;
+    }
+
+    public List<Error> generateMathError() {
+        ArrayList<Error> list =  new ArrayList<>();
+        Log.d(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
+        ParamLayerData data = getData();
+        if(data.Il() < -0.2 || data.Il() > 1.2 && data.Il() != 0 && data.is_Il_paramToSet()){
+            list.add(new Error(" - Il n'est pas compris entre -0.2 et 1.2"));
+        }
+        if(data.e() < 0 || data.e() > 1.1 && data.e() != 0 && data.is_e_paramToSet()){
+            list.add(new Error(" - e n'est pas compris entre 0 et 1.1"));
+        }
+        if(data.fi() < 10 || data.fi() > 37 && data.fi() != 0 && data.is_FI_paramToSet()){
+            list.add(new Error(" - φ n'est pas compris entre 10 et 37"));
+        }
+        if(data.yT() < 1.5 || data.yT() > 2.6 && data.yT() != 0 && data.is_YT_paramToSet()){
+            list.add(new Error(" - γ,T/m<sup>3</sup> n'est pas compris entre 1.5 et 2.6"));
+        }
+        if(data.Sr() < 0 || data.Sr() > 1 && data.Sr() != 0 && data.is_SR_paramToSet()){
+            list.add(new Error(" - S<sub>r</sub> n'est pas compris entre 0 et 1"));
+        }
+        if(data.h() < 0 || data.h() > 40 && data.h() != 0 && data.is_h_paramToSet()){
+            list.add(new Error(" - h n'est pas compris entre 0 et 40"));
+        }
+        Log.d(LOG_TAG, "generate");
         return list;
     }
 

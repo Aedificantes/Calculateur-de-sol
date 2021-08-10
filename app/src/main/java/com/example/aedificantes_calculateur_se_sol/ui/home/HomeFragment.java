@@ -34,6 +34,9 @@ import com.example.aedificantes_calculateur_se_sol.Calculator.ResultUpdatable;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorDisplayer;
 import com.example.aedificantes_calculateur_se_sol.Error.Verificator;
 import com.example.aedificantes_calculateur_se_sol.GlobalResultActivity;
+import com.example.aedificantes_calculateur_se_sol.PDF.PdfGenerator;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GlobalParamActivator;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater_data;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainer;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.Compacite;
@@ -82,6 +85,8 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
     private ErrorDisplayer errorDisplayer;
     private GoodValuesInterfaceDisplayer goodValueDisplayer;
     private Verificator verificator;
+    private GlobalParamActivator globalParamActivator;
+    private PdfGenerator pdfGenerator;
 
     private FloatingActionButton FAB_param;
 
@@ -108,9 +113,9 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
 
         // place default params to test
         listParams.add(new ParamLayer(TypeSol.LOAM_SABLEUX, Granularite.FIN, Compacite.FRIABLE,0.85f,0.65f,0.5f,23f,1.6f,0f,1.55f));
-        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0f,0.5f,28f,2f,0.75f,5.4f));
+        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0.5f,0.5f,28f,2f,0.75f,5.4f));
         listParams.add(new ParamLayer(TypeSol.LIMONEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0.65f,0.5f,0f,22f,1.8f,0f,8.5f));
-        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0f,0f,30f,2f,0.25f,0f));
+        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0.5f,0f,30f,2f,0.25f,0f));
         //listParams.add(new ParamSol());
 
         verificator = new Verificator(this);
@@ -123,9 +128,13 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         errorDisplayer = new ErrorDisplayer(this.getActivity().getApplicationContext(), layout_Const_Result);
         goodValueDisplayer = new GoodValuesInterfaceDisplayer(this, layout_Const_Result);
         resultManager = new ResultManager(paramContainer.get_ParamContainerData());
+        globalParamActivator = new GlobalParamActivator(paramContainer);
+        verificator.setGlobalParamActivator(globalParamActivator);
 
         // place default params to test
         screwPileParamManager.setValues(new float[]{88.9f,250f,3000f,100f,2900f});
+        groundWater.setValues(new GroundWater_data(true,1200,1700));
+
 
         //manage recyclerView
         mAdapter = new LineProfilSolAdaptater(this.getActivity().getApplicationContext(),listParams,verificator, screwPileParamManager);
@@ -303,6 +312,21 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                     public boolean onMenuItemClick(MenuItem item) {
                         Log.d(LOG_TAG,"open of EXPORT menu from homeFragment");
                         askPermissionWrite();
+                        FileExporter exporter = new FileExporter(paramContainer.get_ParamContainerData());
+                        Log.d(LOG_TAG, "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
+                        exporter.save();
+                        return false;
+                    }
+                });
+            }
+            if(item.getTitle() == getString(R.string.action_generate_pdf)){
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Log.d(LOG_TAG,"open of EXPORT PDF menu from homeFragment");
+                        askPermissionWrite();
+                        pdfGenerator = new PdfGenerator(paramContainer);
+                        pdfGenerator.generate(global_LL_activity, getActivity().getApplication().getApplicationContext(), getActivity().getWindowManager());
                         return false;
                     }
                 });
@@ -351,9 +375,6 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
                 return;
             }
         }
-        FileExporter exporter = new FileExporter(paramContainer.get_ParamContainerData());
-        Log.d(LOG_TAG, "string of json create:\n"+exporter.prettyPrint_JSON(exporter.generate()) );
-        exporter.save();
     }
 
     //method used to launch file browser

@@ -48,7 +48,7 @@ public class ErrorDisplayer {
 //List<ParamSol> listParam, PieuParamManager pieuManager
     public void generateAndDisplay(ParamContainer paramContainer){
         List<ErrorManager> tampHash = new ArrayList<ErrorManager>();
-        tampHash.addAll(errorCreater.generate_LineEmptyError(paramContainer.getSol_list()) );
+        tampHash.addAll(errorCreater.generate_LineError(paramContainer.getSol_list()) );
         tampHash.addAll(errorCreater.generate_PieuEmptyError(paramContainer.getPieuManager()) );
         tampHash.addAll(errorCreater.generate_EauxSouterainesEmptyError(paramContainer.getGroundWater()) );
 

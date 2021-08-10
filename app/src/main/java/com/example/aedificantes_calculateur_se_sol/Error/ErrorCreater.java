@@ -1,5 +1,6 @@
 package com.example.aedificantes_calculateur_se_sol.Error;
 
+import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorManager;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorOrder;
 import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.ErrorParamSolManager;
@@ -16,12 +17,18 @@ public class ErrorCreater {
     public ErrorCreater() {
     }
 
-    public List<ErrorManager> generate_LineEmptyError(List<ParamLayer> listParam){
+    public List<ErrorManager> generate_LineError(List<ParamLayer> listParam){
         List<ErrorManager> listTamp = new ArrayList<>();
         for(int i=0; i < listParam.size(); i++){
+            List<Error> listError = new ArrayList<>();
             if(!listParam.get(i).isAllFill()){
-                listTamp.add(new ErrorParamSolManager(listParam.get(i).generateError(),ErrorOrder.PARAMSOL,i));
+                listError.addAll(listParam.get(i).generateEmptyError());
             }
+            listError.addAll(listParam.get(i).generateMathError());
+            if(!listError.isEmpty()) {
+                listTamp.add(new ErrorParamSolManager(listError, ErrorOrder.PARAMSOL, i));
+            }
+
         }
         return listTamp;
     }

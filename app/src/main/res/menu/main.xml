@@ -2,12 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_exportFile"
+        android:title="@string/action_exportFile" />
+    <item
+        android:id="@+id/action_generate_pdf"
+        android:title="@string/action_generate_pdf" />
+    <item
         android:id="@+id/action_loadFile"
         android:icon="@android:drawable/ic_menu_upload"
         android:orderInCategory="100"
         android:title="@string/action_loadFile"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_exportFile"
-        android:title="@string/action_exportFile" />
 </menu>

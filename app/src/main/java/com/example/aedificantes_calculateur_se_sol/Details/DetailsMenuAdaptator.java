@@ -1,6 +1,8 @@
 package com.example.aedificantes_calculateur_se_sol.Details;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class DetailsMenuAdaptator extends BaseExpandableListAdapter {
+
+    private final String LOG_TAG= "CLA_20939";
 
     private List<DetailTitle> list_titleDetails;
     private TreeMap<DetailTitle, List<Detail>> list_ContentDetails;
@@ -32,6 +36,7 @@ public class DetailsMenuAdaptator extends BaseExpandableListAdapter {
     public void display(TreeMap<DetailTitle, List<Detail>> toDisplayData){
         list_ContentDetails = toDisplayData;
         list_titleDetails = new ArrayList<>(toDisplayData.keySet());
+        Log.d(LOG_TAG, "number of elements to display: "+toDisplayData.keySet().size());
     }
 
     @Override
@@ -80,6 +85,8 @@ public class DetailsMenuAdaptator extends BaseExpandableListAdapter {
         DetailTitle title = this.list_titleDetails.get(groupPosition);
         TV_detail_string.setText(title.getNumber()+" - "+title.getText());
 
+        Log.d(LOG_TAG,"new group element n° "+title.getNumber()+" with name "+title.getText());
+
         return convertView;
     }
 
@@ -101,6 +108,10 @@ public class DetailsMenuAdaptator extends BaseExpandableListAdapter {
                 launcher.openTabLayout(detail.getTabManager());
             }
         });
+
+        DetailTitle title = this.list_titleDetails.get(groupPosition);
+        Log.d(LOG_TAG,"new child of parent element n° "+title.getNumber());
+
 
 
         return convertView;

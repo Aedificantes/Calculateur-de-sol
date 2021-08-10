@@ -10,6 +10,7 @@ public class ParamEnabler {
     private LineProfilSolAdaptater.LineProfilSolViewHolder holder;
     private ParamLayer paramLayer;
     private Boolean isLast = true;
+    private boolean[] forceParamToSet = new boolean[6];
 
     public ParamEnabler(ParamLayer current) {
         paramLayer = current;
@@ -67,9 +68,17 @@ public class ParamEnabler {
         if(!isLast){ this.paramLayer.addParamToSet(6); }
         holder.get_ET_index(2).setEnabled(paramLayer.isLoadLayer());
         if(paramLayer.isLoadLayer()){ this.paramLayer.addParamToSet(2); }
+        for(int i=0; i< forceParamToSet.length; i++){
+            if(forceParamToSet[i]) {
+                holder.get_ET_index(i).setEnabled(true);
+                this.paramLayer.addParamToSet(i);
+            }
+        }
     }
 
     public void setLast(Boolean last) {
         isLast = last;
     }
+    public void forceParam_e(boolean bool){ forceParamToSet[1] = bool;}
+    public void remove_forceParam(){ forceParamToSet = new boolean[6];}
 }

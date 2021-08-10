@@ -1,14 +1,20 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import com.example.aedificantes_calculateur_se_sol.Details.TabDetail.TabData.TabBlockManager;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater;
+import com.example.aedificantes_calculateur_se_sol.ParamPackage.GroundWater.GroundWater_data;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamContainerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.ParamLayerData;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ParamLayer.TypeSol;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileManagerData;
 
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResultManager {
 
@@ -17,13 +23,15 @@ public class ResultManager {
 
     private AlphaCalculator alphaCalculator = new AlphaCalculator();
     private LayerCalculator layerCalculator;
-    private SoilResistanceCalculator soilResistanceCalculator = new SoilResistanceCalculator();
+    private SoilResistanceCalculator resistanceSolCalculator = new SoilResistanceCalculator();
     private CoefLayer coefLayer = new CoefLayer();
+    private GroundWater_calculator groundWater_calculator;
 
 
     public ResultManager(ParamContainerData data){
-        this.paramContainerData = data;
-        layerCalculator = new LayerCalculator(paramContainerData.getSol_data_list(),paramContainerData.getScrewPileManagerData());
+        this.paramContainerData = data ;
+        layerCalculator = new LayerCalculator(data);
+        groundWater_calculator = new GroundWater_calculator(data);
     }
 
     public float round(float value, int nbAfterComa){
@@ -98,7 +106,7 @@ public class ResultManager {
 
     public float resistanceSol_couche_Tm(int index){
             ParamLayerData paramSolIndex = paramContainerData.getSol_data_list().get(index);
-            double tamp = soilResistanceCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
+            double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
             System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
             tamp = (tamp/9.80665); // x.xxxxxxx T/m²
             System.out.print(tamp+"T/m²"+ " =~ ");
@@ -110,7 +118,7 @@ public class ResultManager {
 
     public float resistanceSol_couche_Kpa(int index){
         ParamLayerData paramSolIndex = paramContainerData.getSol_data_list().get(index);
-        double tamp = soilResistanceCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
+        double tamp = resistanceSolCalculator.resistanceSol_AVG(round(layerCalculator.profondeur_couche_index(index),2),paramSolIndex); // xx.xx Kpa
         System.out.print(" ResultManager -> resistanceSol_couche("+index+") -> detail: "+ tamp+"Kpa"+ " = ");
         return (float) tamp;
     }
@@ -248,27 +256,82 @@ public class ResultManager {
     public float AVG_masse_volumique_sols_supérieurs(){
         float tamp =0f;
         float sum_enfoncement =0f;
-        float[][] logArray = new float[layerCalculator.index_couchePortante()][2];
+        ArrayList<float[]> log_layer = new ArrayList<>();
         if(layerCalculator.index_couchePortante() == 1){
             ParamLayerData couchePortante = layerCalculator.ParamSol_couchePortante();
             tamp = couchePortante.yT() ;
             System.out.println(" ResultManager -> AVG_masse_volumique_sols_supérieurs() -> detail :("+ couchePortante.yT()+")");
             return tamp;
         }else {
-            for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
-                logArray[i][0] = paramContainerData.getSol_data_list().get(i).yT();
-                logArray[i][1] = layerCalculator.enfoncement_couche_index(i)/1000;
-                tamp += logArray[i][0] * logArray[i][1];
-                sum_enfoncement += layerCalculator.enfoncement_couche_index(i) / 1000;
+            if(paramContainerData.getGroundWater_data().isChecked()){
+                GroundWater_data groundWater_data = paramContainerData.getGroundWater_data();
+
+                for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
+                    ParamLayerData paramLayerData = paramContainerData.getSol_data_list().get(i);
+                    float startHeight;
+                    sum_enfoncement += layerCalculator.enfoncement_couche_index(i);
+
+                    if(i == 0) {
+                        startHeight = paramContainerData.getScrewPileManagerData().Hk_val();
+                    }else{
+                        startHeight = layerCalculator.accumulation_enfoncement_couche_index(i-1) + paramContainerData.getScrewPileManagerData().Hk_val();
+                    }
+
+                    if(groundWater_data.getNes() <= startHeight) {
+                        if(groundWater_data.getAquifere() <= startHeight){
+                            log_layer.add(new float[]{layerCalculator.enfoncement_couche_index(i), paramContainerData.getSol_data_list().get(i).yT()});
+                        }else if(groundWater_data.getAquifere() < layerCalculator.accumulation_enfoncement_couche_index(i)){
+                            log_layer.add(new float[]{groundWater_data.getAquifere() - startHeight, ysb(i)});
+                            log_layer.add(new float[]{layerCalculator.enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        }else{
+                            log_layer.add(new float[]{layerCalculator.enfoncement_couche_index(i), ysb(i)});
+                        }
+                    }else if(groundWater_data.getNes() < layerCalculator.accumulation_enfoncement_couche_index(i)){
+                        if(groundWater_data.getAquifere() < layerCalculator.accumulation_enfoncement_couche_index(i)){
+                            log_layer.add(new float[]{(groundWater_data.getNes() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                            log_layer.add(new float[]{groundWater_data.getAquifere() - groundWater_data.getNes(), ysb(i)});
+                            log_layer.add(new float[]{layerCalculator.accumulation_enfoncement_couche_index(i) - (groundWater_data.getAquifere() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                        }else{
+                            log_layer.add(new float[]{(groundWater_data.getNes() - startHeight), paramContainerData.getSol_data_list().get(i).yT()});
+                            log_layer.add(new float[]{layerCalculator.accumulation_enfoncement_couche_index(i) -(groundWater_data.getNes() - startHeight) , ysb(i)});
+                        }
+                    }else{
+                        log_layer.add(new float[]{layerCalculator.enfoncement_couche_index(i), paramContainerData.getSol_data_list().get(i).yT()});
+                    }
+                }
+
+                for(float[] each : log_layer){
+                    tamp += each[0] * each[1];
+                    Log.d("CODE14758 Sub Layer ","h = "+each[0]+"  y = "+each[1]);
+                }
+
+            }else{
+                for (int i = 0; i < layerCalculator.index_couchePortante(); i++) {
+                    float [] logArray = new float[2];
+                    logArray[0] = layerCalculator.enfoncement_couche_index(i) / 1000;
+                    logArray[1] = paramContainerData.getSol_data_list().get(i).yT();
+                    tamp += logArray[0] * logArray[1];
+                    sum_enfoncement += layerCalculator.enfoncement_couche_index(i) / 1000;
+                    log_layer.add(logArray);
+                }
             }
             System.out.print(" ResultManager -> AVG_masse_volumique_sols_supérieurs() -> detail :(");
-            for(int i =0; i < logArray.length; i++){
-                System.out.print( logArray[i][0]+" * "+logArray[i][1] + " + ");
+            for(float[] eachLog : log_layer){
+                System.out.print( eachLog[0]+" * "+eachLog[1] + " + ");
             }
             System.out.println(") / "+sum_enfoncement +" = "+ tamp+" / "+sum_enfoncement +" = "+round(tamp / sum_enfoncement,2));
             return round(tamp / sum_enfoncement,2);
         }
 
+    }
+
+    protected float ysb(int index){
+        float ysb;
+        ParamLayerData dataLayer  = paramContainerData.getSol_data_list().get(index);
+        float coef  = (dataLayer.getTypeSol() == TypeSol.SABLEUX)? 2.65f:2.75f;
+        ysb = (coef -1)/(1+dataLayer.e());
+        Log.d("CODE56842 ysb"+index,"ysb = ("+coef+"-1)/(1+"+dataLayer.e()+") = "+ysb);
+        return round(ysb,2);
     }
 
     public float AVG_masse_volumique_sols_supérieurs_toLayer(int index){ //TODO CALCULATE WITH LAYER GIVEN
@@ -329,9 +392,9 @@ public class ResultManager {
     }
 
 
-    public void updateData(ParamContainerData newData){ // propagation du changement de données
-        this.paramContainerData = newData;
-        this.layerCalculator.updateData(paramContainerData.getSol_data_list(),paramContainerData.getScrewPileManagerData());
+    public void updateData(ParamContainerData dataUpdate){ // propagation du changement de données
+        this.paramContainerData = dataUpdate;
+        this.layerCalculator.updateData(dataUpdate);
     }
 
 
@@ -344,20 +407,20 @@ public class ResultManager {
         return layerCalculator;
     }
 
-    public ParamContainerData getParamContainerData() {
-        return paramContainerData;
+    public List<ParamLayerData> getParamSolDataList() {
+        return paramContainerData.getSol_data_list();
     }
 
-    public ScrewPileManagerData getPieuParamManagerData(){
-        return this.paramContainerData.getScrewPileManagerData();
+    public ScrewPileManagerData getScrewPileManagerData(){
+        return paramContainerData.getScrewPileManagerData();
     }
 
-    public ArrayList<ParamLayerData> getParamSolDataList(){
-        return this.paramContainerData.getSol_data_list();
+    public ParamContainerData getParamContainerData(){
+        return this.paramContainerData;
     }
 
     public SoilResistanceCalculator getSoilResistanceCalculator() {
-        return soilResistanceCalculator;
+        return resistanceSolCalculator;
     }
 
     public CoefLayer getCoefLayer() { return coefLayer; }

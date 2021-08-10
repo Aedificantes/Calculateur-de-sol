@@ -1,5 +1,7 @@
 package com.example.aedificantes_calculateur_se_sol.Calculator;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,9 @@ import java.util.List;
  * give table result from calculate value
  */
 public class ResultDisplayer {
+
+    private final String LOG_TAG = "CLA_9512";
+
     private ViewGroup parent;
 
     private List<TextView> list_TV_tab1 = new ArrayList<>();
@@ -57,8 +62,6 @@ public class ResultDisplayer {
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_10));
         list_TV_tab2.add((TextView) LL_Result.findViewById(R.id.TV_Tab2_11));
 
-
-
     }
 
     public void updateData(ResultManager resultManager){
@@ -91,11 +94,6 @@ public class ResultDisplayer {
         list_TV_tab2.get(6).setText("charges de traction Fd ( γc = "+resultManager.getCoef_trac()+")");
         list_TV_tab2.get(7).setText("charges variables Fd ( γc = "+resultManager.getCoef_variableLoad()+")");
 
-
-
-
-
-
     }
 
     private TextView create_TV_withWeight(Context context, String text){
@@ -112,8 +110,17 @@ public class ResultDisplayer {
     }
 
     public void show(){
+        Log.d(LOG_TAG,"Le ResultDIsplayer ajoute son tableau à la view");
         parent.addView(LL_Result);
         LL_Result.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         LL_Result.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+
+    public void show(int widht, int height){
+        Log.d(LOG_TAG,"Le ResultDIsplayer ajoute son tableau à la view avec un taille défini : w:"+widht+" h:"+height);
+        parent.addView(LL_Result);
+
+        LL_Result.getLayoutParams().height = height;
+        LL_Result.getLayoutParams().width = widht;
     }
 }
