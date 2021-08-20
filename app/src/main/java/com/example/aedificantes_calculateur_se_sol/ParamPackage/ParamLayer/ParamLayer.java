@@ -54,17 +54,6 @@ public class ParamLayer {
         //addLogName();
     }
 
-   /* private void addLogName(){
-        data.logNameParam.add("Facteur de plasticité des sols argileux");
-        data.logNameParam.add("Indices des vides");
-        data.logNameParam.add("Cohésion du sol");
-        data.logNameParam.add("Angle de frottement interne des sols");
-        data.logNameParam.add("Masse volumique de l'horizon");
-        data.logNameParam.add("Indice d'humidite");
-        data.logNameParam.add("Epaisseur de l'horizon");
-    }
-    */
-
     public boolean isAllFill(){
         boolean returned = true;
         for(IndexColumnName each : data.paramToSet){
@@ -166,10 +155,15 @@ public class ParamLayer {
 
     public List<Error> generateMathError() {
         ArrayList<Error> list =  new ArrayList<>();
-        Log.d(LOG_TAG, "generateError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
+        Log.d(LOG_TAG, "generateMathError nb value params: "+data.params.size()+"\n Param to enable: "+data.paramToSet.toString());
         ParamLayerData data = getData();
         if(data.Il() < -0.2 || data.Il() > 1.2 && data.Il() != 0 && data.is_Il_paramToSet()){
             list.add(new Error(" - Il n'est pas compris entre -0.2 et 1.2"));
+        }else{
+            if(!data.is_Il_paramToSet()) {
+                Log.d(LOG_TAG, "generateMathError IL n'est pas à remplir");
+            }
+                Log.d(LOG_TAG, "generateMathError: Il :"+data.Il());
         }
         if(data.e() < 0 || data.e() > 1.1 && data.e() != 0 && data.is_e_paramToSet()){
             list.add(new Error(" - e n'est pas compris entre 0 et 1.1"));
@@ -186,7 +180,7 @@ public class ParamLayer {
         if(data.h() < 0 || data.h() > 40 && data.h() != 0 && data.is_h_paramToSet()){
             list.add(new Error(" - h n'est pas compris entre 0 et 40"));
         }
-        Log.d(LOG_TAG, "generate");
+        Log.d(LOG_TAG, "generateMatchError : "+ list.toString());
         return list;
     }
 
