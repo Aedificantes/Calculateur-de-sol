@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 import com.example.aedificantes_calculateur_se_sol.ParamPackage.ScrewPile.ScrewPileParamManager;
@@ -25,11 +26,14 @@ import com.example.aedificantes_calculateur_se_sol.R;
 import com.example.aedificantes_calculateur_se_sol.ui.home.HomeFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Complexe class to create recyclerView and display LayerParam inside
  */
 public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAdaptater.LineProfilSolViewHolder> implements VerificateObserver {
+
+    private static final String LOG_TAG = "CLA_1964";
 
     private Context context;
     private ArrayList<ParamLayer> mListparamLayers;
@@ -72,7 +76,6 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             ET_List.add((EditText) itemView.findViewById(R.id.TN_P6));
             ET_List.add((EditText) itemView.findViewById(R.id.TN_P7));
 
-
             setValues(SP_Granularite,Granularite.values());
             setValues(SP_Compacite, Compacite.values());
             setValues(SP_TypeSol, TypeSol.values());
@@ -105,14 +108,14 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
         mListparamLayers = listParams;
         this.verificator =  verificator;
         this.screwPileParamManager = managerPieu;
-        verificator.addLikeObserver(this);
+        //verificator.addLikeObserver(this);
         this.context = context;
     }
     public LineProfilSolAdaptater(Context context, VerificateObservable verificator, ScrewPileParamManager managerPieu){
         mListparamLayers = new ArrayList<>();
         this.verificator =  verificator;
         this.screwPileParamManager = managerPieu;
-        verificator.addLikeObserver(this);
+        //verificator.addLikeObserver(this);
         this.context = context;
     }
     @Override
@@ -147,6 +150,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                 @Override
                 public void onClick(View v) {
                     if(mListparamLayers.size()>1) {
+                        mListparamLayers.get(position).removeObserver();
                         mListparamLayers.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mListparamLayers.size() - position);
@@ -223,8 +227,10 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
                                           int before, int count) {
                     if (s.toString().length() > 0) {
                         paramLayer.setValueByColumnName(IndexColumnName.getIndexColumnName_byId(finalI), Float.parseFloat(s.toString()));
+                        Log.d(LOG_TAG, "new value for "+IndexColumnName.getIndexColumnName_byId(finalI) + " to value : "+Float.parseFloat(s.toString())+" then value of getter is : "+paramLayer.Il());
                     } else {
                         paramLayer.setValueByColumnName(IndexColumnName.getIndexColumnName_byId(finalI), 0);
+                        Log.d(LOG_TAG, "onTextChanged of ground param line -> text length of EditText : ["+ IndexColumnName.getIndexColumnName_byId(finalI) +"] is equal to 0 so param si set to 0");
                     }
                     verificator.notifyDataChange();
                 }
@@ -268,6 +274,7 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
 
     @Override
     public boolean isFill() {
+        /*
         if(screwPileParamManager.isFill()){
             for(ParamLayer each: mListparamLayers){
                 each.setLoadLayer(false);
@@ -275,11 +282,19 @@ public class LineProfilSolAdaptater extends RecyclerView.Adapter<LineProfilSolAd
             HomeFragment.resultManager.getLayerCalculator().ParamSol_couchePortante().setLoadLayer(true);
             updateAll_ET_Element();
         }
+
+         */
         for(ParamLayer each_PS : mListparamLayers){
-            if(!each_PS.isAllFill())
+            if(!each_PS.isFill())
                 return false;
         }
         return true;
     }
+
+    @Override
+    public List<Error> generateError() {
+        return null;
+    }
+
 
 }

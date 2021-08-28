@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Calculator class based on ref table
  */
 public class CoefLayer {
+    private static final String LOG_TAG = "CLA_87856";
 
     private ArrayList<Float[]> REF = new ArrayList<>();
 
@@ -37,6 +38,32 @@ public class CoefLayer {
         switch (layerParam.getTypeSol()){
             case ARGILEUX:
             case LIMONEUX:
+                if(layerParam.Il() > 0.75){
+                    return REF.get(2);
+                }else if(layerParam.Il() > 0.5){
+                    return REF.get(1);
+                }else{
+                    return REF.get(0);
+                }
+            case SABLEUX:
+            case LOAM_SABLEUX:
+                if(layerParam.Sr() > 0.8 || layerParam.Il() > 1){
+                    return REF.get(2);
+                }else if(layerParam.Sr() > 0.5 || (layerParam.Il()>=0 && layerParam.Il()<=1)){
+                    return REF.get(1);
+                }else{
+                    return REF.get(0);
+                }
+
+            case REMBLAI:
+                throw new RemblaiSupportLayerException("Il n'est possible de determiner le coefficient de l'horizon si celui-ci est un Remblai, d'ailleurs le Rembali ne peut-être une couche portante !");
+        }
+        throw new RemblaiSupportLayerException("Valeur hors champs de donnée TypeSol");
+
+    }
+    /*
+                case ARGILEUX:
+            case LIMONEUX:
                 if(layerParam.Sr() > 0.8){
                   return REF.get(2);
                 }else if(layerParam.Sr() > 0.5){
@@ -53,12 +80,7 @@ public class CoefLayer {
                 }else{
                     return REF.get(3);
                 }
-            case REMBLAI:
-                throw new RemblaiSupportLayerException("Il n'est possible de determiner le coefficient de l'horizon si celui-ci est un Remblai, d'ailleurs le Rembali ne peut-être une couche portante !");
-        }
-        throw new RemblaiSupportLayerException("Valeur hors champs de donnée TypeSol");
-
-    }
+     */
 
 
     /* if convert to table is needed

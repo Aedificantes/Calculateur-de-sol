@@ -19,6 +19,9 @@ import java.util.ArrayList;
  * Draw elements in the drawing fragment in result activity
  */
 public class LayerDrawer {
+
+    private static final String LOG_TAG = "CLA_64651";
+
     private ResultManager calculator;
     private ScrewPileManagerData pieuParamManagerData;
     private ArrayList<ParamLayerData> paramLayerDataList;
@@ -84,7 +87,7 @@ public class LayerDrawer {
             enfoncement[i] = (calculator.getLayerCalculator().enfoncement_couche_index(i));
             if(i == index_couchePortante-1){ enfoncement[i] += pieuParamManagerData.Dhel_val();} // if it's support layer, add dhel size
         }
-        float org_fdComp = calculator.fd0_comp();
+        float org_fdComp = calculator.fdcomp();
         float last_x_stop_pos = offset_StartX;
         for(int i=0; i < index_couchePortante; i++){
             float x_start_pos_line=0,x_stop_pos_line=0;
@@ -98,13 +101,13 @@ public class LayerDrawer {
                     reduce_height +=  enfoncement[i]/number_value_chart;
                     y_pos = tabLayer[i][0]+ ((tabLayer[i][1]- tabLayer[i][0])/number_value_chart)*(j);
                 }
-                Log.d("toDrawChart"," new H set :"+ reduce_height);
                 pieuParamManagerData.set_H_val(reduce_height);
-                float x_pos_legend = offset_StartX + (calculator.fd0_comp() * size_to_right_border_legend)/org_fdComp ;
+                Log.d(LOG_TAG," toDrawChart new H set :"+ reduce_height+" on layer n°"+i+" to fdcomp "+calculator.fdcomp_toDisplay());
+                float x_pos_legend = offset_StartX + (calculator.fdcomp() * size_to_right_border_legend)/org_fdComp ;
                 writeTextCanvas(0,x_pos_legend+50,y_pos, calculator.fdcomp_toDisplay());
                 if(j == 0){
                     x_start_pos_line = x_pos_legend;
-                   reduce_height -= first_divider_reduce_height;
+                    reduce_height -= first_divider_reduce_height;
                 }else if(j == number_value_chart){
                     x_stop_pos_line = x_pos_legend;
                 }
@@ -113,7 +116,7 @@ public class LayerDrawer {
             canvas.drawLine(x_start_pos_line, tabLayer[i][0],x_stop_pos_line,tabLayer[i][1], lineColor);
             last_x_stop_pos = x_stop_pos_line;
 
-            Log.d("toDrawChart"," filal H set :"+ reduce_height +"original one was "+base_H);
+            Log.d(LOG_TAG," toDrawChart final H set :"+ reduce_height +" original one was "+base_H);
         }
         canvas.drawLine(size_X_rect+offset_X_rect+50, offset_y, size_X_rect+offset_X_rect+50, (tabLayer[tabLayer.length-1][1]),lineColor);
         float sum_enfoncement = calculator.getLayerCalculator().accumulation_enfoncement_couche_index(calculator.getLayerCalculator().index_couchePortante());
@@ -123,6 +126,21 @@ public class LayerDrawer {
             writeTextCanvas(0,size_X_rect+offset_X_rect+50,offset_y+(onUnit_size*i), i+" m");
         }
 
+
+    }
+
+    private float findHigher_fdcomp(){
+        int index = 0;
+        float higher_fdComp = 0;
+        for(ParamLayerData data : paramLayerDataList){
+            if(index == calculator.getLayerCalculator().index_couchePortante()){
+                break;
+            }
+
+            float tamp_fdComp = calculator.fdcomp();
+           // if()
+        }
+        return 0;
 
     }
 
@@ -137,6 +155,7 @@ public class LayerDrawer {
 
 
         HkheightDraw = ((pieuParamManagerData.Hk_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000);
+        Log.d(LOG_TAG,"toDrawDrawing ->  start HkheightDraw "+ HkheightDraw);
         System.out.println(((pieuParamManagerData.Hk_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000));
         float pieuStartX = offset_X_rect + (size_X_rect/2);
 
@@ -304,7 +323,6 @@ public class LayerDrawer {
     private void drawPieu(float HkheightDraw, float START_TOP, float height_screen, float startX){
         pieuDrawHeight = ((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000);
         diff_outGround = (((pieuParamManagerData.Ip_val() - pieuParamManagerData.H_val())/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000) ;
-        System.out.println(((pieuParamManagerData.H_val()/1000)*height_screen)/(calculator.getLayerCalculator().accumulation_h_couche_index(calculator.getLayerCalculator().index_couchePortante()-1)/1000));
         GraphScrewPile graphScrewPile = new GraphScrewPile(canvas,startX,START_TOP-diff_outGround,pieuDrawHeight,40);
         graphScrewPile.draw();
     }

@@ -88,7 +88,6 @@ public class ParamLayerData implements Serializable {
 
     public void set_Il(float val){
         this.params.put(IndexColumnName.IL,val);
-
     }
     public void set_e(float val){
         this.params.put(IndexColumnName.E,val);

@@ -108,17 +108,19 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
         //generate title of each param for param sol recyclerView
         setTitle();
 
+
+
         FAB_param = globalContainer.findViewById(R.id.FAB_param);
 
+        verificator = new Verificator(this);
 
         // place default params to test
-        listParams.add(new ParamLayer(TypeSol.LOAM_SABLEUX, Granularite.FIN, Compacite.FRIABLE,0.85f,0.65f,0.5f,23f,1.6f,0f,1.55f));
-        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0.5f,0.5f,28f,2f,0.75f,5.4f));
-        listParams.add(new ParamLayer(TypeSol.LIMONEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0.65f,0.5f,0f,22f,1.8f,0f,8.5f));
-        listParams.add(new ParamLayer(TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0.5f,0f,30f,2f,0.25f,0f));
+        listParams.add(new ParamLayer(verificator, TypeSol.LOAM_SABLEUX, Granularite.FIN, Compacite.FRIABLE,0.85f,0.65f,0.5f,23f,1.6f,0f,1.55f));
+        listParams.add(new ParamLayer(verificator,TypeSol.SABLEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0f,0.5f,0.5f,28f,2f,0.75f,5.4f));
+        listParams.add(new ParamLayer(verificator,TypeSol.LIMONEUX, Granularite.MOYEN, Compacite.MOYEN_DENSE,0.65f,0.5f,0f,22f,1.8f,0f,8.5f));
+        listParams.add(new ParamLayer(verificator,TypeSol.SABLEUX, Granularite.GRAVELEUX, Compacite.DENSE_SANS_SOND_ST,0f,0.5f,0f,30f,2f,0.25f,0f));
         //listParams.add(new ParamSol());
 
-        verificator = new Verificator(this);
         screwPileParamManager = new ScrewPileParamManager(verificator, global_LL_activity);
         groundWater = new GroundWater(verificator,global_LL_activity);
 
@@ -147,7 +149,7 @@ public class HomeFragment extends Fragment  implements ResultUpdatable, ResultBu
             @Override
             public void onClick(View v) {
                 mRecyclerView.smoothScrollToPosition(listParams.size()-1);
-                listParams.add(new ParamLayer());
+                listParams.add(new ParamLayer(verificator));
                 mAdapter.notifyItemInserted(listParams.size()-1);
                 mRecyclerView.smoothScrollToPosition(listParams.size());
                 allValuesAreNotSet();

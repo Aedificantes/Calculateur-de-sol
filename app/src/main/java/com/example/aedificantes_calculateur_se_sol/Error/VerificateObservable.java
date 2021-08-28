@@ -17,5 +17,8 @@ public interface VerificateObservable {
      */
     public void addLikeObserver(VerificateObserver obs);
 
+    public void removeObserver(VerificateObserver obs);
+
+
     public void setGlobalParamActivator(GlobalParamActivator globalParamActivator);
 }

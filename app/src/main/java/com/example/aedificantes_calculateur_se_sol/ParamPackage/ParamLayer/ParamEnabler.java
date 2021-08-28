@@ -36,7 +36,6 @@ public class ParamEnabler {
      * Tree of decision to find params to enable
      */
     private void enableElement(){
-
         if (paramLayer.getTypeSol() == TypeSol.SABLEUX) {
             holder.SP_Granularite.setEnabled(true);
             holder.SP_Compacite.setEnabled(true);

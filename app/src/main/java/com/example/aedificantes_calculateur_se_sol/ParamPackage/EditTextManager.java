@@ -7,8 +7,11 @@ import com.example.aedificantes_calculateur_se_sol.Error.ErrorObjects.Error;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObservable;
 import com.example.aedificantes_calculateur_se_sol.Error.VerificateObserver;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Class that is used by several other class to manage control of EditText, especially set listener, getter for value, call back VerificateObservable in chnages
+ * Class that is used by several other class to manage control of EditText, especially set listener, getter for value, call back VerificateObservable in changes
  * @see VerificateObservable
  */
 
@@ -58,13 +61,20 @@ public class EditTextManager implements VerificateObserver {
     public float value(){
         return this.value_PieuParam;
     }
+
     @Override
     public boolean isFill(){
         return value_PieuParam != 0f;
     }
 
-    public Error generateError(){
-        return new Error(this.nameOfElement+" n'a pas de valeur");
+
+    @Override
+    public List<Error> generateError(){
+        ArrayList<Error> listError = new ArrayList<>();
+        if(!this.isFill()){
+            listError.add( new Error(this.nameOfElement+" n'a pas de valeur"));
+        }
+        return listError;
     }
 
 }

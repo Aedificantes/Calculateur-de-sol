@@ -18,6 +18,7 @@ import java.util.List;
 
 public class ResultManager {
 
+    private static final String LOG_TAG = "CLA_112354";
 
     private ParamContainerData paramContainerData;
 
@@ -172,9 +173,15 @@ public class ResultManager {
 
     public String fdcomp_toDisplay(){
         float calc = (fdf()+fd0_comp())*getCoef_comp();
-        System.out.println(" ResultManager -> fdcomp_toDisplay() -> detail: "+getCoef_comp()+" * ("+fd0_comp()+" + "+fdf()+") = "+calc);
+        Log.d(LOG_TAG," ResultManager -> fdcomp_toDisplay() -> formule: getCoef_comp()*(fdf()+fd0_comp()) , detail: "+getCoef_comp()+" * ("+fdf() +" + "+fd0_comp()+") = "+calc);
         calc = round(calc,2);
         return String.valueOf(calc);
+    }
+    public float fdcomp(){
+        float calc = (fdf()+fd0_comp())*getCoef_comp();
+        Log.d(LOG_TAG," ResultManager -> fdcomp_toDisplay() -> formule: getCoef_comp()*(fdf()+fd0_comp()) , detail: "+getCoef_comp()+" * ("+fdf() +" + "+fd0_comp()+") = "+calc);
+        calc = round(calc,2);
+        return calc;
     }
 
     public float[] fdcomp_tolayer_toDisplay(int index){

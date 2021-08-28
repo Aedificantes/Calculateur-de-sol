@@ -63,7 +63,6 @@ public class GroundWater implements VerificateObserver {
         this.ETM_aquifere.setValue(groundWater_data.getAquifere());
     }
 
-    @Override
     public boolean isFill() {
         if(enable_Param.isChecked()){
            return ETM_nes.isFill() && ETM_aquifere.isFill();
@@ -72,14 +71,13 @@ public class GroundWater implements VerificateObserver {
         }
     }
 
-
     public List<Error> generateError() {
         ArrayList<Error> list =  new ArrayList<>();
             if(!ETM_aquifere.isFill()){
-                list.add(ETM_aquifere.generateError());
+                list.addAll(ETM_aquifere.generateError());
             }
             if(!ETM_nes.isFill()){
-                list.add(ETM_nes.generateError());
+                list.addAll(ETM_nes.generateError());
             }
         return list;
     }

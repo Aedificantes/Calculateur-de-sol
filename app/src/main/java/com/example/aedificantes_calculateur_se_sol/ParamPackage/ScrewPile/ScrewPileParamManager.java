@@ -50,16 +50,6 @@ public class ScrewPileParamManager implements VerificateObserver{
         verificator.notifyDataChange();
     }
 
-    public List<Error> generateError(){
-        ArrayList<Error> list =  new ArrayList<>();
-        for(EditTextManager each : list_PieuParam){
-            if(!each.isFill()){
-                list.add(each.generateError());
-            }
-        }
-        return list;
-    }
-
     public ScrewPileManagerData generate_pieuParamData(){
         return new ScrewPileManagerData(
                 Dfut_val(),
@@ -95,4 +85,16 @@ public class ScrewPileParamManager implements VerificateObserver{
         }
         return true;
     }
+
+    @Override
+    public List<Error> generateError(){
+        ArrayList<Error> list =  new ArrayList<>();
+        for(EditTextManager each : list_PieuParam){
+            if(!each.isFill()){
+                list.addAll(each.generateError());
+            }
+        }
+        return list;
+    }
+
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Like every other param classes ScrewPileManagerData has his own data classes that can be serializable to be place in ParamContainerData and transfert to other Activity
  */
-public class ScrewPileManagerData implements Serializable, VerificateObserver {
+public class ScrewPileManagerData implements Serializable {
     private ArrayList<Float> listData = new ArrayList<>();
 
     public ScrewPileManagerData(float... data) {
@@ -72,7 +72,6 @@ public class ScrewPileManagerData implements Serializable, VerificateObserver {
         return obj;
     }
 
-    @Override
     public boolean isFill() {
         return
                 Dhel_val() != 0f &&

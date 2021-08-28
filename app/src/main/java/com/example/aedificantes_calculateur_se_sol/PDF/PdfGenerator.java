@@ -32,6 +32,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class PdfGenerator {
 
@@ -142,7 +146,11 @@ public class PdfGenerator {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
         try {
-            File gpxfile = new File(dir, "PDF_CREATOR.pdf");
+            Date date = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM hh,mm,ss");
+            String strDate = dateFormat.format(date);
+
+            File gpxfile = new File(dir, strDate+"_ae_pdf.pdf");
             FileOutputStream fos = new FileOutputStream(gpxfile);
             document.writeTo(fos);
             document.close();
